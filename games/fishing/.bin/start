@@ -1,0 +1,1 @@
+bash /data/data/com.termux/files/home/gameroom/.bin/server.sh start $1

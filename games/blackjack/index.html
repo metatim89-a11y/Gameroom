@@ -1,0 +1,114 @@
+<!-- ./gameroom/games/blackjack/index.html v10.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blackjack Pro</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .table { background: #064e3b; border: 8px solid #065f46; border-radius: 100px; padding: 40px; margin: 20px 0; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
+        .hand { display: flex; justify-content: center; gap: 10px; min-height: 120px; margin: 20px 0; }
+        .card { width: 70px; height: 100px; background: white; border-radius: 8px; color: #1e293b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); animation: deal 0.3s ease-out; }
+        @keyframes deal { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .suit-icon { width: 24px; height: 24px; }
+        .red { color: #ef4444; }
+        .score { font-size: 0.9rem; font-weight: bold; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blackjack Pro</h1>
+        <div id="status" style="text-align:center; font-weight:bold; margin-bottom:10px;">Ready</div>
+        
+        <div class="table">
+            <div id="dealer-hand" class="hand"></div>
+            <div style="text-align:center"><span id="dealer-score" class="score">DEALER: ?</span></div>
+            
+            <div style="margin: 30px 0; border-top: 1px dashed rgba(255,255,255,0.1);"></div>
+            
+            <div id="player-hand" class="hand"></div>
+            <div style="text-align:center"><span id="player-score" class="score">PLAYER: 0</span></div>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:30px;">
+            <button id="deal-btn" onclick="deal()">DEAL</button>
+            <div id="game-controls" style="display:none; gap:10px;">
+                <button onclick="hit()">HIT</button>
+                <button onclick="stand()" style="background:#334155; color:white;">STAND</button>
+            </div>
+        </div>
+        <a href="../../index.html" class="back-link">← BACK</a>
+    </div>
+
+    <script>
+        const suitIcons = {
+            '♠': `<svg viewBox="0 0 24 24" class="suit-icon"><path d="M12,2C11.73,3 11.23,3.95 10.5,4.84C9.76,5.74 8.71,6.8 7.34,8.04C6,9.27 4.93,10.5 4.14,11.74C3.38,12.93 3,14.2 3,15.54C3,17.29 3.65,18.78 4.96,20C6.27,21.22 7.8,21.83 9.53,21.83C10,21.83 10.45,21.75 11,21.58V18C10,17 9,16 9,15H15C15,16 14,17 13,18V21.58C13.55,21.75 14,21.83 14.47,21.83C16.2,21.83 17.73,21.22 19.04,20C20.35,18.78 21,17.29 21,15.54C21,14.2 20.62,12.93 19.86,11.74C19.07,10.5 18,9.27 16.66,8.04C15.29,6.8 14.24,5.74 13.5,4.84C12.77,3.95 12.27,3 12,2Z"/></svg>`,
+            '♥': `<svg viewBox="0 0 24 24" class="suit-icon red"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.41,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.59,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>`,
+            '♦': `<svg viewBox="0 0 24 24" class="suit-icon red"><path d="M12,2L4.5,12L12,22L19.5,12L12,2Z"/></svg>`,
+            '♣': `<svg viewBox="0 0 24 24" class="suit-icon"><path d="M12,2C11.5,4 11,5 10.5,6C9.5,8 8,9 6.5,9C5.12,9 4,10.12 4,11.5C4,12.88 5.12,14 6.5,14C8,14 9.5,15 10.5,17V22H13.5V17C14.5,15 16,14 17.5,14C18.88,14 20,12.88 20,11.5C20,10.12 18.88,9 17.5,9C16,9 14.5,8 13.5,6C13,5 12.5,4 12,2Z"/></svg>`
+        };
+
+        let deck = [], pHand = [], dHand = [], gameOver = false;
+
+        function getDeck() {
+            const s = ['♠','♥','♦','♣'], v = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+            const d = [];
+            for(let x of s) for(let y of v) d.push({s:x,v:y,r:x==='♥'||x==='♦'});
+            return d.sort(() => Math.random() - 0.5);
+        }
+
+        function val(h) {
+            let n = 0, a = 0;
+            for(let c of h) {
+                if(['J','Q','K'].includes(c.v)) n += 10;
+                else if(c.v === 'A') { n += 11; a++; }
+                else n += parseInt(c.v);
+            }
+            while(n > 21 && a > 0) { n -= 10; a--; }
+            return n;
+        }
+
+        function render() {
+            document.getElementById('player-hand').innerHTML = pHand.map(c => `<div class="card ${c.r?'red':''}"><div>${c.v}</div>${suitIcons[c.s]}</div>`).join('');
+            document.getElementById('player-score').innerText = "PLAYER: " + val(pHand);
+            if(gameOver) {
+                document.getElementById('dealer-hand').innerHTML = dHand.map(c => `<div class="card ${c.r?'red':''}"><div>${c.v}</div>${suitIcons[c.s]}</div>`).join('');
+                document.getElementById('dealer-score').innerText = "DEALER: " + val(dHand);
+            } else {
+                document.getElementById('dealer-hand').innerHTML = dHand.length ? `<div class="card ${dHand[0].r?'red':''}"><div>${dHand[0].v}</div>${suitIcons[dHand[0].s]}</div><div class="card" style="background:#0f172a"></div>` : '';
+                document.getElementById('dealer-score').innerText = "DEALER: ?";
+            }
+        }
+
+        function deal() {
+            deck = getDeck(); pHand = [deck.pop(), deck.pop()]; dHand = [deck.pop(), deck.pop()];
+            gameOver = false; document.getElementById('status').innerText = "Your Turn";
+            document.getElementById('deal-btn').style.display = 'none';
+            document.getElementById('game-controls').style.display = 'flex';
+            render();
+        }
+
+        function hit() {
+            pHand.push(deck.pop()); render();
+            if(val(pHand) > 21) end("Bust! Dealer Wins");
+        }
+
+        function stand() {
+            gameOver = true;
+            while(val(dHand) < 17) dHand.push(deck.pop());
+            render();
+            let pv = val(pHand), dv = val(dHand);
+            if(dv > 21) end("Dealer Busts! You Win");
+            else if(pv > dv) end("You Win!");
+            else if(dv > pv) end("Dealer Wins");
+            else end("Tie");
+        }
+
+        function end(m) {
+            gameOver = true; render();
+            document.getElementById('status').innerText = m;
+            document.getElementById('deal-btn').style.display = 'inline-block';
+            document.getElementById('game-controls').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

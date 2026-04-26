@@ -1,0 +1,100 @@
+<!-- ./gameroom/games/SLOTS/index.html v10.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Omni Slots</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .slot-body { padding: 20px; text-align: center; }
+        .grid-container { display: grid; gap: 8px; background: #0f172a; padding: 15px; border-radius: 12px; border: 2px solid var(--accent); margin: auto; }
+        .cell { background: #1e293b; border-radius: 6px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .cell svg { width: 80%; height: 80%; }
+        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .stats { display: flex; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; border: 1px solid var(--border); }
+        .config-btn { background: #334155; color: white; padding: 5px 10px; border-radius: 4px; border: none; font-size: 0.8rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Slots</h1>
+        <div class="stats">
+            <div>BANK: $<span id="balance">1000</span></div>
+            <div>BET: $<span id="bet">10</span></div>
+            <div style="color: var(--success)">WIN: $<span id="win">0</span></div>
+        </div>
+        
+        <div style="display:flex; gap:20px; justify-content:center; margin-bottom: 15px;">
+            <div>Size: <button class="config-btn" onclick="resize(-1)">-</button> <span id="size-label">3x3</span> <button class="config-btn" onclick="resize(1)">+</button></div>
+            <div>Stake: <button class="config-btn" onclick="adjustBet(-10)">-</button> <button class="config-btn" onclick="adjustBet(10)">+</button></div>
+        </div>
+
+        <div class="game-box">
+            <div id="grid" class="grid-container"></div>
+        </div>
+
+        <div class="controls">
+            <button id="spin-btn" onclick="play()" style="width: 200px;">SPIN</button>
+        </div>
+        <a href="../../index.html" class="back-link">← BACK</a>
+    </div>
+
+    <script>
+        const icons = {
+            clover: `<svg viewBox="0 0 24 24"><path d="M12,10C12.7,10 13.2,9.5 13.2,8.8V4.2C13.2,3.5 12.7,3 12,3C11.3,3 10.8,3.5 10.8,4.2V8.8C10.8,9.5 11.3,10 12,10M17,11.2H21.8C22.5,11.2 23,10.7 23,10C23,9.3 22.5,8.8 21.8,8.8H17C16.3,8.8 15.8,9.3 15.8,10C15.8,10.7 16.3,11.2 17,11.2M7,11.2H2.2C1.5,11.2 1,10.7 1,10C1,9.3 1.5,8.8 2.2,8.8H7C7.7,8.8 8.2,9.3 8.2,10C8.2,10.7 7.7,11.2 7,11.2M12,14C11.3,14 10.8,14.5 10.8,15.2V19.8C10.8,20.5 11.3,21 12,21C12.7,21 13.2,20.5 13.2,19.8V15.2C13.2,14.5 12.7,14 12,14Z"/></svg>`,
+            gold: `<svg viewBox="0 0 24 24"><path d="M5,6H19V18H5V6M19,4H5C3.89,4 3,4.89 3,6V18C3,19.11 3.89,20 5,20H19C20.11,20 21,19.11 21,18V6C21,4.89 20.11,4 19,4M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15Z"/></svg>`,
+            star: `<svg viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>`
+        };
+        const syms = ['clover', 'gold', 'star'];
+        let balance = 1000, bet = 10, size = 3, spinning = false;
+
+        function init() {
+            const grid = document.getElementById('grid');
+            grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            grid.innerHTML = '';
+            for(let i=0; i<size*size; i++) grid.innerHTML += `<div class="cell" id="c${i}">${icons.star}</div>`;
+        }
+
+        function resize(d) {
+            if(spinning) return;
+            size = Math.max(3, Math.min(6, size + d));
+            document.getElementById('size-label').innerText = `${size}x${size}`;
+            init();
+        }
+
+        function adjustBet(d) {
+            if(spinning) return;
+            bet = Math.max(10, Math.min(balance, bet + d));
+            document.getElementById('bet').innerText = bet;
+        }
+
+        function play() {
+            if(spinning || balance < bet) return;
+            spinning = true; balance -= bet; document.getElementById('balance').innerText = balance;
+            
+            const results = [];
+            for(let i=0; i<size*size; i++) {
+                const s = syms[Math.floor(Math.random()*syms.length)];
+                results.push(s);
+                document.getElementById(`c${i}`).innerHTML = icons[s];
+            }
+
+            // Simple line win check
+            let win = 0;
+            for(let r=0; r<size; r++) {
+                let match = true;
+                for(let c=1; c<size; c++) {
+                    if(results[r*size + c] !== results[r*size]) match = false;
+                }
+                if(match) win += bet * 5;
+            }
+
+            balance += win;
+            document.getElementById('win').innerText = win;
+            document.getElementById('balance').innerText = balance;
+            spinning = false;
+        }
+
+        init();
+    </script>
+</body>
+</html>

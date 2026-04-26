@@ -1,0 +1,42 @@
+<!-- ./gameroom/games/fishing/index.html v10.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deep Sea Fishing</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="container" style="text-align: center;">
+        <h1>Deep Sea Fishing</h1>
+        <div class="game-box" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+            <div id="out" style="font-size: 5rem;">🌊</div>
+        </div>
+        <div id="status" style="font-weight: bold; margin-bottom: 20px;">Ready to Cast</div>
+        <button id="btn" onclick="cast()" style="width: 200px;">CAST LINE</button>
+        <a href="../../index.html" class="back-link">← BACK</a>
+    </div>
+    <script>
+        let state = 'idle';
+        function cast() {
+            if(state !== 'idle') return;
+            state = 'waiting'; document.getElementById('status').innerText = "Waiting...";
+            document.getElementById('btn').disabled = true;
+            setTimeout(() => {
+                document.getElementById('status').innerText = "BITE! REEL NOW!";
+                document.getElementById('btn').disabled = false;
+                document.getElementById('btn').innerText = "REEL IN";
+                state = 'bite';
+            }, 1000 + Math.random()*2000);
+        }
+        function reel() {
+            const fish = ['🐟','🐠','🐡','🐙','🦈','🦀'];
+            const c = fish[Math.floor(Math.random()*fish.length)];
+            document.getElementById('out').innerText = c;
+            document.getElementById('status').innerText = "You caught a " + c + "!";
+            document.getElementById('btn').innerText = "CAST LINE";
+            state = 'idle';
+        }
+        document.getElementById('btn').addEventListener('click', () => { if(state==='bite') reel(); });
+    </script>
+</body>
+</html>

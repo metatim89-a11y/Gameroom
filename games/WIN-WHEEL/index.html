@@ -1,0 +1,51 @@
+<!-- ./gameroom/games/WIN-WHEEL/index.html v10.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Win Wheel</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .wheel-container { position: relative; width: 300px; height: 300px; margin: 30px auto; }
+        .wheel-svg { width: 100%; height: 100%; transition: transform 3s cubic-bezier(0.1, 0, 0.1, 1); }
+        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--danger); z-index: 10; }
+    </style>
+</head>
+<body>
+    <div class="container" style="text-align: center;">
+        <h1>Win Wheel</h1>
+        <div class="stats" style="justify-content: center; font-size: 1.5rem;">BANK: $<span id="balance">1000</span></div>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <svg class="wheel-svg" id="wheel" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="var(--border)" stroke-width="2"/>
+                <path d="M50,50 L50,2 A48,48 0 0,1 98,50 Z" fill="var(--accent)" opacity="0.8"/>
+                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="var(--card)"/>
+                <path d="M50,50 L50,98 A48,48 0 0,1 2,50 Z" fill="var(--accent)" opacity="0.5"/>
+                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="var(--card)"/>
+                <text x="70" y="30" fill="white" font-size="6" font-weight="bold">10x</text>
+                <text x="70" y="75" fill="white" font-size="6" font-weight="bold">2x</text>
+                <text x="20" y="75" fill="white" font-size="6" font-weight="bold">5x</text>
+                <text x="20" y="30" fill="white" font-size="6" font-weight="bold">0x</text>
+            </svg>
+        </div>
+
+        <button onclick="spin()" style="width: 200px;">SPIN ($10)</button>
+        <a href="../../index.html" class="back-link">← BACK</a>
+    </div>
+    <script>
+        let balance = 1000, rotation = 0;
+        function spin() {
+            if(balance < 10) return alert("Low Funds");
+            balance -= 10; document.getElementById('balance').innerText = balance;
+            rotation += 1800 + Math.random()*360;
+            document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
+            setTimeout(() => {
+                const m = [10, 2, 5, 0][Math.floor(Math.random()*4)];
+                balance += 10 * m;
+                document.getElementById('balance').innerText = balance;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

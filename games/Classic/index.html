@@ -1,0 +1,103 @@
+<!-- ./gameroom/games/Classic/index.html v10.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Retro Classics</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .arcade { background: #000; border: 4px solid var(--border); border-radius: 12px; min-height: 350px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 10px; }
+        .cell { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; cursor: pointer; }
+        .c4-grid { display: grid; grid-template-columns: repeat(7, 40px); gap: 6px; background: #1e40af; padding: 10px; border-radius: 10px; }
+        .c4-cell { width: 40px; height: 40px; background: #fff; border-radius: 50%; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Retro Classics</h1>
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom: 20px;">
+            <button onclick="startTTT()">TIC-TAC-TOE</button>
+            <button onclick="startSnake()">SNAKE</button>
+            <button onclick="startC4()">CONNECT-4</button>
+        </div>
+
+        <div class="arcade" id="screen">
+            <div style="color: #64748b;">INITIALIZE MODULE...</div>
+        </div>
+
+        <div id="controls" style="display:none; gap:10px; justify-content:center; margin-top: 20px;">
+            <button onclick="undo()">UNDO</button>
+            <button onclick="reset()" style="background:#334155; color:white;">RESET</button>
+        </div>
+        <a href="../../index.html" class="back-link">← BACK</a>
+    </div>
+
+    <script>
+        let game = null, state = {}, history = [];
+        const screen = document.getElementById('screen');
+
+        function startTTT() {
+            game = 'ttt'; history = []; state = { board: Array(9).fill(null), turn: 'X' };
+            document.getElementById('controls').style.display = 'flex';
+            render();
+        }
+
+        function startC4() {
+            game = 'c4'; history = []; state = { board: Array(6).fill().map(() => Array(7).fill(null)), turn: 'R' };
+            document.getElementById('controls').style.display = 'flex';
+            render();
+        }
+
+        function startSnake() {
+            game = 'snake'; screen.innerHTML = '<canvas id="s" width="300" height="300"></canvas>';
+            document.getElementById('controls').style.display = 'flex';
+            const c = document.getElementById('s'), ctx = c.getContext('2d');
+            let s = [{x:10,y:10}], f = {x:15,y:15}, dx=1, dy=0;
+            document.onkeydown = e => {
+                if(e.key==='ArrowUp'&&dy===0){dx=0;dy=-1}
+                if(e.key==='ArrowDown'&&dy===0){dx=0;dy=1}
+                if(e.key==='ArrowLeft'&&dx===0){dx=-1;dy=0}
+                if(e.key==='ArrowRight'&&dx===0){dx=1;dy=0}
+            };
+            const loop = setInterval(() => {
+                if(game !== 'snake') return clearInterval(loop);
+                let head = {x: s[0].x+dx, y: s[0].y+dy};
+                if(head.x<0||head.x>=20||head.y<0||head.y>=20||s.some(b=>b.x===head.x&&b.y===head.y)) return clearInterval(loop);
+                s.unshift(head);
+                if(head.x===f.x&&head.y===f.y) f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}; else s.pop();
+                ctx.fillStyle='#000'; ctx.fillRect(0,0,300,300);
+                ctx.fillStyle='#22c55e'; s.forEach(b=>ctx.fillRect(b.x*15,b.y*15,14,14));
+                ctx.fillStyle='#ef4444'; ctx.fillRect(f.x*15,f.y*15,14,14);
+            }, 150);
+        }
+
+        function render() {
+            if(game === 'ttt') {
+                screen.innerHTML = '<div class="ttt-grid">' + state.board.map((v, i) => `<div class="cell" onclick="move(${i})" style="color:${v==='X'?'var(--accent)':'var(--danger)'}">${v||''}</div>`).join('') + '</div>';
+            } else if(game === 'c4') {
+                screen.innerHTML = '<div class="c4-grid">' + state.board.map((row, r) => row.map((v, c) => `<div class="c4-cell" style="background:${v==='R'?'var(--danger)':v==='Y'?'#eab308':'#fff'}" onclick="drop(${c})"></div>`).join('')).join('') + '</div>';
+            }
+        }
+
+        window.move = (i) => {
+            if(state.board[i]) return;
+            history.push(JSON.parse(JSON.stringify(state)));
+            state.board[i] = state.turn; state.turn = state.turn === 'X' ? 'O' : 'X';
+            render();
+        }
+
+        window.drop = (c) => {
+            for(let r=5; r>=0; r--) {
+                if(!state.board[r][c]) {
+                    history.push(JSON.parse(JSON.stringify(state)));
+                    state.board[r][c] = state.turn; state.turn = state.turn === 'R' ? 'Y' : 'R';
+                    render(); break;
+                }
+            }
+        }
+
+        window.undo = () => { if(history.length) { state = history.pop(); render(); } }
+        window.reset = () => { if(game==='ttt') startTTT(); else if(game==='c4') startC4(); else if(game==='snake') startSnake(); }
+    </script>
+</body>
+</html>
