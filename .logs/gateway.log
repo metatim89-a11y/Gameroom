@@ -6,3 +6,8 @@
 ::1 - - [26/Apr/2026 08:58:16] "GET /games/fishing/index.html HTTP/1.1" 200 -
 ::1 - - [26/Apr/2026 08:58:29] "GET /games/WIN-WHEEL/index.html HTTP/1.1" 200 -
 ::1 - - [26/Apr/2026 08:58:32] "GET /games/Classic/index.html HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [26/Apr/2026 09:07:44] "GET / HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [26/Apr/2026 09:07:45] "GET /style.css HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [26/Apr/2026 09:07:45] code 404, message File not found
+::ffff:127.0.0.1 - - [26/Apr/2026 09:07:45] "GET /favicon.ico HTTP/1.1" 404 -
+::ffff:127.0.0.1 - - [26/Apr/2026 09:07:56] "GET /games/Classic/index.html HTTP/1.1" 200 -
