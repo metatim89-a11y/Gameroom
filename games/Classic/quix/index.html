@@ -1,0 +1,74 @@
+<!-- ./gameroom/games/Classic/quix/index.html v1.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quix Flow</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .node { height: 80px; background: #1e293b; border-radius: 12px; border: 2px solid #334155; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .node.active { border-color: var(--accent); background: var(--accent); color: #0f172a; transform: scale(1.1); box-shadow: 0 0 20px var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="container" style="text-align: center;">
+        <h1>Quix Flow</h1>
+        <div id="status" style="font-weight: 800; color: var(--accent); margin-bottom: 20px;">FOLLOW THE FLOW</div>
+        <div class="grid" id="node-grid"></div>
+        <div style="margin-top: 30px;">
+            <button onclick="startGame()">START SEQUENCE</button>
+            <p id="score" style="margin-top: 15px;">LEVEL: 1</p>
+        </div>
+        <a href="../../../index.html" class="back-link">← EXIT</a>
+    </div>
+    <script>
+        let sequence = [], userSequence = [], level = 1, playing = false;
+        function initGrid() {
+            const grid = document.getElementById('node-grid');
+            for(let i=0; i<16; i++) {
+                grid.innerHTML += `<div class="node" id="n${i}" onclick="nodeClick(${i})">${i+1}</div>`;
+            }
+        }
+        function startGame() {
+            sequence = []; userSequence = []; level = 1; playing = true;
+            nextLevel();
+        }
+        function nextLevel() {
+            userSequence = [];
+            sequence.push(Math.floor(Math.random() * 16));
+            document.getElementById('score').innerText = "LEVEL: " + level;
+            playSequence();
+        }
+        async function playSequence() {
+            playing = false;
+            for(let id of sequence) {
+                await flashNode(id);
+                await new Promise(r => setTimeout(r, 300));
+            }
+            playing = true;
+            document.getElementById('status').innerText = "YOUR TURN";
+        }
+        function flashNode(id) {
+            return new Promise(r => {
+                const el = document.getElementById('n'+id);
+                el.classList.add('active');
+                setTimeout(() => { el.classList.remove('active'); r(); }, 500);
+            });
+        }
+        function nodeClick(id) {
+            if(!playing) return;
+            userSequence.push(id);
+            const expected = sequence[userSequence.length-1];
+            if(id !== expected) {
+                document.getElementById('status').innerText = "CORE COLLAPSE! GAME OVER";
+                playing = false;
+            } else if(userSequence.length === sequence.length) {
+                level++;
+                document.getElementById('status').innerText = "LEVEL CLEAR!";
+                setTimeout(nextLevel, 1000);
+            }
+        }
+        initGrid();
+    </script>
+</body>
+</html>

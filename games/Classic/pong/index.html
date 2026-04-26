@@ -1,0 +1,85 @@
+<!-- ./gameroom/games/Classic/pong/index.html v1.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neon Pong</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--accent); border-radius: 20px; padding: 20px; display: inline-block; position: relative; }
+        canvas { background: #050505; border-radius: 10px; box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.2); }
+        .score-row { display: flex; justify-content: space-between; font-size: 2rem; font-weight: 900; margin-bottom: 10px; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="container" style="text-align: center;">
+        <h1>Neon Pong</h1>
+        <div class="score-row">
+            <span id="p1-score">0</span>
+            <span id="p2-score">0</span>
+        </div>
+        <div class="arcade-frame">
+            <canvas id="pong" width="600" height="400"></canvas>
+        </div>
+        <div style="margin-top: 20px;">
+            <button onclick="resetGame()">RESET</button>
+            <p style="font-size: 0.8rem; color: #64748b;">USE UP/DOWN ARROWS OR TOUCH TOP/BOTTOM OF SCREEN</p>
+        </div>
+        <a href="../../../index.html" class="back-link">← EXIT</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
+        let p1Score = 0, p2Score = 0;
+        const paddleWidth = 10, paddleHeight = 80;
+        let p1Y = 160, p2Y = 160;
+        let ballX = 300, ballY = 200, ballDX = 4, ballDY = 4;
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'ArrowUp') p1Y = Math.max(0, p1Y - 20);
+            if(e.key === 'ArrowDown') p1Y = Math.min(canvas.height - paddleHeight, p1Y + 20);
+        });
+
+        function resetBall() {
+            ballX = canvas.width/2; ballY = canvas.height/2;
+            ballDX = -ballDX; ballDY = Math.random() > 0.5 ? 4 : -4;
+        }
+
+        function update() {
+            ballX += ballDX; ballY += ballDY;
+            // AI
+            if(p2Y + paddleHeight/2 < ballY) p2Y += 3;
+            else p2Y -= 3;
+            p2Y = Math.max(0, Math.min(canvas.height - paddleHeight, p2Y));
+
+            if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
+            if(ballX <= paddleWidth) {
+                if(ballY > p1Y && ballY < p1Y + paddleHeight) {
+                    ballDX = -ballDX * 1.05;
+                } else {
+                    p2Score++; document.getElementById('p2-score').innerText = p2Score;
+                    resetBall();
+                }
+            }
+            if(ballX >= canvas.width - paddleWidth) {
+                if(ballY > p2Y && ballY < p2Y + paddleHeight) {
+                    ballDX = -ballDX * 1.05;
+                } else {
+                    p1Score++; document.getElementById('p1-score').innerText = p1Score;
+                    resetBall();
+                }
+            }
+            draw();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(0, p1Y, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth, p2Y, paddleWidth, paddleHeight);
+            ctx.beginPath(); ctx.arc(ballX, ballY, 6, 0, Math.PI*2); ctx.fill();
+        }
+
+        function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
+        setInterval(update, 1000/60);
+    </script>
+</body>
+</html>
