@@ -1,18 +1,25 @@
-<!-- ./gameroom/games/Classic/pong/index.html v1.0 -->
+<!-- ./gameroom/games/Classic/pong/index.html v11.0 - Ultra Neon -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Neon Pong</title>
+    <title>Neon Pong | Digital Refinery</title>
     <link rel="stylesheet" href="../../../style.css">
     <style>
-        .arcade-frame { background: #000; border: 4px solid var(--accent); border-radius: 20px; padding: 20px; display: inline-block; position: relative; }
-        canvas { background: #050505; border-radius: 10px; box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.2); }
-        .score-row { display: flex; justify-content: space-between; font-size: 2rem; font-weight: 900; margin-bottom: 10px; color: var(--accent); }
+        .arcade-frame { 
+            background: #000; border: 4px solid var(--primary); border-radius: 24px; 
+            padding: 15px; display: inline-block; position: relative;
+            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
+        }
+        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; }
+        .score-row { 
+            display: flex; justify-content: space-around; font-size: 3rem; 
+            font-weight: 900; margin-bottom: 20px; color: #fff;
+            text-shadow: 0 0 15px var(--glow); font-family: 'Space Mono', monospace;
+        }
     </style>
 </head>
-<body>
+<body id="game-body">
     <div class="container" style="text-align: center;">
-        <h1>Neon Pong</h1>
         <div class="score-row">
             <span id="p1-score">0</span>
             <span id="p2-score">0</span>
@@ -20,40 +27,42 @@
         <div class="arcade-frame">
             <canvas id="pong" width="600" height="400"></canvas>
         </div>
-        <div style="margin-top: 20px;">
-            <button onclick="resetGame()">RESET</button>
-            <p style="font-size: 0.8rem; color: #64748b;">USE UP/DOWN ARROWS OR TOUCH TOP/BOTTOM OF SCREEN</p>
+        <div style="margin-top: 30px;">
+            <button onclick="resetGame()">RE-INITIALIZE CORE</button>
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top:15px; letter-spacing: 2px;">MANUAL OVERRIDE: ARROW_KEYS</p>
         </div>
-        <a href="../../../index.html" class="back-link">← EXIT</a>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
     </div>
     <script>
         const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
         let p1Score = 0, p2Score = 0;
         const paddleWidth = 10, paddleHeight = 80;
         let p1Y = 160, p2Y = 160;
-        let ballX = 300, ballY = 200, ballDX = 4, ballDY = 4;
+        let ballX = 300, ballY = 200, ballDX = 5, ballDY = 5;
 
         document.addEventListener('keydown', e => {
-            if(e.key === 'ArrowUp') p1Y = Math.max(0, p1Y - 20);
-            if(e.key === 'ArrowDown') p1Y = Math.min(canvas.height - paddleHeight, p1Y + 20);
+            if(e.key === 'ArrowUp') p1Y = Math.max(0, p1Y - 30);
+            if(e.key === 'ArrowDown') p1Y = Math.min(canvas.height - paddleHeight, p1Y + 30);
         });
 
         function resetBall() {
             ballX = canvas.width/2; ballY = canvas.height/2;
-            ballDX = -ballDX; ballDY = Math.random() > 0.5 ? 4 : -4;
+            ballDX = -ballDX / Math.abs(ballDX) * 5; ballDY = (Math.random() - 0.5) * 10;
         }
 
         function update() {
             ballX += ballDX; ballY += ballDY;
-            // AI
-            if(p2Y + paddleHeight/2 < ballY) p2Y += 3;
-            else p2Y -= 3;
+            // AI Logic
+            const targetY = ballY - paddleHeight/2;
+            if(p2Y < targetY) p2Y += 4.5; else p2Y -= 4.5;
             p2Y = Math.max(0, Math.min(canvas.height - paddleHeight, p2Y));
 
             if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
             if(ballX <= paddleWidth) {
                 if(ballY > p1Y && ballY < p1Y + paddleHeight) {
                     ballDX = -ballDX * 1.05;
+                    const deltaY = ballY - (p1Y + paddleHeight/2);
+                    ballDY = deltaY * 0.3;
                 } else {
                     p2Score++; document.getElementById('p2-score').innerText = p2Score;
                     resetBall();
@@ -62,6 +71,8 @@
             if(ballX >= canvas.width - paddleWidth) {
                 if(ballY > p2Y && ballY < p2Y + paddleHeight) {
                     ballDX = -ballDX * 1.05;
+                    const deltaY = ballY - (p2Y + paddleHeight/2);
+                    ballDY = deltaY * 0.3;
                 } else {
                     p1Score++; document.getElementById('p1-score').innerText = p1Score;
                     resetBall();
@@ -71,15 +82,26 @@
         }
 
         function draw() {
-            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(0, p1Y, paddleWidth, paddleHeight);
-            ctx.fillRect(canvas.width - paddleWidth, p2Y, paddleWidth, paddleHeight);
-            ctx.beginPath(); ctx.arc(ballX, ballY, 6, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            // Center Line
+            ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = 'var(--primary)';
+            ctx.shadowBlur = 15; ctx.shadowColor = 'var(--primary)';
+            ctx.fillRect(2, p1Y, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth - 2, p2Y, paddleWidth, paddleHeight);
+            ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
         }
 
         function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
         setInterval(update, 1000/60);
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
     </script>
 </body>
 </html>

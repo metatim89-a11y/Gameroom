@@ -1,158 +1,129 @@
-<!-- ./gameroom/games/WIN-WHEEL/index.html v10.2 -->
+<!-- ./gameroom/games/WIN-WHEEL/index.html v11.0 - Ultra Velocity -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Velocity Wheel</title>
+    <title>Velocity Wheel | Digital Refinery</title>
     <link rel="stylesheet" href="../../style.css">
     <style>
-        .wheel-container { position: relative; width: 340px; height: 340px; margin: 30px auto; }
+        .wheel-shield {
+            width: 360px; height: 360px; margin: 30px auto; position: relative;
+            padding: 15px; border-radius: 50%; background: var(--surface);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px var(--glow);
+            border: 2px solid var(--primary);
+        }
         .wheel-svg { 
             width: 100%; height: 100%; 
-            transition: transform 45s cubic-bezier(0.15, 0, 0.05, 1); 
-            filter: drop-shadow(0 0 20px var(--accent));
+            transition: transform 45s var(--transition-smooth); 
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
         }
         .pointer { 
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); 
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%); 
             width: 0; height: 0; border-left: 20px solid transparent; 
-            border-right: 20px solid transparent; border-top: 40px solid var(--danger); 
-            z-index: 20; filter: drop-shadow(0 0 10px var(--danger));
+            border-right: 20px solid transparent; border-top: 45px solid var(--tertiary); 
+            z-index: 20; filter: drop-shadow(0 0 15px var(--tertiary));
         }
-        .timer-bar { 
-            width: 100%; height: 8px; background: #334155; 
-            border-radius: 4px; margin: 20px 0; overflow: hidden; 
+        .timer-track { 
+            width: 100%; height: 6px; background: rgba(255,255,255,0.05); 
+            border-radius: 3px; margin: 25px 0; overflow: hidden; 
         }
         #timer-fill { 
-            width: 100%; height: 100%; background: var(--accent); 
-            transition: width 1s linear; 
+            width: 100%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary)); 
+            box-shadow: 0 0 10px var(--primary);
         }
-        .phase-label { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
-        .multiplier-badge { background: #1e293b; border: 1px solid var(--border); padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        .monitor {
+            background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px; border-radius: 16px; margin-bottom: 20px;
+            display: flex; justify-content: space-around; font-weight: 900;
+        }
+        .ticker { animation: ptrTick 0.1s infinite alternate; }
+        @keyframes ptrTick { from { transform: translateX(-50%) rotate(-3deg); } to { transform: translateX(-50%) rotate(3deg); } }
     </style>
 </head>
-<body>
+<body id="game-body">
     <div class="container" style="text-align: center;">
-        <h1>Velocity Wheel</h1>
-        
-        <div class="stats" style="justify-content: space-around; margin-bottom: 20px;">
-            <div>BANK: $<span id="balance">1000</span></div>
-            <div>MY BET: $<span id="my-bet">0</span></div>
+        <div class="monitor">
+            <div>BANK: <span id="balance" style="color:var(--primary)">1000</span></div>
+            <div>STAKE: <span id="my-bet" style="color:var(--tertiary)">0</span></div>
         </div>
 
-        <div class="timer-bar"><div id="timer-fill"></div></div>
-        <div id="phase" class="phase-label">Waiting for Bets...</div>
-        <div id="countdown" style="font-size: 2rem; font-weight: 900; margin-bottom: 10px;">35s</div>
+        <div class="timer-track"><div id="timer-fill"></div></div>
+        <div id="phase" style="font-weight: 800; letter-spacing: 3px; color: var(--primary); opacity: 0.8;">BETTING PHASE OPEN</div>
+        <div id="countdown" style="font-size: 3rem; font-weight: 900; margin: 10px 0; font-family: 'Space Mono', monospace;">35</div>
 
-        <div class="wheel-container">
-            <div class="pointer"></div>
+        <div class="wheel-shield">
+            <div id="pointer" class="pointer"></div>
             <svg class="wheel-svg" id="wheel" viewBox="0 0 100 100">
-                <!-- 2x Sector (0-90) -->
-                <path d="M50,50 L50,2 A48,48 0 0,1 98,50 Z" fill="#1e293b" stroke="var(--accent)" stroke-width="0.5"/>
-                <!-- 5x Sector (90-180) -->
-                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="#0f172a" stroke="var(--accent)" stroke-width="0.5"/>
-                <!-- 50x Sector (180-270) -->
-                <path d="M50,50 L50,98 A48,48 0 0,1 2,50 Z" fill="#1e293b" stroke="var(--accent)" stroke-width="0.5"/>
-                <!-- 3x Sector (270-360) -->
-                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="#0f172a" stroke="var(--accent)" stroke-width="0.5"/>
-                
-                <text x="65" y="30" fill="white" font-size="8" font-weight="900" transform="rotate(0, 70, 30)">2x</text>
-                <text x="65" y="75" fill="white" font-size="8" font-weight="900">5x</text>
-                <text x="20" y="75" fill="white" font-size="8" font-weight="900">50x</text>
-                <text x="20" y="30" fill="white" font-size="8" font-weight="900">3x</text>
+                <path d="M50,50 L50,2 A48,48 0 0,1 98,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L50,98 A48,48 0 0,1 2,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <text x="68" y="30" fill="var(--primary)" font-size="7" font-weight="900">2x</text>
+                <text x="68" y="75" fill="var(--primary)" font-size="7" font-weight="900">5x</text>
+                <text x="18" y="75" fill="var(--tertiary)" font-size="7" font-weight="900">50x</text>
+                <text x="18" y="30" fill="var(--secondary)" font-size="7" font-weight="900">3x</text>
             </svg>
         </div>
 
-        <div id="betting-controls" style="margin-top: 20px;">
-            <div style="margin-bottom: 15px;">
-                <button onclick="placeBet(10)">BET $10</button>
-                <button onclick="placeBet(50)">BET $50</button>
-                <button onclick="placeBet(100)">BET $100</button>
-            </div>
-            <button onclick="clearBet()" style="background:#334155; color:white; font-size: 0.8rem;">CLEAR BET</button>
+        <div id="betting-controls" style="margin-top: 30px; display:flex; gap:15px; justify-content:center;">
+            <button onclick="placeBet(10)">+$10</button>
+            <button onclick="placeBet(50)">+$50</button>
+            <button onclick="placeBet(100)">+$100</button>
+            <button onclick="clearBet()" style="background:var(--bg-deep); border-color:#444; color:#666;">RESET</button>
         </div>
 
-        <a href="../../index.html" class="back-link">← EXIT TO GATEWAY</a>
+        <a href="../../index.html" class="back-link">TERMINATE LINK</a>
     </div>
 
     <script>
         let balance = 1000, currentBet = 0, rotation = 0;
-        let phase = 'betting'; // 'betting' or 'spinning'
-        let timer = 35;
+        let phase = 'betting', timer = 35;
 
         function updateUI() {
             document.getElementById('balance').innerText = balance;
             document.getElementById('my-bet').innerText = currentBet;
-            document.getElementById('countdown').innerText = timer + "s";
-            document.getElementById('timer-fill').style.width = (timer / (phase === 'betting' ? 35 : 45) * 100) + "%";
+            document.getElementById('countdown').innerText = timer;
+            const max = phase === 'betting' ? 35 : 45;
+            document.getElementById('timer-fill').style.width = (timer / max * 100) + "%";
+            document.getElementById('timer-fill').style.transition = timer === max ? "none" : "width 1s linear";
         }
 
-        function placeBet(amt) {
-            if(phase !== 'betting' || balance < amt) return;
-            balance -= amt;
-            currentBet += amt;
-            updateUI();
-        }
-
-        function clearBet() {
-            if(phase !== 'betting') return;
-            balance += currentBet;
-            currentBet = 0;
-            updateUI();
-        }
+        function placeBet(amt) { if(phase==='betting' && balance>=amt) { balance-=amt; currentBet+=amt; updateUI(); } }
+        function clearBet() { if(phase==='betting') { balance+=currentBet; currentBet=0; updateUI(); } }
 
         function runCycle() {
-            if(phase === 'betting') {
-                if(timer > 0) {
-                    timer--;
-                } else {
-                    startSpin();
-                }
-            } else {
-                if(timer > 0) {
-                    timer--;
-                } else {
-                    endSpin();
-                }
-            }
+            if(timer > 0) timer--;
+            else phase === 'betting' ? startSpin() : endSpin();
             updateUI();
         }
 
         function startSpin() {
-            phase = 'spinning';
-            timer = 45;
-            document.getElementById('phase').innerText = "Wheel in Motion...";
-            document.getElementById('betting-controls').style.opacity = "0.3";
+            phase = 'spinning'; timer = 45;
+            document.getElementById('phase').innerText = "WHEEL IN MOTION";
+            document.getElementById('betting-controls').style.opacity = "0.2";
+            document.getElementById('pointer').classList.add('ticker');
             
-            // Randomly select winning sector (0=2x, 1=5x, 2=50x, 3=3x)
             const sectorIdx = Math.floor(Math.random() * 4);
-            const extraSpins = 10 * 360; // Many spins for 45s
-            const stopAngle = (sectorIdx * 90) + 45; // Land in middle of sector
-            
-            // Note: SVG wheel starts with 2x at top-right (0-90)
-            // Pointer is at the very top (0 deg)
-            // We want to land on sectorIdx.
+            const extraSpins = 12 * 360;
+            const stopAngle = (sectorIdx * 90) + 45;
             rotation += extraSpins + (360 - (rotation % 360)) + (360 - stopAngle);
             document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
-            
-            // Store the result for later
             window.winMultiplier = [2, 5, 50, 3][sectorIdx];
         }
 
         function endSpin() {
-            const win = currentBet * window.winMultiplier;
-            balance += win;
-            
-            alert(`CYCLE COMPLETE!\nResult: ${window.winMultiplier}x\nWin: $${win}`);
-            
-            phase = 'betting';
-            timer = 35;
-            currentBet = 0;
-            document.getElementById('phase').innerText = "Waiting for Bets...";
+            const win = currentBet * window.winMultiplier; balance += win;
+            document.getElementById('pointer').classList.remove('ticker');
+            phase = 'betting'; timer = 35; currentBet = 0;
+            document.getElementById('phase').innerText = "BETTING PHASE OPEN";
             document.getElementById('betting-controls').style.opacity = "1";
             updateUI();
         }
 
         setInterval(runCycle, 1000);
-        updateUI();
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
     </script>
 </body>
 </html>

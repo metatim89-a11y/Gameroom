@@ -1,42 +1,117 @@
-<!-- ./gameroom/games/fishing/index.html v10.0 -->
+<!-- ./gameroom/games/fishing/index.html v11.0 - Ultra Deep Sea -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Deep Sea Fishing</title>
+    <title>Deep Sea Fishing | Digital Refinery</title>
     <link rel="stylesheet" href="../../style.css">
+    <style>
+        .water-chamber {
+            height: 400px; border-radius: 30px; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+            border: 2px solid var(--primary); box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .bubble-stream {
+            position: absolute; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 10%);
+            background-size: 100px 100px; animation: bubbleFlow 10s linear infinite;
+        }
+        @keyframes bubbleFlow { from { background-position: 0 0; } to { background-position: 0 -400px; } }
+
+        #hook { 
+            font-size: 6rem; z-index: 10; transition: all 0.5s var(--transition-bounce); 
+            filter: drop-shadow(0 0 20px var(--glow)); cursor: pointer;
+        }
+        
+        .hook-float { animation: hFloat 3s infinite ease-in-out; }
+        @keyframes hFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-40px) rotate(2deg); } }
+        
+        .sonar-ping {
+            position: absolute; width: 20px; height: 20px; border: 2px solid var(--primary);
+            border-radius: 50%; animation: ping 2s infinite; opacity: 0;
+        }
+        @keyframes ping { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(10); opacity: 0; } }
+
+        .depth-gauge {
+            position: absolute; left: 30px; top: 30px; bottom: 30px; width: 8px;
+            background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;
+        }
+        #depth-fill { position: absolute; bottom: 0; width: 100%; height: 0%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: height 2s ease-in-out; }
+    </style>
 </head>
-<body>
+<body id="game-body">
     <div class="container" style="text-align: center;">
-        <h1>Deep Sea Fishing</h1>
-        <div class="game-box" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-            <div id="out" style="font-size: 5rem;">🌊</div>
+        <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900;">
+            <div>PRESSURE: <span style="color:var(--primary)">OPTIMAL</span></div>
+            <div>STATUS: <span id="status-text" style="color:var(--tertiary)">IDLE</span></div>
         </div>
-        <div id="status" style="font-weight: bold; margin-bottom: 20px;">Ready to Cast</div>
-        <button id="btn" onclick="cast()" style="width: 200px;">CAST LINE</button>
-        <a href="../../index.html" class="back-link">← BACK</a>
+
+        <div class="water-chamber">
+            <div class="bubble-stream"></div>
+            <div class="sonar-ping"></div>
+            <div class="depth-gauge"><div id="depth-fill"></div></div>
+            <div id="hook" class="hook-float">🌊</div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <button id="btn" onclick="cast()" style="min-width: 250px; font-size: 1.2rem;">DEPLOY RECOVERY HOOK</button>
+        </div>
+
+        <a href="../../index.html" class="back-link">ABORT MISSION</a>
     </div>
+
     <script>
         let state = 'idle';
         function cast() {
             if(state !== 'idle') return;
-            state = 'waiting'; document.getElementById('status').innerText = "Waiting...";
-            document.getElementById('btn').disabled = true;
+            state = 'waiting';
+            const hook = document.getElementById('hook');
+            const depth = document.getElementById('depth-fill');
+            const status = document.getElementById('status-text');
+            const btn = document.getElementById('btn');
+
+            btn.disabled = true;
+            status.innerText = "DESCENDING";
+            hook.innerText = "⚓";
+            depth.style.height = "85%";
+
             setTimeout(() => {
-                document.getElementById('status').innerText = "BITE! REEL NOW!";
-                document.getElementById('btn').disabled = false;
-                document.getElementById('btn').innerText = "REEL IN";
+                status.innerText = "CONTACT!";
+                status.style.color = "var(--primary)";
+                hook.innerText = "⚡";
+                btn.disabled = false;
+                btn.innerText = "RECOVER ASSET";
                 state = 'bite';
-            }, 1000 + Math.random()*2000);
+            }, 1500 + Math.random()*2000);
         }
+
         function reel() {
-            const fish = ['🐟','🐠','🐡','🐙','🦈','🦀'];
+            const fish = ['🐟','🐠','🐡','🐙','🦈','🦀','💎','👑'];
             const c = fish[Math.floor(Math.random()*fish.length)];
-            document.getElementById('out').innerText = c;
-            document.getElementById('status').innerText = "You caught a " + c + "!";
-            document.getElementById('btn').innerText = "CAST LINE";
+            const hook = document.getElementById('hook');
+            const depth = document.getElementById('depth-fill');
+            const status = document.getElementById('status-text');
+            const btn = document.getElementById('btn');
+
+            hook.innerText = c;
+            depth.style.height = "0%";
+            status.innerText = "ASSET SECURED";
+            status.style.color = "var(--tertiary)";
+            btn.innerText = "DEPLOY AGAIN";
             state = 'idle';
+            
+            // Visual pop
+            hook.style.transform = "scale(1.5)";
+            setTimeout(() => hook.style.transform = "scale(1)", 400);
         }
+
         document.getElementById('btn').addEventListener('click', () => { if(state==='bite') reel(); });
+
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
     </script>
 </body>
 </html>

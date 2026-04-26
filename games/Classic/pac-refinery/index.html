@@ -1,75 +1,85 @@
-<!DOCTYPE html><html><head><title>PAC-REFINERY</title>
-<style>
-    body { background:#000; color:#00ff41; font-family:monospace; text-align:center; overflow:hidden; }
-    canvas { border:2px solid #00ff41; background:#050505; margin-top:20px; }
-    .stats { font-size:1.5em; margin:10px; }
-</style></head><body>
-    <h1>🟡 PAC-REFINERY</h1>
-    <div class="stats">SCORE: <span id="score">0</span></div>
-    <canvas id="game" width="360" height="360"></canvas>
-    <div style="margin-top:20px;">[ ARROW KEYS TO MOVE ]</div>
-    <a href="../index.html" style="display:block;margin-top:20px;color:#00ff41;">← BACK TO CLASSICS</a>
+<!-- ./gameroom/games/Classic/pac-refinery/index.html v11.0 - Ultra Pac -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pac-Refinery | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { 
+            background: #000; border: 4px solid var(--primary); border-radius: 24px; 
+            padding: 15px; display: inline-block; position: relative;
+            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
+        }
+        canvas { background: #050508; border-radius: 12px; }
+        .score-badge { 
+            font-size: 1.5rem; font-weight: 900; background: var(--surface); 
+            color: var(--primary); padding: 10px 30px; border-radius: 30px; 
+            border: 1px solid var(--primary); display: inline-block;
+            margin-bottom: 20px; font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">SCRAP: <span id="score">0000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="400" height="400"></canvas>
+        </div>
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">DIRECTIONAL_ARROWS: NAVIGATE_GRID</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
 
 <script>
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 
-let score = 0;
-let pacman = { x: 180, y: 180, size: 15, dir: 'right' };
-let dots = [];
+let score = 0, dots = [];
+let pacman = { x: 200, y: 200, size: 18, dir: 'right', nextDir: 'right' };
 
-// Generate Refinery Scraps (Dots)
-for(let i=0; i<20; i++) {
-    dots.push({ x: Math.random()*340+10, y: Math.random()*340+10 });
-}
+for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,400,400);
     
     // Draw Dots
-    ctx.fillStyle = '#00ff41';
-    dots.forEach(dot => {
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, 3, 0, Math.PI*2);
-        ctx.fill();
-    });
+    ctx.fillStyle = 'var(--primary)';
+    ctx.shadowBlur = 10; ctx.shadowColor = 'var(--primary)';
+    dots.forEach(dot => { ctx.beginPath(); ctx.arc(dot.x, dot.y, 3, 0, Math.PI*2); ctx.fill(); });
 
     // Draw Pacman
-    ctx.fillStyle = '#ffff00';
+    ctx.fillStyle = '#ffff00'; ctx.shadowColor = '#ffff00';
     ctx.beginPath();
-    let startAngle = (pacman.dir === 'right') ? 0.2 * Math.PI : (pacman.dir === 'left') ? 1.2 * Math.PI : (pacman.dir === 'up') ? 1.7 * Math.PI : 0.7 * Math.PI;
-    let endAngle = startAngle + 1.6 * Math.PI;
+    let startAngle = (pacman.dir==='right')?0.2:(pacman.dir==='left')?1.2:(pacman.dir==='up')?1.7:0.7;
+    let endAngle = startAngle + 1.6;
     ctx.moveTo(pacman.x, pacman.y);
-    ctx.arc(pacman.x, pacman.y, pacman.size, startAngle, endAngle);
+    ctx.arc(pacman.x, pacman.y, pacman.size, startAngle*Math.PI, endAngle*Math.PI);
     ctx.fill();
+    ctx.shadowBlur = 0;
 
     update();
     requestAnimationFrame(draw);
 }
 
 function update() {
-    if(pacman.dir === 'right') pacman.x += 2;
-    if(pacman.dir === 'left') pacman.x -= 2;
-    if(pacman.dir === 'up') pacman.y -= 2;
-    if(pacman.dir === 'down') pacman.y += 2;
+    const speed = 3;
+    if(pacman.dir==='right') pacman.x+=speed; if(pacman.dir==='left') pacman.x-=speed;
+    if(pacman.dir==='up') pacman.y-=speed; if(pacman.dir==='down') pacman.y+=speed;
 
-    // Screen Wrap
-    if(pacman.x > 360) pacman.x = 0;
-    if(pacman.x < 0) pacman.x = 360;
-    if(pacman.y > 360) pacman.y = 0;
-    if(pacman.y < 0) pacman.y = 360;
+    if(pacman.x>400) pacman.x=0; if(pacman.x<0) pacman.x=400;
+    if(pacman.y>400) pacman.y=0; if(pacman.y<0) pacman.y=400;
 
-    // Collision Check
     dots = dots.filter(dot => {
-        let dist = Math.hypot(pacman.x - dot.x, pacman.y - dot.y);
-        if(dist < pacman.size) {
-            score += 10;
-            scoreEl.innerText = score;
+        if(Math.hypot(pacman.x-dot.x, pacman.y-dot.y) < pacman.size) {
+            score+=10; scoreEl.innerText = score.toString().padStart(4, '0');
             return false;
         }
         return true;
     });
+    if(dots.length === 0) {
+        for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
+    }
 }
 
 window.addEventListener('keydown', e => {
@@ -79,5 +89,9 @@ window.addEventListener('keydown', e => {
     if(e.key === 'ArrowDown') pacman.dir = 'down';
 });
 
-draw();
+window.onload = () => {
+    const t = localStorage.getItem('refinery-theme');
+    if(t) document.body.setAttribute('data-theme', t);
+    draw();
+}
 </script></body></html>

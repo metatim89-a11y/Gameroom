@@ -1,77 +1,125 @@
-<!DOCTYPE html><html><head><title>DEBRIS DISPOSAL</title>
-<style>
-    body { background:#000; color:#00ff41; font-family:monospace; text-align:center; overflow:hidden; }
-    canvas { border:2px solid #00ff41; background:#050505; }
-</style></head><body>
-    <h1>☄️ DEBRIS DISPOSAL</h1>
-    <canvas id="game" width="400" height="400"></canvas>
-    <div style="margin-top:10px;">[ ARROWS: Move | SPACE: Pulse ]</div>
-    <a href="../index.html" style="display:block;margin-top:15px;color:#00ff41;">← BACK</a>
+<!-- ./gameroom/games/Classic/asteroids/index.html v11.0 - Ultra Asteroids -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asteroids Core | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { 
+            background: #000; border: 4px solid var(--tertiary); border-radius: 24px; 
+            padding: 15px; display: inline-block; position: relative;
+            box-shadow: 0 0 30px rgba(255, 0, 122, 0.3), inset 0 0 20px rgba(255, 0, 122, 0.2);
+        }
+        canvas { background: #050508; border-radius: 12px; }
+        .score-badge { 
+            font-size: 1.2rem; font-weight: 900; background: var(--surface); 
+            color: var(--tertiary); padding: 10px 30px; border-radius: 30px; 
+            border: 1px solid var(--tertiary); display: inline-block;
+            margin-bottom: 20px; font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">DEBRIS_CLEARED: <span id="score">000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="600" height="450"></canvas>
+        </div>
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS: THRUST/ROTATE | SPACE: PULSE_CANNON</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
 
 <script>
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+let score = 0;
+let ship = { x:300, y:225, r:15, a:0, rot:0, thrust:false, vel:{x:0, y:0} };
+let bullets = [], debris = [];
 
-let ship = { x:200, y:200, r:15, a:0, rot:0, thrust:false, vel:{x:0, y:0} };
-let bullets = [];
-let debris = [];
-
-// Create initial scraps
-for(let i=0; i<5; i++) {
-    debris.push({ x:Math.random()*400, y:Math.random()*400, vx:Math.random()*2-1, vy:Math.random()*2-1, r:20 });
+function initDebris() {
+    debris = [];
+    for(let i=0; i<8; i++) {
+        debris.push({ 
+            x:Math.random()*canvas.width, y:Math.random()*canvas.height, 
+            vx:Math.random()*2-1, vy:Math.random()*2-1, r:Math.random()*20+15,
+            points: Math.floor(Math.random()*5+5)
+        });
+    }
 }
 
 function draw() {
-    ctx.clearRect(0, 0, 400, 400);
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
     
     // Draw Ship
-    ctx.strokeStyle = ship.thrust ? '#ff0000' : '#00ff41';
+    ctx.strokeStyle = ship.thrust ? 'var(--primary)' : 'var(--text)';
+    ctx.shadowBlur = ship.thrust ? 15 : 0; ctx.shadowColor = 'var(--primary)';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(ship.x + ship.r * Math.cos(ship.a), ship.y + ship.r * Math.sin(ship.a));
     ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) - Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) + Math.cos(ship.a)));
     ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) + Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) - Math.cos(ship.a)));
     ctx.closePath(); ctx.stroke();
+    ctx.shadowBlur = 0;
 
-    // Draw Bullets & Debris
-    ctx.fillStyle = '#00ff41';
+    // Bullets
+    ctx.fillStyle = 'var(--primary)';
     bullets.forEach((b, i) => {
-        ctx.fillRect(b.x, b.y, 2, 2);
+        ctx.beginPath(); ctx.arc(b.x, b.y, 2, 0, Math.PI*2); ctx.fill();
         b.x += b.vx; b.y += b.vy;
-        if(b.x<0 || b.x>400 || b.y<0 || b.y>400) bullets.splice(i, 1);
+        if(b.x<0 || b.x>canvas.width || b.y<0 || b.y>canvas.height) bullets.splice(i, 1);
     });
 
+    // Debris
+    ctx.strokeStyle = 'var(--tertiary)';
     debris.forEach((d, i) => {
-        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI*2); ctx.stroke();
-        d.x += d.vx; d.y += d.vy;
-        if(d.x<0) d.x=400; if(d.x>400) d.x=0; if(d.y<0) d.y=400; if(d.y>400) d.y=0;
+        ctx.beginPath();
+        for(let p=0; p<d.points; p++) {
+            let angle = (p/d.points)*Math.PI*2;
+            let rx = d.x + d.r * Math.cos(angle);
+            let ry = d.y + d.r * Math.sin(angle);
+            if(p===0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry);
+        }
+        ctx.closePath(); ctx.stroke();
         
-        // Hit detection
+        d.x += d.vx; d.y += d.vy;
+        if(d.x<0) d.x=canvas.width; if(d.x>canvas.width) d.x=0;
+        if(d.y<0) d.y=canvas.height; if(d.y>canvas.height) d.y=0;
+
         bullets.forEach((b, bi) => {
             if(Math.hypot(d.x-b.x, d.y-b.y) < d.r) {
                 debris.splice(i, 1); bullets.splice(bi, 1);
-                debris.push({x:Math.random()*400, y:Math.random()*400, vx:Math.random()*2-1, vy:Math.random()*2-1, r:20});
+                score += 10; document.getElementById('score').innerText = score.toString().padStart(3, '0');
+                if(debris.length < 5) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*3-1.5, vy:Math.random()*3-1.5, r:20, points:7});
             }
         });
     });
 
-    // Physics
-    if(ship.thrust) { ship.vel.x += 0.1 * Math.cos(ship.a); ship.vel.y += 0.1 * Math.sin(ship.a); }
+    if(ship.thrust) { ship.vel.x += 0.15 * Math.cos(ship.a); ship.vel.y += 0.15 * Math.sin(ship.a); }
+    ship.vel.x *= 0.99; ship.vel.y *= 0.99;
     ship.x += ship.vel.x; ship.y += ship.vel.y;
     ship.a += ship.rot;
-    if(ship.x<0) ship.x=400; if(ship.x>400) ship.x=0; if(ship.y<0) ship.y=400; if(ship.y>400) ship.y=0;
+    if(ship.x<0) ship.x=canvas.width; if(ship.x>canvas.width) ship.x=0;
+    if(ship.y<0) ship.y=canvas.height; if(ship.y>canvas.height) ship.y=0;
 
     requestAnimationFrame(draw);
 }
 
 window.onkeydown = e => {
     if(e.key=='ArrowUp') ship.thrust=true;
-    if(e.key=='ArrowLeft') ship.rot=-0.1;
-    if(e.key=='ArrowRight') ship.rot=0.1;
-    if(e.key==' ') bullets.push({x:ship.x, y:ship.y, vx:5*Math.cos(ship.a), vy:5*Math.sin(ship.a)});
+    if(e.key=='ArrowLeft') ship.rot=-0.08;
+    if(e.key=='ArrowRight') ship.rot=0.08;
+    if(e.key==' ') bullets.push({x:ship.x, y:ship.y, vx:7*Math.cos(ship.a), vy:7*Math.sin(ship.a)});
 };
 window.onkeyup = e => {
     if(e.key=='ArrowUp') ship.thrust=false;
     if(e.key=='ArrowLeft' || e.key=='ArrowRight') ship.rot=0;
 };
-draw();
+
+window.onload = () => {
+    const t = localStorage.getItem('refinery-theme');
+    if(t) document.body.setAttribute('data-theme', t);
+    initDebris();
+    draw();
+}
 </script></body></html>
