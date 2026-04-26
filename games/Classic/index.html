@@ -106,16 +106,26 @@
 
         function startSnake() {
             game = 'snake'; over = false; status.innerText = "SNAKE_CORE.EXE";
-            view.innerHTML = '<canvas id="s" width="300" height="300" style="filter:drop-shadow(0 0 10px var(--primary))"></canvas>';
+            view.innerHTML = `
+                <canvas id="s" width="300" height="300" style="filter:drop-shadow(0 0 10px var(--primary))"></canvas>
+                <div class="mobile-controls">
+                    <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
+                    <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
+                    <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
+                    <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
+                </div>
+            `;
             document.getElementById('controls').style.display = 'flex';
             const c = document.getElementById('s'), ctx = c.getContext('2d');
             let s = [{x:10,y:10}], f = {x:15,y:15}, dx=1, dy=0;
-            document.onkeydown = e => {
-                if(e.key==='ArrowUp'&&dy===0){dx=0;dy=-1}
-                if(e.key==='ArrowDown'&&dy===0){dx=0;dy=1}
-                if(e.key==='ArrowLeft'&&dx===0){dx=-1;dy=0}
-                if(e.key==='ArrowRight'&&dx===0){dx=1;dy=0}
+            
+            window.handleControl = (key) => {
+                if(key==='ArrowUp'&&dy===0){dx=0;dy=-1}
+                if(key==='ArrowDown'&&dy===0){dx=0;dy=1}
+                if(key==='ArrowLeft'&&dx===0){dx=-1;dy=0}
+                if(key==='ArrowRight'&&dx===0){dx=1;dy=0}
             };
+            document.onkeydown = e => handleControl(e.key);
             const loop = setInterval(() => {
                 if(game !== 'snake' || over) return clearInterval(loop);
                 let head = {x: s[0].x+dx, y: s[0].y+dy};

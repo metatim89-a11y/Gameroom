@@ -1,22 +1,13 @@
-<!-- ./gameroom/games/Classic/pac-refinery/index.html v11.0 - Ultra Pac -->
+<!-- ./gameroom/games/Classic/pac-refinery/index.html v11.1 - Mobile Friendly -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Pac-Refinery | Digital Refinery</title>
     <link rel="stylesheet" href="../../../style.css">
     <style>
-        .arcade-frame { 
-            background: #000; border: 4px solid var(--primary); border-radius: 24px; 
-            padding: 15px; display: inline-block; position: relative;
-            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
-        }
-        canvas { background: #050508; border-radius: 12px; }
-        .score-badge { 
-            font-size: 1.5rem; font-weight: 900; background: var(--surface); 
-            color: var(--primary); padding: 10px 30px; border-radius: 30px; 
-            border: 1px solid var(--primary); display: inline-block;
-            margin-bottom: 20px; font-family: 'Space Mono', monospace;
-        }
+        .arcade-frame { background: #000; border: 4px solid var(--primary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow); }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { font-size: 1.5rem; font-weight: 900; background: var(--surface); color: var(--primary); padding: 10px 30px; border-radius: 30px; border: 1px solid var(--primary); display: inline-block; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
     </style>
 </head>
 <body id="game-body">
@@ -25,8 +16,16 @@
         <div class="arcade-frame">
             <canvas id="game" width="400" height="400"></canvas>
         </div>
+        
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
+            <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
+            <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
+            <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
+        </div>
+
         <div style="margin-top: 30px;">
-            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">DIRECTIONAL_ARROWS: NAVIGATE_GRID</p>
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS OR TOUCH: NAVIGATE</p>
         </div>
         <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
     </div>
@@ -34,64 +33,167 @@
 <script>
 const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
-
 let score = 0, dots = [];
-let pacman = { x: 200, y: 200, size: 18, dir: 'right', nextDir: 'right' };
+let pacman = { x: 200, y: 200, size: 18, dir: 'right' };
 
 for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
 
+function handleControl(key) {
+    if(key === 'ArrowRight') pacman.dir = 'right';
+    if(key === 'ArrowLeft') pacman.dir = 'left';
+    if(key === 'ArrowUp') pacman.dir = 'up';
+    if(key === 'ArrowDown') pacman.dir = 'down';
+}
+
 function draw() {
     ctx.fillStyle = '#050508'; ctx.fillRect(0,0,400,400);
-    
-    // Draw Dots
-    ctx.fillStyle = 'var(--primary)';
-    ctx.shadowBlur = 10; ctx.shadowColor = 'var(--primary)';
+    ctx.fillStyle = 'var(--primary)'; ctx.shadowBlur = 10; ctx.shadowColor = 'var(--primary)';
     dots.forEach(dot => { ctx.beginPath(); ctx.arc(dot.x, dot.y, 3, 0, Math.PI*2); ctx.fill(); });
-
-    // Draw Pacman
-    ctx.fillStyle = '#ffff00'; ctx.shadowColor = '#ffff00';
-    ctx.beginPath();
-    let startAngle = (pacman.dir==='right')?0.2:(pacman.dir==='left')?1.2:(pacman.dir==='up')?1.7:0.7;
-    let endAngle = startAngle + 1.6;
-    ctx.moveTo(pacman.x, pacman.y);
-    ctx.arc(pacman.x, pacman.y, pacman.size, startAngle*Math.PI, endAngle*Math.PI);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    update();
-    requestAnimationFrame(draw);
+    ctx.fillStyle = '#ffff00'; ctx.shadowColor = '#ffff00'; ctx.beginPath();
+    let sA = (pacman.dir==='right')?0.2:(pacman.dir==='left')?1.2:(pacman.dir==='up')?1.7:0.7;
+    let eA = sA + 1.6; ctx.moveTo(pacman.x, pacman.y); ctx.arc(pacman.x, pacman.y, pacman.size, sA*Math.PI, eA*Math.PI); ctx.fill();
+    ctx.shadowBlur = 0; update(); requestAnimationFrame(draw);
 }
 
 function update() {
     const speed = 3;
     if(pacman.dir==='right') pacman.x+=speed; if(pacman.dir==='left') pacman.x-=speed;
     if(pacman.dir==='up') pacman.y-=speed; if(pacman.dir==='down') pacman.y+=speed;
-
-    if(pacman.x>400) pacman.x=0; if(pacman.x<0) pacman.x=400;
-    if(pacman.y>400) pacman.y=0; if(pacman.y<0) pacman.y=400;
-
+    if(pacman.x>400) pacman.x=0; if(pacman.x<0) pacman.x=400; if(pacman.y>400) pacman.y=0; if(pacman.y<0) pacman.y=400;
     dots = dots.filter(dot => {
-        if(Math.hypot(pacman.x-dot.x, pacman.y-dot.y) < pacman.size) {
-            score+=10; scoreEl.innerText = score.toString().padStart(4, '0');
-            return false;
-        }
+        if(Math.hypot(pacman.x-dot.x, pacman.y-dot.y) < pacman.size) { score+=10; scoreEl.innerText = score.toString().padStart(4, '0'); return false; }
         return true;
     });
-    if(dots.length === 0) {
-        for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
-    }
+    if(dots.length === 0) for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
 }
 
-window.addEventListener('keydown', e => {
-    if(e.key === 'ArrowRight') pacman.dir = 'right';
-    if(e.key === 'ArrowLeft') pacman.dir = 'left';
-    if(e.key === 'ArrowUp') pacman.dir = 'up';
-    if(e.key === 'ArrowDown') pacman.dir = 'down';
-});
-
-window.onload = () => {
-    const t = localStorage.getItem('refinery-theme');
-    if(t) document.body.setAttribute('data-theme', t);
-    draw();
-}
+window.addEventListener('keydown', e => handleControl(e.key));
+window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); draw(); }
 </script></body></html>
+
+# Update Asteroids with Mobile Controls
+cat << 'EOF' > gameroom/games/Classic/asteroids/index.html
+<!-- ./gameroom/games/Classic/asteroids/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asteroids Core | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--tertiary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px rgba(255, 0, 122, 0.3), inset 0 0 20px rgba(255, 0, 122, 0.2); }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { font-size: 1.2rem; font-weight: 900; background: var(--surface); color: var(--tertiary); padding: 10px 30px; border-radius: 30px; border: 1px solid var(--tertiary); display: inline-block; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
+        .fire-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--tertiary); color: #000; font-weight: 900; display: none; align-items: center; justify-content: center; position: fixed; bottom: 30px; right: 30px; z-index: 100; box-shadow: 0 0 20px var(--tertiary); }
+        @media (pointer: coarse) { .fire-btn { display: flex; } }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">DEBRIS_CLEARED: <span id="score">000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="600" height="450"></canvas>
+        </div>
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" ontouchstart="handleControl('ArrowUp', true)" ontouchend="handleControl('ArrowUp', false)">▲</div>
+            <div class="d-btn" style="grid-area: left" ontouchstart="handleControl('ArrowLeft', true)" ontouchend="handleControl('ArrowLeft', false)">◀</div>
+            <div class="d-btn" style="grid-area: right" ontouchstart="handleControl('ArrowRight', true)" ontouchend="handleControl('ArrowRight', false)">▶</div>
+        </div>
+        <div class="fire-btn" ontouchstart="fire()">FIRE</div>
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS OR TOUCH: COMMAND_SHIP</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+let score = 0, ship = { x:300, y:225, r:15, a:0, rot:0, thrust:false, vel:{x:0, y:0} };
+let bullets = [], debris = [];
+
+function fire() { bullets.push({x:ship.x, y:ship.y, vx:7*Math.cos(ship.a), vy:7*Math.sin(ship.a)}); }
+function handleControl(key, active) {
+    if(key=='ArrowUp') ship.thrust=active;
+    if(key=='ArrowLeft') ship.rot=active?-0.08:0;
+    if(key=='ArrowRight') ship.rot=active?0.08:0;
+    if(key==' ' && active) fire();
+}
+
+function draw() {
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = ship.thrust ? 'var(--primary)' : 'var(--text)'; ctx.shadowBlur = ship.thrust ? 15 : 0; ctx.shadowColor = 'var(--primary)'; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.moveTo(ship.x + ship.r * Math.cos(ship.a), ship.y + ship.r * Math.sin(ship.a));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) - Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) + Math.cos(ship.a)));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) + Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) - Math.cos(ship.a)));
+    ctx.closePath(); ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.fillStyle = 'var(--primary)'; bullets.forEach((b, i) => { ctx.beginPath(); ctx.arc(b.x, b.y, 2, 0, Math.PI*2); ctx.fill(); b.x += b.vx; b.y += b.vy; if(b.x<0 || b.x>canvas.width || b.y<0 || b.y>canvas.height) bullets.splice(i, 1); });
+    ctx.strokeStyle = 'var(--tertiary)'; debris.forEach((d, i) => {
+        ctx.beginPath(); for(let p=0; p<d.points; p++) { let ang = (p/d.points)*Math.PI*2; let rx = d.x + d.r * Math.cos(ang), ry = d.y + d.r * Math.sin(ang); if(p===0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry); }
+        ctx.closePath(); ctx.stroke(); d.x += d.vx; d.y += d.vy; if(d.x<0) d.x=canvas.width; if(d.x>canvas.width) d.x=0; if(d.y<0) d.y=canvas.height; if(d.y>canvas.height) d.y=0;
+        bullets.forEach((b, bi) => { if(Math.hypot(d.x-b.x, d.y-b.y) < d.r) { debris.splice(i, 1); bullets.splice(bi, 1); score += 10; document.getElementById('score').innerText = score.toString().padStart(3, '0'); if(debris.length < 5) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*3-1.5, vy:Math.random()*3-1.5, r:20, points:7}); } });
+    });
+    if(ship.thrust) { ship.vel.x += 0.15 * Math.cos(ship.a); ship.vel.y += 0.15 * Math.sin(ship.a); }
+    ship.vel.x *= 0.99; ship.vel.y *= 0.99; ship.x += ship.vel.x; ship.y += ship.vel.y; ship.a += ship.rot;
+    if(ship.x<0) ship.x=canvas.width; if(ship.x>canvas.width) ship.x=0; if(ship.y<0) ship.y=canvas.height; if(ship.y>canvas.height) ship.y=0;
+    requestAnimationFrame(draw);
+}
+window.onkeydown = e => handleControl(e.key, true);
+window.onkeyup = e => handleControl(e.key, false);
+window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); debris=[]; for(let i=0; i<8; i++) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*2-1, vy:Math.random()*2-1, r:Math.random()*20+15, points:Math.floor(Math.random()*5+5)}); draw(); }
+</script></body></html>
+
+# Update Pong with Mobile Controls
+cat << 'EOF' > gameroom/games/Classic/pong/index.html
+<!-- ./gameroom/games/Classic/pong/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neon Pong | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--primary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow); }
+        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; max-width: 90vw; height: auto; }
+        .score-row { display: flex; justify-content: space-around; font-size: 3rem; font-weight: 900; margin-bottom: 20px; color: #fff; text-shadow: 0 0 15px var(--glow); font-family: 'Space Mono', monospace; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-row"><span id="p1-score">0</span><span id="p2-score">0</span></div>
+        <div class="arcade-frame">
+            <canvas id="pong" width="600" height="400"></canvas>
+        </div>
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" ontouchstart="handleControl('ArrowUp', true)" ontouchend="handleControl('ArrowUp', false)">▲</div>
+            <div class="d-btn" style="grid-area: down" ontouchstart="handleControl('ArrowDown', true)" ontouchend="handleControl('ArrowDown', false)">▼</div>
+        </div>
+        <div style="margin-top: 30px;">
+            <button onclick="resetGame()">RE-INITIALIZE CORE</button>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
+        let p1Score = 0, p2Score = 0, p1Y = 160, p2Y = 160, ballX = 300, ballY = 200, ballDX = 5, ballDY = 5;
+        let upPressed = false, downPressed = false;
+        function handleControl(key, active) { if(key === 'ArrowUp') upPressed = active; if(key === 'ArrowDown') downPressed = active; }
+        function resetBall() { ballX = canvas.width/2; ballY = canvas.height/2; ballDX = -ballDX / Math.abs(ballDX) * 5; ballDY = (Math.random() - 0.5) * 10; }
+        function update() {
+            if(upPressed) p1Y = Math.max(0, p1Y - 6); if(downPressed) p1Y = Math.min(canvas.height - 80, p1Y + 6);
+            ballX += ballDX; ballY += ballDY; const targetY = ballY - 40;
+            if(p2Y < targetY) p2Y += 4.5; else p2Y -= 4.5; p2Y = Math.max(0, Math.min(canvas.height - 80, p2Y));
+            if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
+            if(ballX <= 10) { if(ballY > p1Y && ballY < p1Y + 80) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p1Y + 40)) * 0.3; } else { p2Score++; document.getElementById('p2-score').innerText = p2Score; resetBall(); } }
+            if(ballX >= canvas.width - 10) { if(ballY > p2Y && ballY < p2Y + 80) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p2Y + 40)) * 0.3; } else { p1Score++; document.getElementById('p1-score').innerText = p1Score; resetBall(); } }
+            draw();
+        }
+        function draw() {
+            ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
+            ctx.fillStyle = 'var(--primary)'; ctx.shadowBlur = 15; ctx.shadowColor = 'var(--primary)';
+            ctx.fillRect(2, p1Y, 10, 80); ctx.fillRect(canvas.width - 12, p2Y, 10, 80); ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+        }
+        function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
+        window.addEventListener('keydown', e => handleControl(e.key, true)); window.addEventListener('keyup', e => handleControl(e.key, false));
+        setInterval(update, 1000/60);
+        window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); }
+    </script>
+</body>
+</html>
