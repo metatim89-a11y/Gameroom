@@ -1,13 +1,31 @@
-<!-- ./gameroom/index.html v10.6 -->
+<!-- ./gameroom/index.html v11.0 -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Digital Refinery</title>
+    <title>Digital Refinery | Premium Gaming Suite</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .hero { margin: 80px 0; text-align: center; }
+        .hero p { color: var(--primary); font-weight: 800; letter-spacing: 10px; margin-top: 10px; text-transform: uppercase; font-size: 0.8rem; }
+        .theme-selector { position: fixed; top: 20px; right: 20px; z-index: 100; }
+        select { background: var(--surface); color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 8px; outline: none; cursor: pointer; font-weight: 600; }
+    </style>
 </head>
-<body>
+<body id="main-body">
+    <div class="theme-selector">
+        <select id="theme-selector" onchange="changeTheme(this.value)">
+            <option value="cyber">CYBER NEON</option>
+            <option value="royal">ROYAL CASINO</option>
+            <option value="synthwave">SYNTHWAVE</option>
+        </select>
+    </div>
+
     <div class="container">
-        <h1>Digital Refinery</h1>
+        <div class="hero">
+            <h1>DIGITAL REFINERY</h1>
+            <p>High-Fidelity Interaction Core</p>
+        </div>
+
         <div class="grid">
             <a href="games/SLOTS/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
@@ -38,6 +56,24 @@
                 <h3>All Classics</h3>
             </a>
         </div>
+        
+        <div style="margin-top: 80px; text-align: center; opacity: 0.2; font-size: 0.7rem; letter-spacing: 5px;">
+            V11.0 ULTRA-REFINED // REFINERY ENGINE
+        </div>
     </div>
+
+    <script>
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('refinery-theme', theme);
+        }
+        window.onload = () => {
+            const saved = localStorage.getItem('refinery-theme');
+            if(saved) {
+                document.getElementById('theme-selector').value = saved;
+                changeTheme(saved);
+            }
+        }
+    </script>
 </body>
 </html>
