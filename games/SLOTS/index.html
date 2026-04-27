@@ -1,184 +1,372 @@
-<!-- ./gameroom/games/SLOTS/index.html v11.0 - Ultra Mechanical -->
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Quantum Slots | Digital Refinery</title>
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        .grid-container { 
-            display: grid; gap: 12px; background: rgba(0,0,0,0.5); padding: 20px; 
-            border-radius: 24px; border: 2px solid var(--primary); margin: auto; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px var(--glow);
-        }
-        
-        .cell { 
-            background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 12px; aspect-ratio: 1; 
-            display: flex; align-items: center; justify-content: center; padding: 10px;
-            transition: transform 0.6s var(--transition-bounce), box-shadow 0.6s;
-            position: relative; overflow: hidden; border: 1px solid var(--border);
-        }
-
-        .cell.spinning { 
-            transform: scale(1.1) translateY(-5px); 
-            box-shadow: 0 15px 30px var(--glow);
-            border-color: var(--primary);
-            z-index: 10;
-        }
-
-        .blur-motion { animation: mechSpin 0.1s infinite linear; }
-        @keyframes mechSpin {
-            0% { transform: translateY(-30px); filter: blur(10px) brightness(2); opacity: 0.6; }
-            100% { transform: translateY(30px); filter: blur(10px) brightness(2); opacity: 0.6; }
-        }
-
-        .cell.snap { animation: snapSnap 0.4s var(--transition-bounce); }
-        @keyframes snapSnap {
-            0% { transform: scale(1.2) translateY(5px); }
-            100% { transform: scale(1) translateY(0); }
-        }
-
-        .stats-display {
-            display: flex; justify-content: space-around; background: var(--surface);
-            padding: 20px; border-radius: 16px; margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.05); font-weight: 800;
-        }
-        
-        .win-flash { animation: winFlash 0.5s infinite alternate; }
-        @keyframes winFlash { from { filter: brightness(1); } to { filter: brightness(2); box-shadow: 0 0 30px var(--primary); } }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quantum Slots | Gameroom</title>
+<style>
+:root{
+  --bg:#070814;
+  --panel:#11172a;
+  --panel2:#171f3b;
+  --text:#eef4ff;
+  --muted:#8ea0c7;
+  --accent:#00f5ff;
+  --accent2:#ff3df2;
+  --gold:#ffd166;
+  --danger:#ff5470;
+  --good:#63ff9a;
+  --shadow:0 0 40px rgba(0,245,255,.22);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(0,245,255,.18),transparent 30%),
+    radial-gradient(circle at 80% 15%,rgba(255,61,242,.14),transparent 32%),
+    linear-gradient(135deg,#050611,#0b1024 60%,#050611);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle,black,transparent 78%);
+  pointer-events:none;
+}
+.wrap{max-width:1120px;margin:auto;padding:28px}
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  margin-bottom:20px;
+}
+h1{margin:0;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:.08em;text-transform:uppercase}
+.brand span{
+  color:var(--accent);
+  text-shadow:0 0 18px var(--accent);
+}
+.sub{color:var(--muted);letter-spacing:.22em;text-transform:uppercase;font-size:.78rem}
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+  border-radius:28px;
+  box-shadow:var(--shadow),0 24px 80px rgba(0,0,0,.45);
+  backdrop-filter:blur(14px);
+}
+.machine{padding:22px;position:relative;overflow:hidden}
+.hud{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px
+}
+.stat{padding:14px;border-radius:18px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1)}
+.label{font-size:.72rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
+.value{font-size:1.5rem;font-weight:900;margin-top:4px}
+.reels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  padding:18px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#080b17,#121a33);
+  border:1px solid rgba(0,245,255,.24);
+  position:relative;
+}
+.reels::after{
+  content:"";
+  position:absolute;left:14px;right:14px;top:50%;
+  height:34%;
+  transform:translateY(-50%);
+  border-top:2px solid rgba(255,209,102,.55);
+  border-bottom:2px solid rgba(255,209,102,.55);
+  pointer-events:none;
+  box-shadow:0 0 26px rgba(255,209,102,.22);
+}
+.reel{
+  height:330px;
+  overflow:hidden;
+  border-radius:22px;
+  background:#050711;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 0 32px rgba(0,0,0,.8);
+}
+.strip{transform:translateY(0)}
+.symbol{
+  height:110px;
+  display:grid;
+  place-items:center;
+  font-size:3.6rem;
+  filter:drop-shadow(0 0 12px rgba(0,245,255,.42));
+}
+.spinning .symbol{filter:blur(2px) drop-shadow(0 0 18px rgba(255,61,242,.55))}
+.controls{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+button,select{
+  border:0;
+  color:var(--text);
+  background:linear-gradient(135deg,rgba(0,245,255,.18),rgba(255,61,242,.16));
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  padding:14px 16px;
+  font-weight:900;
+  letter-spacing:.08em;
+  cursor:pointer;
+  text-transform:uppercase;
+}
+button:hover{transform:translateY(-1px);box-shadow:0 0 26px rgba(0,245,255,.24)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.spin{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#03040a;
+  font-size:1rem;
+}
+.msg{
+  min-height:54px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  margin-top:16px;
+  color:var(--gold);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.bonus{
+  margin-top:18px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.1);
+  display:none;
+}
+.bonus.active{display:block}
+.pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.pick{font-size:2rem;height:78px}
+.paytable{margin-top:18px;padding:18px}
+.paytable h2{margin:0 0 12px}
+.paytable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.pay{padding:12px;border-radius:16px;background:rgba(255,255,255,.06);color:var(--muted)}
+.winflash{animation:flash .8s ease-in-out 2}
+.shake{animation:shake .45s ease-in-out}
+@keyframes flash{
+  50%{box-shadow:0 0 80px rgba(255,209,102,.65),0 0 120px rgba(255,61,242,.25)}
+}
+@keyframes shake{
+  20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+@media(max-width:760px){
+  .hud,.controls{grid-template-columns:repeat(2,1fr)}
+  .reels{gap:8px;padding:10px}
+  .reel{height:270px}
+  .symbol{height:90px;font-size:2.6rem}
+  .spin{grid-column:1/-1}
+}
+</style>
 </head>
-<body id="game-body">
-    <div class="container">
-        <div id="bonus-screen" class="bonus-overlay"></div>
-        <h1>QUANTUM SLOTS</h1>
-        
-        <div class="stats-display">
-            <div>BANK: <span id="balance" style="color:var(--primary)">1000</span></div>
-            <div>BET: <span id="bet" style="color:var(--tertiary)">10</span></div>
-            <div>WIN: <span id="win" style="color:var(--secondary)">0</span></div>
-        </div>
-        
-        <div style="display:flex; gap:15px; justify-content:center; margin-bottom: 25px;">
-            <button onclick="resize(-1)" style="padding: 10px 20px;">- SIZE</button>
-            <div class="glass" style="padding: 10px 25px; border-radius: 12px; font-weight: 900; display:flex; align-items:center;">
-                <span id="size-label">3x3</span>
-            </div>
-            <button onclick="resize(1)" style="padding: 10px 20px;">+ SIZE</button>
-        </div>
-
-        <div class="game-box"><div id="grid" class="grid-container"></div></div>
-        
-        <div style="text-align:center; margin-top:30px; display:flex; gap:15px; justify-content:center;">
-            <button onclick="adjustBet(-10)">DECREASE BET</button>
-            <button id="spin-btn" onclick="play()" style="flex: 1; max-width: 400px; background: var(--primary); color: var(--bg-deep);">INITIATE SPIN SEQUENCE</button>
-            <button onclick="adjustBet(10)">INCREASE BET</button>
-        </div>
-        
-        <a href="../../index.html" class="back-link">TERMINATE INTERFACE</a>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <h1>Quantum <span>Slots</span></h1>
+      <div class="sub">Digital Refinery Casino Engine</div>
     </div>
+    <button onclick="location.href='../../index.html'">Exit</button>
+  </div>
 
-    <script>
-        const icons = {
-            clover: `<svg viewBox="0 0 24 24" fill="#22c55e"><path d="M12,10C12.7,10 13.2,9.5 13.2,8.8V4.2C13.2,3.5 12.7,3 12,3C11.3,3 10.8,3.5 10.8,4.2V8.8C10.8,9.5 11.3,10 12,10M17,11.2H21.8C22.5,11.2 23,10.7 23,10C23,9.3 22.5,8.8 21.8,8.8H17C16.3,8.8 15.8,9.3 15.8,10C15.8,10.7 16.3,11.2 17,11.2M7,11.2H2.2C1.5,11.2 1,10.7 1,10C1,9.3 1.5,8.8 2.2,8.8H7C7.7,8.8 8.2,9.3 8.2,10C8.2,10.7 7.7,11.2 7,11.2M12,14C11.3,14 10.8,14.5 10.8,15.2V19.8C10.8,20.5 11.3,21 12,21C12.7,21 13.2,20.5 13.2,19.8V15.2C13.2,14.5 12.7,14 12,14Z"/></svg>`,
-            gold: `<svg viewBox="0 0 24 24" fill="#eab308"><path d="M5,6H19V18H5V6M19,4H5C3.89,4 3,4.89 3,6V18C3,19.11 3.89,20 5,20H19C20.11,20 21,19.11 21,18V6C21,4.89 20.11,4 19,4M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15Z"/></svg>`,
-            rainbow: `<svg viewBox="0 0 24 24" fill="#38bdf8"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4Z"/></svg>`,
-            hat: `<svg viewBox="0 0 24 24" fill="#166534"><path d="M5,16L3,5L8.5,10L12,2L15.5,10L21,5L19,16H5M19,19C19,19.55 18.55,20 18,20H6C5.45,20 5,19.55 5,19V18H19V19Z"/></svg>`
-        };
-        const syms = ['clover', 'gold', 'rainbow', 'hat'];
-        let balance = 1000, bet = 10, size = 3, spinning = false;
+  <main class="machine card" id="machine">
+    <section class="hud">
+      <div class="stat"><div class="label">Bank</div><div class="value" id="bank">1000</div></div>
+      <div class="stat"><div class="label">Bet</div><div class="value" id="bet">10</div></div>
+      <div class="stat"><div class="label">Last Win</div><div class="value" id="win">0</div></div>
+      <div class="stat"><div class="label">Bonus Meter</div><div class="value" id="meter">0%</div></div>
+    </section>
 
-        function init() {
-            const grid = document.getElementById('grid');
-            grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            grid.innerHTML = '';
-            for(let i=0; i<size*size; i++) {
-                grid.innerHTML += `<div class="cell" id="c${i}"><div id="w${i}" style="width:100%;height:100%">${icons.clover}</div></div>`;
-            }
-        }
+    <section class="reels" id="reels">
+      <div class="reel"><div class="strip" id="r0"></div></div>
+      <div class="reel"><div class="strip" id="r1"></div></div>
+      <div class="reel"><div class="strip" id="r2"></div></div>
+    </section>
 
-        function resize(d) {
-            if(spinning) return;
-            size = Math.max(3, Math.min(6, size + d));
-            document.getElementById('size-label').innerText = `${size}x${size}`;
-            init();
-        }
+    <div class="msg" id="msg">Initiate spin sequence</div>
 
-        function adjustBet(d) {
-            if(spinning) return;
-            bet = Math.max(10, Math.min(balance, bet + d));
-            document.getElementById('bet').innerText = bet;
-        }
+    <section class="controls">
+      <button id="down">- Bet</button>
+      <button id="up">+ Bet</button>
+      <button id="max">Max Bet</button>
+      <button class="spin" id="spin">Spin</button>
+      <select id="theme">
+        <option value="cyber">Cyber Neon</option>
+        <option value="gold">Royal Gold</option>
+        <option value="space">Deep Space</option>
+        <option value="synth">Synthwave</option>
+      </select>
+    </section>
 
-        function play() {
-            if(spinning || balance < bet) return;
-            spinning = true; balance -= bet; document.getElementById('balance').innerText = balance;
-            const btn = document.getElementById('spin-btn');
-            btn.disabled = true;
+    <section class="bonus" id="bonus">
+      <strong>Bonus Game: Pick a Quantum Vault</strong>
+      <div class="pick-grid" id="pickGrid"></div>
+    </section>
+  </main>
 
-            for(let i=0; i<size*size; i++) {
-                document.getElementById(`c${i}`).classList.add('spinning');
-                document.getElementById(`w${i}`).classList.add('blur-motion');
-            }
+  <section class="paytable card">
+    <h2>Paytable</h2>
+    <div class="paytable-grid">
+      <div class="pay">💎💎💎 Jackpot: 25x</div>
+      <div class="pay">👑👑👑 Royal Win: 15x</div>
+      <div class="pay">⚡⚡⚡ Power Win: 10x</div>
+      <div class="pay">🔥🔥🔥 Heat Win: 8x</div>
+      <div class="pay">Any 2 Match: 2x</div>
+      <div class="pay">3 🎁 Triggers Bonus</div>
+    </div>
+  </section>
+</div>
 
-            setTimeout(() => {
-                const results = [];
-                for(let i=0; i<size*size; i++) results.push(syms[Math.floor(Math.random()*syms.length)]);
+<script>
+const symbols = ["💎","👑","⚡","🔥","🌙","🔔","🎁"];
+const payouts = {"💎":25,"👑":15,"⚡":10,"🔥":8,"🌙":6,"🔔":5,"🎁":0};
+let bank=1000, bet=10, lastWin=0, bonusMeter=0, spinning=false;
 
-                results.forEach((s, i) => {
-                    setTimeout(() => {
-                        const cell = document.getElementById(`c${i}`);
-                        const wrapper = document.getElementById(`w${i}`);
-                        wrapper.classList.remove('blur-motion');
-                        wrapper.innerHTML = icons[s];
-                        cell.classList.remove('spinning');
-                        cell.classList.add('snap');
-                        setTimeout(() => cell.classList.remove('snap'), 400);
-                        if(i === size*size - 1) calculateFinal(results);
-                    }, i * 120);
-                });
-            }, 3000);
-        }
+const $ = id => document.getElementById(id);
+const strips = [0,1,2].map(i=>$("r"+i));
+const machine = $("machine");
 
-        function calculateFinal(results) {
-            let win = 0, bonus = null;
-            for(let r=0; r<size; r++) {
-                let match = true, first = results[r*size];
-                for(let c=1; c<size; c++) if(results[r*size + c] !== first) match = false;
-                if(match) {
-                    if(first === 'rainbow') bonus = 'rainbow';
-                    else if(first === 'gold') bonus = 'gold';
-                    win += bet * (syms.indexOf(first) + 5);
-                }
-            }
-            balance += win;
-            document.getElementById('win').innerText = win;
-            document.getElementById('balance').innerText = balance;
-            if(win > 0) document.getElementById('grid').classList.add('win-flash');
-            setTimeout(() => document.getElementById('grid').classList.remove('win-flash'), 2000);
+function draw(){
+  $("bank").textContent=bank;
+  $("bet").textContent=bet;
+  $("win").textContent=lastWin;
+  $("meter").textContent=Math.min(100,bonusMeter)+"%";
+  $("spin").disabled=spinning || bank < bet;
+}
 
-            if(bonus) triggerBonus(bonus);
-            else { btn.disabled = false; spinning = false; }
-        }
+function randSymbol(){ return symbols[Math.floor(Math.random()*symbols.length)] }
 
-        function triggerBonus(type) {
-            const screen = document.getElementById('bonus-screen');
-            screen.style.display = 'flex';
-            screen.innerHTML = `<h1 style="font-size:4rem">${type==='rainbow'?'🌈':'💰'}</h1><h2>${type.toUpperCase()} BONUS DETECTED</h2><button onclick="endBonus(${type==='rainbow'?50:100})">REALIZE ASSET</button>`;
-        }
+function buildReel(strip, finalSymbol){
+  const arr=[];
+  for(let i=0;i<22;i++) arr.push(randSymbol());
+  arr.push(finalSymbol);
+  arr.push(randSymbol(), randSymbol());
+  strip.innerHTML=arr.map(s=>`<div class="symbol">${s}</div>`).join("");
+  strip.style.transition="none";
+  strip.style.transform="translateY(0)";
+  return arr.length;
+}
 
-        window.endBonus = (amt) => {
-            balance += amt;
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('bonus-screen').style.display = 'none';
-            document.getElementById('spin-btn').disabled = false;
-            spinning = false;
-        };
+function setTheme(name){
+  const themes={
+    cyber:["#00f5ff","#ff3df2","#070814"],
+    gold:["#ffd166","#ff9f1c","#120b05"],
+    space:["#8ec5ff","#b388ff","#050714"],
+    synth:["#ff4ecd","#00d4ff","#12051f"]
+  };
+  const [a,b,bg]=themes[name];
+  document.documentElement.style.setProperty("--accent",a);
+  document.documentElement.style.setProperty("--accent2",b);
+  document.documentElement.style.setProperty("--bg",bg);
+}
 
-        window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
-            if(t) document.body.setAttribute('data-theme', t);
-            init();
-        }
-    </script>
+function evaluate(res){
+  const counts = {};
+  res.forEach(s=>counts[s]=(counts[s]||0)+1);
+
+  if(counts["🎁"]===3){
+    bonusMeter = 100;
+    openBonus();
+    return {win:0,msg:"Bonus unlocked: Quantum Vaults!"};
+  }
+
+  if(res[0]===res[1] && res[1]===res[2]){
+    const win = bet * payouts[res[0]];
+    return {win,msg: win >= bet*15 ? "Mega win detected!" : "Triple match payout!"};
+  }
+
+  if(Object.values(counts).some(v=>v===2)){
+    return {win:bet*2,msg:"Near-field match: 2x payout"};
+  }
+
+  bonusMeter += 8;
+  if(bonusMeter >= 100){
+    openBonus();
+    return {win:0,msg:"Bonus meter charged!"};
+  }
+  return {win:0,msg:"No match. Reactor charging..."};
+}
+
+function openBonus(){
+  bonusMeter=0;
+  const grid=$("pickGrid");
+  const prizes=[2,3,5,8,10,12,15,20].sort(()=>Math.random()-.5);
+  grid.innerHTML="";
+  $("bonus").classList.add("active");
+  prizes.forEach(mult=>{
+    const b=document.createElement("button");
+    b.className="pick";
+    b.textContent="◈";
+    b.onclick=()=>{
+      const prize=bet*mult;
+      bank+=prize;
+      lastWin=prize;
+      $("msg").textContent=`Quantum vault opened: ${mult}x bonus!`;
+      $("bonus").classList.remove("active");
+      machine.classList.add("winflash");
+      setTimeout(()=>machine.classList.remove("winflash"),1200);
+      draw();
+    };
+    grid.appendChild(b);
+  });
+}
+
+function spin(){
+  if(spinning || bank < bet) return;
+  spinning=true;
+  bank-=bet;
+  lastWin=0;
+  draw();
+  $("msg").textContent="Reels accelerating...";
+  $("reels").classList.add("spinning");
+
+  const result=[randSymbol(),randSymbol(),randSymbol()];
+  strips.forEach((strip,i)=>{
+    const len=buildReel(strip,result[i]);
+    setTimeout(()=>{
+      strip.style.transition=`transform ${900+i*380}ms cubic-bezier(.12,.82,.16,1)`;
+      strip.style.transform=`translateY(-${(len-3)*110}px)`;
+    },60+i*120);
+  });
+
+  setTimeout(()=>{
+    $("reels").classList.remove("spinning");
+    const outcome=evaluate(result);
+    bank+=outcome.win;
+    lastWin=outcome.win;
+    $("msg").textContent=`${result.join(" ")} — ${outcome.msg}`;
+    if(outcome.win>0){
+      machine.classList.add("winflash");
+      if(outcome.win>=bet*10) machine.classList.add("shake");
+      setTimeout(()=>machine.classList.remove("winflash","shake"),1200);
+    }
+    spinning=false;
+    draw();
+  },2300);
+}
+
+$("spin").onclick=spin;
+$("down").onclick=()=>{bet=Math.max(10,bet-10);draw()};
+$("up").onclick=()=>{bet=Math.min(100,bet+10);draw()};
+$("max").onclick=()=>{bet=Math.min(100,bank);draw()};
+$("theme").onchange=e=>setTheme(e.target.value);
+
+strips.forEach(strip=>{
+  strip.innerHTML=["💎","👑","⚡"].map(s=>`<div class="symbol">${s}</div>`).join("");
+});
+draw();
+</script>
 </body>
 </html>
