@@ -99,8 +99,27 @@
             }
         }
 
+        function drawCard() {
+            let rtp = parseInt(localStorage.getItem('bj_rtp') || "98");
+            let forceHigh = Math.random() < (rtp - 100) / 100; // Player gets good cards
+            let forceLow = Math.random() < (100 - rtp) / 100; // Dealer gets good cards
+
+            // Scan deck for a "good" or "bad" card based on target score 21
+            if (forceHigh || forceLow) {
+                // Simplified: Just sort remaining deck occasionally to put high/low cards on top
+                deck.sort((a, b) => {
+                    const valA = ['J','Q','K','A'].includes(a.v) ? 10 : parseInt(a.v);
+                    const valB = ['J','Q','K','A'].includes(b.v) ? 10 : parseInt(b.v);
+                    return forceHigh ? (valB - valA) : (valA - valB);
+                });
+            }
+            return deck.pop();
+        }
+
         function deal() {
-            deck = getDeck(); pHand = [deck.pop(), deck.pop()]; dHand = [deck.pop(), deck.pop()];
+            deck = getDeck(); 
+            pHand = [drawCard(), drawCard()]; 
+            dHand = [drawCard(), drawCard()];
             gameOver = false; document.getElementById('status').innerText = "PLAYER DECISION REQUIRED";
             document.getElementById('deal-btn').style.display = 'none';
             document.getElementById('game-controls').style.display = 'flex';
@@ -108,14 +127,14 @@
         }
 
         function hit() {
-            pHand.push(deck.pop()); render();
+            pHand.push(drawCard()); render();
             if(val(pHand) > 21) end("SESSION BUST - HOUSE WINS");
         }
 
         function stand() {
             gameOver = true;
             const dealerPlay = () => {
-                if(val(dHand) < 17) { dHand.push(deck.pop()); render(); setTimeout(dealerPlay, 600); }
+                if(val(dHand) < 17) { dHand.push(drawCard()); render(); setTimeout(dealerPlay, 600); }
                 else finalize();
             }
             dealerPlay();

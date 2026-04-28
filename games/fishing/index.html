@@ -87,8 +87,21 @@
         }
 
         function reel() {
-            const fish = ['🐟','🐠','🐡','🐙','🦈','🦀','💎','👑'];
-            const c = fish[Math.floor(Math.random()*fish.length)];
+            let rtp = parseInt(localStorage.getItem('fish_rtp') || "90");
+            
+            const lowTier = ['🐟','🐠','🐡','🦀'];
+            const highTier = ['💎','👑','🦈','🐙'];
+            
+            let c;
+            // RTP Influence
+            if (Math.random() < rtp / 100) {
+                // Good catch
+                c = Math.random() < 0.3 ? highTier[Math.floor(Math.random()*highTier.length)] : lowTier[Math.floor(Math.random()*lowTier.length)];
+            } else {
+                // Bad luck or garbage
+                c = Math.random() < 0.2 ? lowTier[Math.floor(Math.random()*lowTier.length)] : '👞';
+            }
+
             const hook = document.getElementById('hook');
             const depth = document.getElementById('depth-fill');
             const status = document.getElementById('status-text');
