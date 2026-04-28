@@ -1,211 +1,218 @@
-<!-- ./gameroom/games/SLOTS/index.html v15.0 - Wealth Refinery: The Dashboard Update -->
+<!-- ./gameroom/games/SLOTS/index.html v16.0 - Wealth Refinery: Immersive Console -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Wealth Refinery | Dashboard v15</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Wealth Refinery | Immersive Console</title>
 <link rel="stylesheet" href="../../style.css">
 <style>
 :root {
     --gold: #ffd700;
-    --gold-glow: rgba(255, 215, 0, 0.6);
+    --gold-glow: rgba(255, 215, 0, 0.7);
     --money-green: #00ff88;
     --danger: #ff3366;
-    --slot-bg: #030305;
-    --panel-bg: #0a0a12;
-    --reel-width: 95px;
-    --symbol-size: 95px;
+    --slot-bg: #010103;
+    --symbol-size: 10vh; /* Scaled to screen height */
     --grid-rows: 5;
 }
 
 body {
-    background: #010103;
+    background: #000;
     color: #fff;
+    margin: 0; padding: 0;
     overflow: hidden;
+    font-family: 'Space Mono', monospace;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    margin: 0;
-    font-family: 'Space Mono', monospace;
 }
 
+/* THE FX LAYER */
 #fx-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
-.particle { position: absolute; font-size: 2rem; pointer-events: none; }
+.particle { position: absolute; font-size: 2.5rem; pointer-events: none; }
 
-/* TOP BAR HUD */
-.top-hud {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 30px; background: linear-gradient(180deg, #111, transparent);
-    z-index: 50;
+/* THE GLASS HUD (TOP) */
+.glass-hud {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 80px; background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    z-index: 500;
 }
-.treasury-display {
-    background: rgba(0,0,0,0.8); border: 1px solid var(--money-green);
-    padding: 10px 25px; border-radius: 40px; box-shadow: 0 0 20px rgba(0,255,136,0.2);
-}
-.treasury-display label { font-size: 0.6rem; color: #888; display: block; text-transform: uppercase; }
-.treasury-display span { color: var(--money-green); font-size: 1.5rem; font-weight: 900; }
+.stat-group { text-align: center; }
+.stat-group label { font-size: 0.55rem; color: #888; display: block; text-transform: uppercase; letter-spacing: 1px; }
+.stat-group span { font-size: 1.2rem; font-weight: 900; }
+.stat-balance { color: var(--money-green); }
+.stat-win { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
 
-/* MAIN GAME AREA */
-.game-viewport {
-    flex: 1; display: flex; align-items: center; justify-content: center; position: relative;
-    perspective: 1000px;
+/* MAIN REEL CHAMBER */
+.reel-chamber {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 10px 120px 10px; /* Space for HUD and POD */
+    background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
 }
 
 .reels-window {
-    position: relative; display: flex; gap: 8px;
-    background: var(--slot-bg); padding: 15px; border-radius: 30px;
-    border: 3px solid #222; box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 100px #000;
-    height: calc(var(--grid-rows) * var(--symbol-size));
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    gap: 4px;
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    overflow: hidden;
 }
 
-.reel { width: var(--reel-width); height: 100%; position: relative; overflow: hidden; }
-.reel.sticky { background: rgba(170,0,255,0.05); border-radius: 10px; }
-
-#colossal-symbol {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: calc(var(--reel-width) * 3 + 16px); height: calc(var(--symbol-size) * 3);
-    background: rgba(0,0,0,0.9); border: 4px solid #aa00ff; border-radius: 20px;
-    display: none; align-items: center; justify-content: center; font-size: 10rem;
-    z-index: 50; box-shadow: 0 0 50px rgba(170,0,255,0.6);
+/* Glass Reflection over Reels */
+.reels-window::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(125deg, rgba(255,255,255,0.1) 0%, transparent 40%, rgba(255,255,255,0.05) 60%, transparent 100%);
+    pointer-events: none;
+    z-index: 100;
 }
 
-/* SIDEBAR TABS */
-.sidebar-tab {
-    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 10px; padding: 10px;
-}
-.btn-tab {
-    background: #111; border: 1px solid #333; color: #888; width: 50px; height: 50px;
-    border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; transition: all 0.2s;
-}
-.btn-tab:hover { border-color: var(--gold); color: #fff; }
-
-/* BOTTOM DASHBOARD */
-.dashboard {
-    background: #050508; border-top: 2px solid #222;
-    padding: 20px 40px 40px; display: grid;
-    grid-template-columns: 1fr 1fr 1fr; align-items: center;
-    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+.reel {
+    flex: 1;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-.bet-controls { display: flex; align-items: center; gap: 15px; }
-.bet-display { text-align: center; min-width: 100px; }
-.bet-display label { font-size: 0.6rem; color: #555; display: block; }
-.bet-display span { font-size: 1.8rem; font-weight: 900; color: var(--gold); }
-
-.win-center { text-align: center; }
-.win-center label { font-size: 0.7rem; color: #888; letter-spacing: 2px; }
-#last-win { font-size: 2.5rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px var(--gold-glow); }
-
-.spin-center { display: flex; justify-content: flex-end; align-items: center; gap: 20px; }
-
-/* THE BIG SPIN BUTTON */
-.btn-reactor {
-    width: 100px; height: 100px; border-radius: 50%; border: none;
-    background: radial-gradient(circle at 30% 30%, var(--gold), #8b6508);
-    box-shadow: 0 10px 0 #443300, 0 20px 40px rgba(0,0,0,0.5);
-    cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: all 0.1s;
+.symbol-strip {
+    position: absolute; width: 100%;
+    display: flex; flex-direction: column;
 }
-.btn-reactor:active { transform: translateY(5px); box-shadow: 0 5px 0 #443300; }
-.btn-reactor span { font-weight: 900; color: #000; font-size: 1rem; }
-.btn-reactor.auto-active { background: radial-gradient(circle at 30% 30%, var(--money-green), #004422); box-shadow: 0 10px 0 #002211; }
-.btn-reactor.spinning { background: radial-gradient(circle at 30% 30%, var(--danger), #880022); box-shadow: 0 10px 0 #440011; }
 
-.sub-btn { background: #1a1a1a; border: 1px solid #333; color: #666; padding: 10px 15px; border-radius: 10px; font-weight: bold; font-size: 0.7rem; cursor: pointer; }
-.sub-btn.active { border-color: var(--money-green); color: var(--money-green); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+.symbol {
+    height: var(--symbol-size);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.symbol.big { font-size: 4.5rem; filter: drop-shadow(0 0 15px var(--gold-glow)); }
+
+/* THE COMMAND POD (BOTTOM) */
+.command-pod {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 500px;
+    background: rgba(15,15,25,0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 60px;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    z-index: 600;
+}
+
+.pod-btn {
+    background: none; border: none; color: #fff;
+    padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+}
+.pod-btn i { font-size: 1.2rem; margin-bottom: 4px; }
+.pod-btn span { font-size: 0.6rem; color: #888; font-weight: bold; }
+
+.main-spin-trigger {
+    width: 70px; height: 70px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px var(--gold-glow);
+    cursor: pointer;
+    border: 4px solid #000;
+    transition: all 0.2s;
+}
+
+.main-spin-trigger:active { transform: scale(0.9); }
+.main-spin-trigger.spinning { background: var(--danger); box-shadow: 0 0 20px var(--danger); }
+.main-spin-trigger.auto { background: var(--money-green); box-shadow: 0 0 20px var(--money-green); }
 
 /* OVERLAYS */
-.overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 40px;
+.modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    z-index: 2000; display: none; flex-direction: column; padding: 40px;
+    align-items: center; justify-content: center;
 }
-.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; }
-.choice-card { background: #111; border: 1px solid #333; padding: 25px; border-radius: 20px; cursor: pointer; text-align: center; }
-.choice-card:hover { border-color: var(--gold); }
-
-@keyframes pulse-reactor { 0% { box-shadow: 0 10px 0 #443300, 0 0 20px var(--gold-glow); } 50% { box-shadow: 0 10px 0 #443300, 0 0 50px var(--gold-glow); } 100% { box-shadow: 0 10px 0 #443300, 0 0 20px var(--gold-glow); } }
-.btn-reactor:not(:disabled):hover { animation: pulse-reactor 1s infinite; }
+.modal h2 { color: var(--gold); letter-spacing: 4px; margin-bottom: 30px; }
+.contract-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
+.contract-card {
+    background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px;
+    text-align: center; cursor: pointer;
+}
 </style>
 </head>
 <body>
 
 <div id="fx-overlay"></div>
 
-<div class="top-hud">
-    <div style="display:flex; align-items:center; gap:20px;">
-        <a href="../../index.html" class="sub-btn">← HUB</a>
-        <div id="status-ind" style="font-weight:bold; color:var(--gold); font-size:0.7rem;">STATUS: REFINING</div>
+<div class="glass-hud">
+    <div class="stat-group">
+        <label>Treasury</label>
+        <span id="balance" class="stat-balance">1000.00</span>
     </div>
-    <div class="treasury-display">
-        <label>Total Treasury</label>
-        <span id="balance">1000.00</span>
+    <div class="stat-group">
+        <label>Current Win</label>
+        <span id="last-win" class="stat-win">0.00</span>
+    </div>
+    <div class="stat-group">
+        <label>Investment</label>
+        <span id="current-bet">10.00</span>
     </div>
 </div>
 
-<div class="game-viewport">
-    <div class="sidebar-tab">
-        <button class="btn-tab" onclick="openBuyMenu()" title="Buy Contract">📜</button>
-        <button class="btn-tab" onclick="$('paytable').style.display='flex'" title="Info">ℹ️</button>
-    </div>
-
+<div class="reel-chamber">
     <div class="reels-window" id="reels-window">
-        <div id="colossal-symbol">💎</div>
-        <div class="reel" id="reel-0"><div class="symbol-strip" id="strip-0"></div></div>
-        <div class="reel" id="reel-1"><div class="symbol-strip" id="strip-1"></div></div>
-        <div class="reel" id="reel-2"><div class="symbol-strip" id="strip-2"></div></div>
-        <div class="reel" id="reel-3"><div class="symbol-strip" id="strip-3"></div></div>
-        <div class="reel" id="reel-4"><div class="symbol-strip" id="strip-4"></div></div>
-    </div>
-</div>
-
-<div class="dashboard">
-    <div class="bet-controls">
-        <button class="sub-btn" onclick="adjustBet(-10)">-</button>
-        <div class="bet-display">
-            <label>Investment</label>
-            <span id="current-bet">10</span>
+        <!-- Middle Colossal Container -->
+        <div id="colossal-overlay" style="position:absolute; inset:0; z-index:150; display:none; align-items:center; justify-content:center;">
+             <div id="big-sym" style="font-size:15rem; filter:drop-shadow(0 0 30px #aa00ff)">💎</div>
         </div>
-        <button class="sub-btn" onclick="adjustBet(10)">+</button>
-        <button class="sub-btn" onclick="state.bet = 500; updateUI()">MAX</button>
-    </div>
-
-    <div class="win-center">
-        <label>CURRENT PAYOUT</label>
-        <div id="last-win">0.00</div>
-    </div>
-
-    <div class="spin-center">
-        <button class="sub-btn" id="fast-btn" onclick="toggleFastMode()">FAST</button>
-        <button class="sub-btn" id="auto-btn" onclick="toggleAutoPlay()">AUTO</button>
-        <button class="btn-reactor" id="spin-btn" onclick="spin()">
-            <span id="spin-text">SPIN</span>
-        </button>
+        
+        <div class="reel"><div class="symbol-strip" id="strip-0"></div></div>
+        <div class="reel"><div class="symbol-strip" id="strip-1"></div></div>
+        <div class="reel"><div class="symbol-strip" id="strip-2"></div></div>
+        <div class="reel"><div class="symbol-strip" id="strip-3"></div></div>
+        <div class="reel"><div class="symbol-strip" id="strip-4"></div></div>
     </div>
 </div>
 
-<!-- OVERLAYS (REUSED LOGIC) -->
-<div id="bonus-choice" class="overlay">
-    <h2 style="color:var(--gold)">WEALTH CONTRACTS</h2>
-    <div class="choice-grid">
-        <div class="choice-card" onclick="selectBonus(0)"><h3>Mega Rows</h3><p>5x9 Grid Expansion</p></div>
-        <div class="choice-card" onclick="selectBonus(1)"><h3>Colossal Vault</h3><p>3x3 Giant Symbol</p></div>
-        <div class="choice-card" onclick="selectBonus(2)"><h3>Treasury x10</h3><p>Global Multiplier</p></div>
-        <div class="choice-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Ultimate</h3><p>Combined Power</p></div>
+<div class="command-pod">
+    <button class="pod-btn" onclick="openBuyMenu()">
+        <span>CONTRACTS</span>
+    </button>
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button class="pod-btn" onclick="adjustBet(-10)"><span>-</span></button>
+        <div class="main-spin-trigger" id="spin-btn" onclick="spin()">
+            <div id="spin-label" style="font-weight:900; color:#000; font-size:0.8rem;">SPIN</div>
+        </div>
+        <button class="pod-btn" onclick="adjustBet(10)"><span>+</span></button>
+    </div>
+    <div style="display:flex;">
+        <button class="pod-btn" id="auto-btn" onclick="toggleAutoPlay()"><span>AUTO</span></button>
+        <button class="pod-btn" id="fast-btn" onclick="toggleFastMode()"><span>FAST</span></button>
     </div>
 </div>
 
-<div id="paytable" class="overlay">
-    <h2 style="color:var(--gold)">REFINERY DATA</h2>
-    <div id="pay-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; width:100%;"></div>
-    <button class="sub-btn" onclick="$('paytable').style.display='none'" style="margin-top:30px; width:200px;">CLOSE</button>
+<div id="bonus-choice" class="modal">
+    <h2>WEALTH CONTRACTS</h2>
+    <div class="contract-grid">
+        <div class="contract-card" onclick="selectBonus(0)"><h3>Mega Rows</h3></div>
+        <div class="contract-card" onclick="selectBonus(1)"><h3>Colossal Vault</h3></div>
+        <div class="contract-card" onclick="selectBonus(2)"><h3>Treasury x10</h3></div>
+        <div class="contract-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Ultimate</h3></div>
+    </div>
+    <button class="pod-btn" onclick="$('bonus-choice').style.display='none'" style="margin-top:20px;"><span>CLOSE</span></button>
 </div>
 
 <script>
+/**
+ * WEALTH REFINERY v16.0 - IMMERSIVE CONSOLE
+ */
 const SYMBOLS = [
     { s: "👑", v: 100 }, { s: "💎", v: 50 }, { s: "💰", v: 25 }, { s: "🥇", v: 15 },
     { s: "🥈", v: 10 }, { s: "💵", v: 5 }, { s: "🪙", v: 2 }, { s: "🌟", v: 0 }, { s: "📜", v: 0 }
@@ -218,9 +225,6 @@ let state = {
 
 const $ = (id) => document.getElementById(id);
 const reelElems = [0,1,2,3,4].map(i => $(`strip-${i}`));
-const winDisplay = $('last-win');
-const spinBtn = $('spin-btn');
-let stopResolver = null;
 
 function rainWealth(count = 30) {
     for(let i=0; i<count; i++) {
@@ -232,44 +236,45 @@ function rainWealth(count = 30) {
     }
 }
 
+function updateUI() {
+    $('balance').innerText = state.balance.toFixed(2);
+    $('current-bet').innerText = state.bet.toFixed(2);
+    $('auto-btn').classList.toggle('active', state.autoPlay);
+    $('fast-btn').classList.toggle('active', state.fastMode);
+    
+    const spinBtn = $('spin-btn');
+    const label = $('spin-label');
+    
+    if (state.isSpinning) {
+        spinBtn.className = "main-spin-trigger spinning";
+        label.innerText = "STOP";
+    } else {
+        if (state.freeSpins > 0) {
+            spinBtn.style.background = "#aa00ff";
+            label.innerText = "FREE";
+        } else if (state.autoPlay) {
+            spinBtn.className = "main-spin-trigger auto";
+            label.innerText = "AUTO";
+        } else {
+            spinBtn.className = "main-spin-trigger";
+            spinBtn.style.background = "";
+            label.innerText = "SPIN";
+        }
+    }
+}
+
 function init() { 
     reelElems.forEach(strip => populateStrip(strip, true)); 
-    const pg = $('pay-grid');
-    SYMBOLS.slice(0,7).forEach(sym => {
-        pg.innerHTML += `<div style="background:#111; padding:10px; border-radius:10px; text-align:center;"><span>${sym.s}</span><br><b>${sym.v*5}x</b></div>`;
-    });
     updateUI(); 
 }
 
 function populateStrip(strip, isStatic = false) {
     let html = ''; const count = isStatic ? state.gridRows : 40;
-    for (let i = 0; i < count; i++) html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length-2))].s}</div>`;
-    strip.innerHTML = html;
-}
-
-function updateUI() {
-    $('balance').innerText = state.balance.toFixed(2);
-    $('current-bet').innerText = state.bet;
-    $('auto-btn').classList.toggle('active', state.autoPlay);
-    $('fast-btn').classList.toggle('active', state.fastMode);
-    
-    if (state.isSpinning) {
-        spinBtn.classList.add('spinning');
-        $('spin-text').innerText = "STOP";
-    } else {
-        spinBtn.classList.remove('spinning');
-        if (state.freeSpins > 0) {
-            spinBtn.style.background = "#aa00ff";
-            $('spin-text').innerText = "FREE";
-        } else if (state.autoPlay) {
-            spinBtn.classList.add('auto-active');
-            $('spin-text').innerText = "AUTO";
-        } else {
-            spinBtn.classList.remove('auto-active');
-            spinBtn.style.background = "";
-            $('spin-text').innerText = "SPIN";
-        }
+    for (let i = 0; i < count; i++) {
+        const sym = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length-2))];
+        html += `<div class="symbol">${sym.s}</div>`;
     }
+    strip.innerHTML = html;
 }
 
 function adjustBet(amount) { if (!state.isSpinning && !state.bonusMode) { state.bet = Math.max(10, Math.min(500, state.bet + amount)); updateUI(); } }
@@ -279,19 +284,15 @@ function openBuyMenu() { if (!state.isSpinning && !state.bonusMode) $('bonus-cho
 
 function selectBonus(type) {
     state.bonusType = type; state.bonusMode = true; state.freeSpins = 10;
-    if (type === 0 || type === 3) { state.gridRows = 9; document.documentElement.style.setProperty('--grid-rows', '9'); }
-    else { state.gridRows = 5; document.documentElement.style.setProperty('--grid-rows', '5'); }
+    if (type === 0 || type === 3) { state.gridRows = 9; document.documentElement.style.setProperty('--grid-rows', '9'); document.documentElement.style.setProperty('--symbol-size', '6.5vh'); }
+    else { state.gridRows = 5; document.documentElement.style.setProperty('--grid-rows', '5'); document.documentElement.style.setProperty('--symbol-size', '10vh'); }
 
     $('bonus-choice').style.display = 'none';
-    $('main-container').classList.add('bonus-mode');
-    
     if (type === 1 || type === 3) {
         state.colossalIdx = Math.floor(Math.random()*7);
-        $('colossal-symbol').innerText = SYMBOLS[state.colossalIdx].s;
-        $('colossal-symbol').style.display = 'flex';
-        $('reels-window').classList.add('colossal-active');
+        $('big-sym').innerText = SYMBOLS[state.colossalIdx].s;
+        $('colossal-overlay').style.display = 'flex';
     }
-
     rainWealth(50);
     reelElems.forEach(strip => populateStrip(strip, true));
     updateUI();
@@ -301,7 +302,6 @@ function selectBonus(type) {
 function evaluateWays(resultsGrid) {
     let totalWin = 0;
     const mult = (state.bonusType === 2 || state.bonusType === 3) ? 10 : 1;
-
     SYMBOLS.forEach((symDef, symIdx) => {
         if (symIdx >= 7) return;
         let ways = 1, matchLength = 0;
@@ -312,13 +312,7 @@ function evaluateWays(resultsGrid) {
         }
         if (matchLength >= 3) totalWin += symDef.v * ways * [0,0,0,1,2,5][matchLength] * (state.bet / 10) * mult;
     });
-
-    let sc = 0, mystery = false;
-    for (let c = 0; c < 5; c++) for (let r = 0; r < state.gridRows; r++) {
-        if (resultsGrid[c][r] === 7) sc++;
-        if (resultsGrid[c][r] === 8) mystery = true;
-    }
-    return { win: totalWin, scatters: sc, mystery: mystery };
+    return { win: totalWin };
 }
 
 async function spin() {
@@ -328,8 +322,7 @@ async function spin() {
     state.isSpinning = true; state.canStop = false;
     if (state.freeSpins > 0) state.freeSpins--; else state.balance -= state.bet;
     
-    let isMysterySpin = !state.bonusMode && Math.random() < 0.05;
-    winDisplay.innerText = "0.00"; updateUI();
+    $('last-win').innerText = "0.00"; updateUI();
 
     const resultsGrid = [];
     let rtp = parseInt(localStorage.getItem('slots_rtp') || "95");
@@ -349,15 +342,15 @@ async function spin() {
                     while(sym === resultsGrid[c-1][r]) sym = Math.floor(Math.random()*7);
                 } else {
                     let rand = Math.random();
-                    if (rand < 0.03) sym = 7;
-                    else if (rand < 0.05) sym = 8;
-                    else sym = Math.floor(Math.random()*7);
+                    sym = rand < 0.04 ? 7 : (rand < 0.06 ? 8 : Math.floor(Math.random()*7));
                 }
                 col.push(sym);
             }
         }
         resultsGrid.push(col);
     }
+
+    const symbolSizePx = reelElems[0].parentElement.offsetHeight / state.gridRows;
 
     reelElems.forEach((strip, c) => {
         let html = ''; for (let j = 0; j < 35; j++) html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random()*7)].s}</div>`;
@@ -371,47 +364,36 @@ async function spin() {
     reelElems.forEach((strip, c) => {
         const time = state.fastMode ? (300 + c*50) : (1200 + c*300);
         strip.style.transition = `transform ${time}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
-        strip.style.transform = `translateY(-${(strip.children.length - state.gridRows) * 95}px)`;
+        strip.style.transform = `translateY(-${(strip.children.length - state.gridRows) * symbolSizePx}px)`;
     });
 
     await spinPromise; stopResolver = null;
-    reelElems.forEach((strip, c) => {
+    reelElems.forEach(strip => {
         strip.style.transition = 'transform 0.1s ease-out';
-        strip.style.transform = `translateY(-${(strip.children.length - state.gridRows) * 95}px)`;
+        strip.style.transform = `translateY(-${(strip.children.length - state.gridRows) * symbolSizePx}px)`;
     });
 
     await new Promise(r => setTimeout(r, state.fastMode ? 50 : 150));
     const evalRes = evaluateWays(resultsGrid);
-    if (evalRes.win > 0) { state.balance += evalRes.win; animateValue(winDisplay, 0, evalRes.win, state.fastMode ? 200 : 800); }
+    if (evalRes.win > 0) { 
+        state.balance += evalRes.win; 
+        $('last-win').innerText = evalRes.win.toFixed(2); 
+        if(evalRes.win >= state.bet * 20) rainWealth();
+    }
     
     state.isSpinning = false; updateUI();
 
-    if (evalRes.scatters >= 3 || isMysterySpin || evalRes.mystery) {
-        setTimeout(() => {
-            if (isMysterySpin || evalRes.mystery) selectBonus(Math.floor(Math.random()*4));
-            else openBuyMenu();
-        }, 1000);
-    } else if (state.freeSpins > 0) {
+    if (state.freeSpins > 0) {
         setTimeout(spin, state.fastMode ? 200 : 1000);
     } else if (state.bonusMode && state.freeSpins === 0) {
         setTimeout(() => {
-            state.bonusMode = false; state.gridRows = 5; document.documentElement.style.setProperty('--grid-rows', '5');
-            $('main-container').classList.remove('bonus-mode');
-            $('colossal-symbol').style.display = 'none'; $('reels-window').classList.remove('colossal-active');
+            state.bonusMode = false; state.gridRows = 5; 
+            document.documentElement.style.setProperty('--grid-rows', '5');
+            document.documentElement.style.setProperty('--symbol-size', '10vh');
+            $('colossal-overlay').style.display = 'none';
             updateUI();
         }, 2000);
     } else if (state.autoPlay) setTimeout(() => { if (state.autoPlay) spin(); }, state.fastMode ? 300 : 1000);
-}
-
-function animateValue(obj, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerText = (progress * (end - start) + start).toFixed(2);
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
 }
 
 init();
