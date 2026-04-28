@@ -291,6 +291,12 @@ async function spin() {
     winDisplay.innerText = "0.00"; spinBtn.innerText = "STOP"; spinBtn.style.background = "var(--danger)"; updateUI();
 
     const resultsGrid = [];
+    let rtp = parseInt(localStorage.getItem('slots_rtp') || "95");
+    
+    // RTP RIGGING LOGIC
+    let forceWin = !state.bonusMode && Math.random() < (rtp - 100) / 100;
+    let forceLoss = !state.bonusMode && Math.random() < (100 - rtp) / 100;
+
     for (let c = 0; c < 5; c++) {
         let col = [];
         for (let r = 0; r < state.gridRows; r++) {
@@ -298,9 +304,21 @@ async function spin() {
                 col.push(state.colossalIdx);
             } else {
                 let rand = Math.random();
-                if (rand < 0.03) col.push(7); // Scatter
-                else if (rand < 0.05) col.push(8); // Contract
-                else col.push(Math.floor(Math.random()*7));
+                let sym;
+                
+                if (forceWin && c > 0) {
+                    // Try to match previous column
+                    sym = resultsGrid[c-1][r];
+                } else if (forceLoss && c > 0 && Math.random() > 0.5) {
+                    // Try to NOT match previous column
+                    sym = Math.floor(Math.random()*7);
+                    while(sym === resultsGrid[c-1][r]) sym = Math.floor(Math.random()*7);
+                } else {
+                    if (rand < 0.03) sym = 7; // Scatter
+                    else if (rand < 0.05) sym = 8; // Contract
+                    else sym = Math.floor(Math.random()*7);
+                }
+                col.push(sym);
             }
         }
         resultsGrid.push(col);

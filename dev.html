@@ -1,0 +1,138 @@
+<!-- ./gameroom/dev.html v1.0 - Refinery Admin & RTP Controller -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Refinery Admin | Central Control</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root {
+    --admin-gold: #ffd700;
+    --admin-bg: #050508;
+    --admin-surface: #0f0f1a;
+}
+body {
+    background: var(--admin-bg);
+    color: #fff;
+    padding: 40px;
+    font-family: 'Space Mono', monospace;
+}
+.admin-container {
+    max-width: 900px;
+    margin: auto;
+}
+.header {
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+.game-card {
+    background: var(--admin-surface);
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.game-info h2 { margin: 0; color: var(--admin-gold); text-transform: uppercase; letter-spacing: 2px; }
+.game-info p { color: #888; margin: 5px 0 0; font-size: 0.8rem; }
+
+.control-group {
+    text-align: right;
+    width: 300px;
+}
+input[type=range] {
+    width: 100%;
+    accent-color: var(--admin-gold);
+}
+.rtp-val {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--money-green);
+}
+.save-hint { font-size: 0.7rem; color: #555; margin-top: 10px; }
+.back-link { text-decoration: none; color: #888; border: 1px solid #333; padding: 10px 20px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header">
+        <a href="index.html" class="back-link">← EXIT ADMIN</a>
+        <h1 style="margin-top:20px;">REFINERY ENGINE <span style="color:var(--admin-gold)">DEV-OPS</span></h1>
+        <p>Mathematical Variance & Payback Calibration</p>
+    </div>
+
+    <!-- SLOTS CONTROL -->
+    <div class="game-card">
+        <div class="game-info">
+            <h2>Wealth Refinery</h2>
+            <p>Control symbol weights and bonus frequency.</p>
+        </div>
+        <div class="control-group">
+            <div class="rtp-val" id="slots-rtp-txt">95%</div>
+            <input type="range" id="slots-rtp" min="1" max="200" value="95" oninput="updateRTP('slots', this.value)">
+            <div class="save-hint">EFFECT: SYMBOL CLUSTERING</div>
+        </div>
+    </div>
+
+    <!-- BLACKJACK CONTROL -->
+    <div class="game-card">
+        <div class="game-info">
+            <h2>Blackjack</h2>
+            <p>Adjust dealer "Luck" and deck shuffling variance.</p>
+        </div>
+        <div class="control-group">
+            <div class="rtp-val" id="bj-rtp-txt">98%</div>
+            <input type="range" id="bj-rtp" min="1" max="200" value="98" oninput="updateRTP('bj', this.value)">
+            <div class="save-hint">EFFECT: DEALER HOLE CARD RIGGING</div>
+        </div>
+    </div>
+
+    <!-- FISHING CONTROL -->
+    <div class="game-card">
+        <div class="game-info">
+            <h2>Fishing Refinery</h2>
+            <p>Modify catch rates and loot value scaling.</p>
+        </div>
+        <div class="control-group">
+            <div class="rtp-val" id="fish-rtp-txt">90%</div>
+            <input type="range" id="fish-rtp" min="1" max="200" value="90" oninput="updateRTP('fish', this.value)">
+            <div class="save-hint">EFFECT: HOOK ATTRACTION STRENGTH</div>
+        </div>
+    </div>
+
+    <!-- WIN WHEEL CONTROL -->
+    <div class="game-card">
+        <div class="game-info">
+            <h2>Win Wheel</h2>
+            <p>Shift segment gravity for higher/lower payouts.</p>
+        </div>
+        <div class="control-group">
+            <div class="rtp-val" id="wheel-rtp-txt">85%</div>
+            <input type="range" id="wheel-rtp" min="1" max="200" value="85" oninput="updateRTP('wheel', this.value)">
+            <div class="save-hint">EFFECT: MAGNETIC DECELERATION</div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateRTP(game, val) {
+    document.getElementById(game + '-rtp-txt').innerText = val + '%';
+    localStorage.setItem(game + '_rtp', val);
+}
+
+// Load initial values
+['slots', 'bj', 'fish', 'wheel'].forEach(game => {
+    let saved = localStorage.getItem(game + '_rtp');
+    if (saved) {
+        document.getElementById(game + '-rtp').value = saved;
+        document.getElementById(game + '-rtp-txt').innerText = saved + '%';
+    }
+});
+</script>
+</body>
+</html>
