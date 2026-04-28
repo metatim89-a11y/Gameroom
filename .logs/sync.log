@@ -722,3 +722,8 @@ Everything up-to-date
 Everything up-to-date
 Everything up-to-date
 Everything up-to-date
+ssh_dispatch_run_fatal: Connection to 140.82.114.4 port 22: Software caused connection abort
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
