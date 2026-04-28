@@ -1,0 +1,7 @@
+# ./.project.bashaliases v1.0
+# Project-specific shortcuts
+
+alias start-server="$PROJECT_ROOT/.bin/server.sh"
+alias sync-push="$PROJECT_ROOT/.bin/sync_push.sh"
+alias log-tail="tail -f .logs/server.log"
+alias g-dump="./dump"

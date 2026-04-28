@@ -1,0 +1,1885 @@
+------------------------------------------------
+PROJECT DUMP: gameroom
+GENERATED: 04/28/26 12:10 AM
+------------------------------------------------
+================================================
+FILE: ./games/SLOTS/index.html
+================================================
+<!-- ./gameroom/games/SLOTS/index.html v11.0 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quantum Slots | Gameroom</title>
+<style>
+:root{
+  --bg:#070814;
+  --panel:#11172a;
+  --panel2:#171f3b;
+  --text:#eef4ff;
+  --muted:#8ea0c7;
+  --accent:#00f5ff;
+  --accent2:#ff3df2;
+  --gold:#ffd166;
+  --danger:#ff5470;
+  --good:#63ff9a;
+  --shadow:0 0 40px rgba(0,245,255,.22);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(0,245,255,.18),transparent 30%),
+    radial-gradient(circle at 80% 15%,rgba(255,61,242,.14),transparent 32%),
+    linear-gradient(135deg,#050611,#0b1024 60%,#050611);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle,black,transparent 78%);
+  pointer-events:none;
+}
+.wrap{max-width:1120px;margin:auto;padding:28px}
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  margin-bottom:20px;
+}
+h1{margin:0;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:.08em;text-transform:uppercase}
+.brand span{
+  color:var(--accent);
+  text-shadow:0 0 18px var(--accent);
+}
+.sub{color:var(--muted);letter-spacing:.22em;text-transform:uppercase;font-size:.78rem}
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+  border-radius:28px;
+  box-shadow:var(--shadow),0 24px 80px rgba(0,0,0,.45);
+  backdrop-filter:blur(14px);
+}
+.machine{padding:22px;position:relative;overflow:hidden}
+.hud{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px
+}
+.stat{padding:14px;border-radius:18px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1)}
+.label{font-size:.72rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
+.value{font-size:1.5rem;font-weight:900;margin-top:4px}
+.reels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  padding:18px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#080b17,#121a33);
+  border:1px solid rgba(0,245,255,.24);
+  position:relative;
+}
+.reels::after{
+  content:"";
+  position:absolute;left:14px;right:14px;top:50%;
+  height:34%;
+  transform:translateY(-50%);
+  border-top:2px solid rgba(255,209,102,.55);
+  border-bottom:2px solid rgba(255,209,102,.55);
+  pointer-events:none;
+  box-shadow:0 0 26px rgba(255,209,102,.22);
+}
+.reel{
+  height:330px;
+  overflow:hidden;
+  border-radius:22px;
+  background:#050711;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 0 32px rgba(0,0,0,.8);
+}
+.strip{transform:translateY(0)}
+.symbol{
+  height:110px;
+  display:grid;
+  place-items:center;
+  font-size:3.6rem;
+  filter:drop-shadow(0 0 12px rgba(0,245,255,.42));
+}
+.spinning .symbol{filter:blur(2px) drop-shadow(0 0 18px rgba(255,61,242,.55))}
+.controls{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+button,select{
+  border:0;
+  color:var(--text);
+  background:linear-gradient(135deg,rgba(0,245,255,.18),rgba(255,61,242,.16));
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  padding:14px 16px;
+  font-weight:900;
+  letter-spacing:.08em;
+  cursor:pointer;
+  text-transform:uppercase;
+}
+button:hover{transform:translateY(-1px);box-shadow:0 0 26px rgba(0,245,255,.24)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.spin{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#03040a;
+  font-size:1rem;
+}
+.msg{
+  min-height:54px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  margin-top:16px;
+  color:var(--gold);
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.bonus{
+  margin-top:18px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.1);
+  display:none;
+}
+.bonus.active{display:block}
+.pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.pick{font-size:2rem;height:78px}
+.paytable{margin-top:18px;padding:18px}
+.paytable h2{margin:0 0 12px}
+.paytable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.pay{padding:12px;border-radius:16px;background:rgba(255,255,255,.06);color:var(--muted)}
+.winflash{animation:flash .8s ease-in-out 2}
+.shake{animation:shake .45s ease-in-out}
+@keyframes flash{
+  50%{box-shadow:0 0 80px rgba(255,209,102,.65),0 0 120px rgba(255,61,242,.25)}
+}
+@keyframes shake{
+  20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+@media(max-width:760px){
+  .hud,.controls{grid-template-columns:repeat(2,1fr)}
+  .reels{gap:8px;padding:10px}
+  .reel{height:270px}
+  .symbol{height:90px;font-size:2.6rem}
+  .spin{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <h1>Quantum <span>Slots</span></h1>
+      <div class="sub">Digital Refinery Casino Engine</div>
+    </div>
+    <button onclick="location.href='../../index.html'">Exit</button>
+  </div>
+
+  <main class="machine card" id="machine">
+    <section class="hud">
+      <div class="stat"><div class="label">Bank</div><div class="value" id="bank">1000</div></div>
+      <div class="stat"><div class="label">Bet</div><div class="value" id="bet">10</div></div>
+      <div class="stat"><div class="label">Last Win</div><div class="value" id="win">0</div></div>
+      <div class="stat"><div class="label">Bonus Meter</div><div class="value" id="meter">0%</div></div>
+    </section>
+
+    <section class="reels" id="reels">
+      <div class="reel"><div class="strip" id="r0"></div></div>
+      <div class="reel"><div class="strip" id="r1"></div></div>
+      <div class="reel"><div class="strip" id="r2"></div></div>
+    </section>
+
+    <div class="msg" id="msg">Initiate spin sequence</div>
+
+    <section class="controls">
+      <button id="down">- Bet</button>
+      <button id="up">+ Bet</button>
+      <button id="max">Max Bet</button>
+      <button class="spin" id="spin">Spin</button>
+      <select id="theme">
+        <option value="cyber">Cyber Neon</option>
+        <option value="gold">Royal Gold</option>
+        <option value="space">Deep Space</option>
+        <option value="synth">Synthwave</option>
+      </select>
+    </section>
+
+    <section class="bonus" id="bonus">
+      <strong>Bonus Game: Pick a Quantum Vault</strong>
+      <div class="pick-grid" id="pickGrid"></div>
+    </section>
+  </main>
+
+  <section class="paytable card">
+    <h2>Paytable</h2>
+    <div class="paytable-grid">
+      <div class="pay">💎💎💎 Jackpot: 25x</div>
+      <div class="pay">👑👑👑 Royal Win: 15x</div>
+      <div class="pay">⚡⚡⚡ Power Win: 10x</div>
+      <div class="pay">🔥🔥🔥 Heat Win: 8x</div>
+      <div class="pay">Any 2 Match: 2x</div>
+      <div class="pay">3 🎁 Triggers Bonus</div>
+    </div>
+  </section>
+</div>
+
+<script>
+const symbols = ["💎","👑","⚡","🔥","🌙","🔔","🎁"];
+const payouts = {"💎":25,"👑":15,"⚡":10,"🔥":8,"🌙":6,"🔔":5,"🎁":0};
+let bank=1000, bet=10, lastWin=0, bonusMeter=0, spinning=false;
+
+const $ = id => document.getElementById(id);
+const strips = [0,1,2].map(i=>$("r"+i));
+const machine = $("machine");
+
+function draw(){
+  $("bank").textContent=bank;
+  $("bet").textContent=bet;
+  $("win").textContent=lastWin;
+  $("meter").textContent=Math.min(100,bonusMeter)+"%";
+  $("spin").disabled=spinning || bank < bet;
+}
+
+function randSymbol(){ return symbols[Math.floor(Math.random()*symbols.length)] }
+
+function buildReel(strip, finalSymbol){
+  const arr=[];
+  for(let i=0;i<22;i++) arr.push(randSymbol());
+  arr.push(finalSymbol);
+  arr.push(randSymbol(), randSymbol());
+  strip.innerHTML=arr.map(s=>`<div class="symbol">${s}</div>`).join("");
+  strip.style.transition="none";
+  strip.style.transform="translateY(0)";
+  return arr.length;
+}
+
+function setTheme(name){
+  const themes={
+    cyber:["#00f5ff","#ff3df2","#070814"],
+    gold:["#ffd166","#ff9f1c","#120b05"],
+    space:["#8ec5ff","#b388ff","#050714"],
+    synth:["#ff4ecd","#00d4ff","#12051f"]
+  };
+  const [a,b,bg]=themes[name];
+  document.documentElement.style.setProperty("--accent",a);
+  document.documentElement.style.setProperty("--accent2",b);
+  document.documentElement.style.setProperty("--bg",bg);
+}
+
+function evaluate(res){
+  const counts = {};
+  res.forEach(s=>counts[s]=(counts[s]||0)+1);
+
+  if(counts["🎁"]===3){
+    bonusMeter = 100;
+    openBonus();
+    return {win:0,msg:"Bonus unlocked: Quantum Vaults!"};
+  }
+
+  if(res[0]===res[1] && res[1]===res[2]){
+    const win = bet * payouts[res[0]];
+    return {win,msg: win >= bet*15 ? "Mega win detected!" : "Triple match payout!"};
+  }
+
+  if(Object.values(counts).some(v=>v===2)){
+    return {win:bet*2,msg:"Near-field match: 2x payout"};
+  }
+
+  bonusMeter += 8;
+  if(bonusMeter >= 100){
+    openBonus();
+    return {win:0,msg:"Bonus meter charged!"};
+  }
+  return {win:0,msg:"No match. Reactor charging..."};
+}
+
+function openBonus(){
+  bonusMeter=0;
+  const grid=$("pickGrid");
+  const prizes=[2,3,5,8,10,12,15,20].sort(()=>Math.random()-.5);
+  grid.innerHTML="";
+  $("bonus").classList.add("active");
+  prizes.forEach(mult=>{
+    const b=document.createElement("button");
+    b.className="pick";
+    b.textContent="◈";
+    b.onclick=()=>{
+      const prize=bet*mult;
+      bank+=prize;
+      lastWin=prize;
+      $("msg").textContent=`Quantum vault opened: ${mult}x bonus!`;
+      $("bonus").classList.remove("active");
+      machine.classList.add("winflash");
+      setTimeout(()=>machine.classList.remove("winflash"),1200);
+      draw();
+    };
+    grid.appendChild(b);
+  });
+}
+
+function spin(){
+  if(spinning || bank < bet) return;
+  spinning=true;
+  bank-=bet;
+  lastWin=0;
+  draw();
+  $("msg").textContent="Reels accelerating...";
+  $("reels").classList.add("spinning");
+
+  const result=[randSymbol(),randSymbol(),randSymbol()];
+  strips.forEach((strip,i)=>{
+    const len=buildReel(strip,result[i]);
+    setTimeout(()=>{
+      strip.style.transition=`transform ${900+i*380}ms cubic-bezier(.12,.82,.16,1)`;
+      strip.style.transform=`translateY(-${(len-3)*110}px)`;
+    },60+i*120);
+  });
+
+  setTimeout(()=>{
+    $("reels").classList.remove("spinning");
+    const outcome=evaluate(result);
+    bank+=outcome.win;
+    lastWin=outcome.win;
+    $("msg").textContent=`${result.join(" ")} — ${outcome.msg}`;
+    if(outcome.win>0){
+      machine.classList.add("winflash");
+      if(outcome.win>=bet*10) machine.classList.add("shake");
+      setTimeout(()=>machine.classList.remove("winflash","shake"),1200);
+    }
+    spinning=false;
+    draw();
+  },2300);
+}
+
+$("spin").onclick=spin;
+$("down").onclick=()=>{bet=Math.max(10,bet-10);draw()};
+$("up").onclick=()=>{bet=Math.min(100,bet+10);draw()};
+$("max").onclick=()=>{bet=Math.min(100,bank);draw()};
+$("theme").onchange=e=>setTheme(e.target.value);
+
+strips.forEach(strip=>{
+  strip.innerHTML=["💎","👑","⚡"].map(s=>`<div class="symbol">${s}</div>`).join("");
+});
+draw();
+</script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/blackjack/index.html
+================================================
+<!-- ./gameroom/games/blackjack/index.html v11.0 - Ultra Luxe -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blackjack Pro | Digital Refinery</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .table { 
+            background: radial-gradient(circle at 50% 120%, #065f46 0%, #064e3b 100%); 
+            border: 12px solid #3d2b1f; border-radius: 120px; padding: 50px; 
+            margin: 20px 0; box-shadow: inset 0 0 100px rgba(0,0,0,0.6), 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .hand { display: flex; justify-content: center; gap: 15px; min-height: 140px; margin: 20px 0; perspective: 1000px; }
+        
+        .card { 
+            width: 85px; height: 125px; background: #fff; border-radius: 12px; color: #1e293b; 
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
+            padding: 12px; font-weight: 900; font-size: 1.4rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+            animation: cardEnter 0.6s var(--transition-bounce) both;
+            border: 1px solid #e2e8f0;
+        }
+        
+        @keyframes cardEnter { 
+            from { transform: translateY(-200px) rotateY(90deg); opacity: 0; } 
+            to { transform: translateY(0) rotateY(0deg); opacity: 1; } 
+        }
+
+        .suit-icon { width: 32px; height: 32px; }
+        .red { color: #ef4444; }
+        
+        .score-badge { 
+            font-size: 0.8rem; font-weight: 900; background: var(--surface); 
+            color: var(--primary); padding: 8px 20px; border-radius: 30px; 
+            border: 1px solid var(--primary); box-shadow: 0 0 15px var(--glow);
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .status-msg { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; color: #fff; text-shadow: 0 0 20px var(--glow); margin-bottom: 20px; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container">
+        <div id="status" class="status-msg">READY TO DEAL</div>
+        
+        <div class="table">
+            <div id="dealer-hand" class="hand"></div>
+            <div style="text-align:center"><span id="dealer-score" class="score-badge">DEALER: ?</span></div>
+            
+            <div style="margin: 50px 0; border-top: 2px dashed rgba(255,255,255,0.05);"></div>
+            
+            <div id="player-hand" class="hand"></div>
+            <div style="text-align:center"><span id="player-score" class="score-badge">PLAYER: 0</span></div>
+        </div>
+
+        <div style="display:flex; gap:20px; justify-content:center; margin-top:40px;">
+            <button id="deal-btn" onclick="deal()" style="min-width: 250px;">INITIALIZE DEAL</button>
+            <div id="game-controls" style="display:none; gap:15px;">
+                <button onclick="hit()">HIT</button>
+                <button onclick="stand()" style="background:var(--surface); border-color:#ef4444; color:#ef4444;">STAND</button>
+            </div>
+        </div>
+        <a href="../../index.html" class="back-link">TERMINATE SESSION</a>
+    </div>
+
+    <script>
+        const suitIcons = {
+            '♠': `<svg viewBox="0 0 24 24" class="suit-icon"><path d="M12,2C11.73,3 11.23,3.95 10.5,4.84C9.76,5.74 8.71,6.8 7.34,8.04C6,9.27 4.93,10.5 4.14,11.74C3.38,12.93 3,14.2 3,15.54C3,17.29 3.65,18.78 4.96,20C6.27,21.22 7.8,21.83 9.53,21.83C10,21.83 10.45,21.75 11,21.58V18C10,17 9,16 9,15H15C15,16 14,17 13,18V21.58C13.55,21.75 14,21.83 14.47,21.83C16.2,21.83 17.73,21.22 19.04,20C20.35,18.78 21,17.29 21,15.54C21,14.2 20.62,12.93 19.86,11.74C19.07,10.5 18,9.27 16.66,8.04C15.29,6.8 14.24,5.74 13.5,4.84C12.77,3.95 12.27,3 12,2Z"/></svg>`,
+            '♥': `<svg viewBox="0 0 24 24" class="suit-icon red"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.41,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.59,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>`,
+            '♦': `<svg viewBox="0 0 24 24" class="suit-icon red"><path d="M12,2L4.5,12L12,22L19.5,12L12,2Z"/></svg>`,
+            '♣': `<svg viewBox="0 0 24 24" class="suit-icon"><path d="M12,2C11.5,4 11,5 10.5,6C9.5,8 8,9 6.5,9C5.12,9 4,10.12 4,11.5C4,12.88 5.12,14 6.5,14C8,14 9.5,15 10.5,17V22H13.5V17C14.5,15 16,14 17.5,14C18.88,14 20,12.88 20,11.5C20,10.12 18.88,9 17.5,9C16,9 14.5,8 13.5,6C13,5 12.5,4 12,2Z"/></svg>`
+        };
+
+        let deck = [], pHand = [], dHand = [], gameOver = false;
+
+        function getDeck() {
+            const s = ['♠','♥','♦','♣'], v = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+            const d = [];
+            for(let x of s) for(let y of v) d.push({s:x,v:y,r:x==='♥'||x==='♦'});
+            return d.sort(() => Math.random() - 0.5);
+        }
+
+        function val(h) {
+            let n = 0, a = 0;
+            for(let c of h) { if(['J','Q','K'].includes(c.v)) n += 10; else if(c.v === 'A') { n += 11; a++; } else n += parseInt(c.v); }
+            while(n > 21 && a > 0) { n -= 10; a--; }
+            return n;
+        }
+
+        function render() {
+            document.getElementById('player-hand').innerHTML = pHand.map(c => `<div class="card ${c.r?'red':''}"><div>${c.v}</div>${suitIcons[c.s]}<div style="transform:rotate(180deg)">${c.v}</div></div>`).join('');
+            document.getElementById('player-score').innerText = "PLAYER: " + val(pHand);
+            if(gameOver) {
+                document.getElementById('dealer-hand').innerHTML = dHand.map(c => `<div class="card ${c.r?'red':''}"><div>${c.v}</div>${suitIcons[c.s]}<div style="transform:rotate(180deg)">${c.v}</div></div>`).join('');
+                document.getElementById('dealer-score').innerText = "DEALER: " + val(dHand);
+            } else {
+                document.getElementById('dealer-hand').innerHTML = dHand.length ? `<div class="card ${dHand[0].r?'red':''}"><div>${dHand[0].v}</div>${suitIcons[dHand[0].s]}<div style="transform:rotate(180deg)">${dHand[0].v}</div></div><div class="card glass" style="background:rgba(0,0,0,0.5)"></div>` : '';
+                document.getElementById('dealer-score').innerText = "DEALER: ?";
+            }
+        }
+
+        function deal() {
+            deck = getDeck(); pHand = [deck.pop(), deck.pop()]; dHand = [deck.pop(), deck.pop()];
+            gameOver = false; document.getElementById('status').innerText = "PLAYER DECISION REQUIRED";
+            document.getElementById('deal-btn').style.display = 'none';
+            document.getElementById('game-controls').style.display = 'flex';
+            render();
+        }
+
+        function hit() {
+            pHand.push(deck.pop()); render();
+            if(val(pHand) > 21) end("SESSION BUST - HOUSE WINS");
+        }
+
+        function stand() {
+            gameOver = true;
+            const dealerPlay = () => {
+                if(val(dHand) < 17) { dHand.push(deck.pop()); render(); setTimeout(dealerPlay, 600); }
+                else finalize();
+            }
+            dealerPlay();
+        }
+
+        function finalize() {
+            let pv = val(pHand), dv = val(dHand);
+            if(dv > 21) end("DEALER BUST - ASSETS SECURED");
+            else if(pv > dv) end("VICTORY - SCORE SURPASSED");
+            else if(dv > pv) end("DEFEAT - HOUSE PREVAILS");
+            else end("NEUTRAL OUTCOME - PUSH");
+        }
+
+        function end(m) {
+            gameOver = true; render();
+            document.getElementById('status').innerText = m;
+            document.getElementById('deal-btn').style.display = 'inline-block';
+            document.getElementById('deal-btn').innerText = "NEW SESSION";
+            document.getElementById('game-controls').style.display = 'none';
+        }
+
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/fishing/index.html
+================================================
+<!-- ./gameroom/games/fishing/index.html v11.0 - Ultra Deep Sea -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deep Sea Fishing | Digital Refinery</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .water-chamber {
+            height: 400px; border-radius: 30px; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+            border: 2px solid var(--primary); box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .bubble-stream {
+            position: absolute; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 10%);
+            background-size: 100px 100px; animation: bubbleFlow 10s linear infinite;
+        }
+        @keyframes bubbleFlow { from { background-position: 0 0; } to { background-position: 0 -400px; } }
+
+        #hook { 
+            font-size: 6rem; z-index: 10; transition: all 0.5s var(--transition-bounce); 
+            filter: drop-shadow(0 0 20px var(--glow)); cursor: pointer;
+        }
+        
+        .hook-float { animation: hFloat 3s infinite ease-in-out; }
+        @keyframes hFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-40px) rotate(2deg); } }
+        
+        .sonar-ping {
+            position: absolute; width: 20px; height: 20px; border: 2px solid var(--primary);
+            border-radius: 50%; animation: ping 2s infinite; opacity: 0;
+        }
+        @keyframes ping { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(10); opacity: 0; } }
+
+        .depth-gauge {
+            position: absolute; left: 30px; top: 30px; bottom: 30px; width: 8px;
+            background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden;
+        }
+        #depth-fill { position: absolute; bottom: 0; width: 100%; height: 0%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: height 2s ease-in-out; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900;">
+            <div>PRESSURE: <span style="color:var(--primary)">OPTIMAL</span></div>
+            <div>STATUS: <span id="status-text" style="color:var(--tertiary)">IDLE</span></div>
+        </div>
+
+        <div class="water-chamber">
+            <div class="bubble-stream"></div>
+            <div class="sonar-ping"></div>
+            <div class="depth-gauge"><div id="depth-fill"></div></div>
+            <div id="hook" class="hook-float">🌊</div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <button id="btn" onclick="cast()" style="min-width: 250px; font-size: 1.2rem;">DEPLOY RECOVERY HOOK</button>
+        </div>
+
+        <a href="../../index.html" class="back-link">ABORT MISSION</a>
+    </div>
+
+    <script>
+        let state = 'idle';
+        function cast() {
+            if(state !== 'idle') return;
+            state = 'waiting';
+            const hook = document.getElementById('hook');
+            const depth = document.getElementById('depth-fill');
+            const status = document.getElementById('status-text');
+            const btn = document.getElementById('btn');
+
+            btn.disabled = true;
+            status.innerText = "DESCENDING";
+            hook.innerText = "⚓";
+            depth.style.height = "85%";
+
+            setTimeout(() => {
+                status.innerText = "CONTACT!";
+                status.style.color = "var(--primary)";
+                hook.innerText = "⚡";
+                btn.disabled = false;
+                btn.innerText = "RECOVER ASSET";
+                state = 'bite';
+            }, 1500 + Math.random()*2000);
+        }
+
+        function reel() {
+            const fish = ['🐟','🐠','🐡','🐙','🦈','🦀','💎','👑'];
+            const c = fish[Math.floor(Math.random()*fish.length)];
+            const hook = document.getElementById('hook');
+            const depth = document.getElementById('depth-fill');
+            const status = document.getElementById('status-text');
+            const btn = document.getElementById('btn');
+
+            hook.innerText = c;
+            depth.style.height = "0%";
+            status.innerText = "ASSET SECURED";
+            status.style.color = "var(--tertiary)";
+            btn.innerText = "DEPLOY AGAIN";
+            state = 'idle';
+            
+            // Visual pop
+            hook.style.transform = "scale(1.5)";
+            setTimeout(() => hook.style.transform = "scale(1)", 400);
+        }
+
+        document.getElementById('btn').addEventListener('click', () => { if(state==='bite') reel(); });
+
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/WIN-WHEEL/index.html
+================================================
+<!-- ./gameroom/games/WIN-WHEEL/index.html v11.0 - Ultra Velocity -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Velocity Wheel | Digital Refinery</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .wheel-shield {
+            width: 360px; height: 360px; margin: 30px auto; position: relative;
+            padding: 15px; border-radius: 50%; background: var(--surface);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px var(--glow);
+            border: 2px solid var(--primary);
+        }
+        .wheel-svg { 
+            width: 100%; height: 100%; 
+            transition: transform 45s var(--transition-smooth); 
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+        .pointer { 
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%); 
+            width: 0; height: 0; border-left: 20px solid transparent; 
+            border-right: 20px solid transparent; border-top: 45px solid var(--tertiary); 
+            z-index: 20; filter: drop-shadow(0 0 15px var(--tertiary));
+        }
+        .timer-track { 
+            width: 100%; height: 6px; background: rgba(255,255,255,0.05); 
+            border-radius: 3px; margin: 25px 0; overflow: hidden; 
+        }
+        #timer-fill { 
+            width: 100%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary)); 
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .monitor {
+            background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px; border-radius: 16px; margin-bottom: 20px;
+            display: flex; justify-content: space-around; font-weight: 900;
+        }
+        .ticker { animation: ptrTick 0.1s infinite alternate; }
+        @keyframes ptrTick { from { transform: translateX(-50%) rotate(-3deg); } to { transform: translateX(-50%) rotate(3deg); } }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="monitor">
+            <div>BANK: <span id="balance" style="color:var(--primary)">1000</span></div>
+            <div>STAKE: <span id="my-bet" style="color:var(--tertiary)">0</span></div>
+        </div>
+
+        <div class="timer-track"><div id="timer-fill"></div></div>
+        <div id="phase" style="font-weight: 800; letter-spacing: 3px; color: var(--primary); opacity: 0.8;">BETTING PHASE OPEN</div>
+        <div id="countdown" style="font-size: 3rem; font-weight: 900; margin: 10px 0; font-family: 'Space Mono', monospace;">35</div>
+
+        <div class="wheel-shield">
+            <div id="pointer" class="pointer"></div>
+            <svg class="wheel-svg" id="wheel" viewBox="0 0 100 100">
+                <path d="M50,50 L50,2 A48,48 0 0,1 98,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L50,98 A48,48 0 0,1 2,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <text x="68" y="30" fill="var(--primary)" font-size="7" font-weight="900">2x</text>
+                <text x="68" y="75" fill="var(--primary)" font-size="7" font-weight="900">5x</text>
+                <text x="18" y="75" fill="var(--tertiary)" font-size="7" font-weight="900">50x</text>
+                <text x="18" y="30" fill="var(--secondary)" font-size="7" font-weight="900">3x</text>
+            </svg>
+        </div>
+
+        <div id="betting-controls" style="margin-top: 30px; display:flex; gap:15px; justify-content:center;">
+            <button onclick="placeBet(10)">+$10</button>
+            <button onclick="placeBet(50)">+$50</button>
+            <button onclick="placeBet(100)">+$100</button>
+            <button onclick="clearBet()" style="background:var(--bg-deep); border-color:#444; color:#666;">RESET</button>
+        </div>
+
+        <a href="../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+
+    <script>
+        let balance = 1000, currentBet = 0, rotation = 0;
+        let phase = 'betting', timer = 35;
+
+        function updateUI() {
+            document.getElementById('balance').innerText = balance;
+            document.getElementById('my-bet').innerText = currentBet;
+            document.getElementById('countdown').innerText = timer;
+            const max = phase === 'betting' ? 35 : 45;
+            document.getElementById('timer-fill').style.width = (timer / max * 100) + "%";
+            document.getElementById('timer-fill').style.transition = timer === max ? "none" : "width 1s linear";
+        }
+
+        function placeBet(amt) { if(phase==='betting' && balance>=amt) { balance-=amt; currentBet+=amt; updateUI(); } }
+        function clearBet() { if(phase==='betting') { balance+=currentBet; currentBet=0; updateUI(); } }
+
+        function runCycle() {
+            if(timer > 0) timer--;
+            else phase === 'betting' ? startSpin() : endSpin();
+            updateUI();
+        }
+
+        function startSpin() {
+            phase = 'spinning'; timer = 45;
+            document.getElementById('phase').innerText = "WHEEL IN MOTION";
+            document.getElementById('betting-controls').style.opacity = "0.2";
+            document.getElementById('pointer').classList.add('ticker');
+            
+            const sectorIdx = Math.floor(Math.random() * 4);
+            const extraSpins = 12 * 360;
+            const stopAngle = (sectorIdx * 90) + 45;
+            rotation += extraSpins + (360 - (rotation % 360)) + (360 - stopAngle);
+            document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
+            window.winMultiplier = [2, 5, 50, 3][sectorIdx];
+        }
+
+        function endSpin() {
+            const win = currentBet * window.winMultiplier; balance += win;
+            document.getElementById('pointer').classList.remove('ticker');
+            phase = 'betting'; timer = 35; currentBet = 0;
+            document.getElementById('phase').innerText = "BETTING PHASE OPEN";
+            document.getElementById('betting-controls').style.opacity = "1";
+            updateUI();
+        }
+
+        setInterval(runCycle, 1000);
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/Classic/index.html
+================================================
+<!-- ./gameroom/games/Classic/index.html v11.0 - Ultra Retro -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Retro Classics | Digital Refinery</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .arcade-cabinet { 
+            background: #000; border-radius: 40px; padding: 25px; 
+            border: 1px solid rgba(255,255,255,0.05); position: relative;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 0 50px rgba(255,255,255,0.05);
+            max-width: 700px; margin: auto;
+        }
+        
+        .crt-screen {
+            background: #050508; border-radius: 30px; min-height: 450px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; border: 4px solid #1a1a2e;
+            box-shadow: inset 0 0 50px #000;
+        }
+
+        .crt-screen::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: 10;
+        }
+
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 300px; }
+        .ttt-node {
+            aspect-ratio: 1; background: rgba(255,255,255,0.02); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; font-weight: 900; border: 2px solid rgba(255,255,255,0.05);
+            transition: all 0.3s var(--transition-bounce); cursor: pointer;
+        }
+        .ttt-node:hover { background: rgba(255,255,255,0.05); border-color: var(--primary); transform: scale(1.05); }
+        
+        .c4-frame { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; }
+        .c4-slot { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); transition: 0.5s var(--transition-bounce); }
+        
+        #status { 
+            position: absolute; top: 30px; font-weight: 900; color: var(--primary); 
+            letter-spacing: 5px; text-transform: uppercase; font-size: 0.8rem;
+            text-shadow: 0 0 10px var(--primary);
+        }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container">
+        <div style="display:flex; gap:15px; justify-content:center; margin-bottom: 30px; flex-wrap:wrap;">
+            <button onclick="startTTT()">TIC-TAC-TOE</button>
+            <button onclick="startSnake()">SNAKE CORE</button>
+            <button onclick="startC4()">CONNECT-4</button>
+        </div>
+
+        <div class="arcade-cabinet">
+            <div id="screen" class="crt-screen">
+                <div id="status">MODULE STANDBY</div>
+                <div id="game-view" style="width:100%; display:flex; justify-content:center; align-items:center;">
+                    <div style="color:rgba(255,255,255,0.1); font-weight:900;">[ LOAD LOGIC MODULE ]</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="controls" style="display:none; gap:15px; justify-content:center; margin-top: 40px;">
+            <button onclick="undo()" style="border-color:#444; color:#666;">REVERT MOVE</button>
+            <button onclick="reset()" style="background:var(--surface); border-color:var(--tertiary); color:var(--tertiary);">INITIATE RESET</button>
+        </div>
+        
+        <a href="../../index.html" class="back-link">TERMINATE CORE LINK</a>
+    </div>
+
+    <script>
+        let game = null, state = {}, history = [], over = false;
+        const view = document.getElementById('game-view');
+        const status = document.getElementById('status');
+
+        function startTTT() {
+            game = 'ttt'; history = []; over = false;
+            state = { board: Array(9).fill(null), turn: 'X' };
+            document.getElementById('controls').style.display = 'flex';
+            status.innerText = "PLAYER X ACTIVE";
+            render();
+        }
+
+        function checkTTTWin(b) {
+            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for(let l of lines) if(b[l[0]] && b[l[0]]===b[l[1]] && b[l[0]]===b[l[2]]) return b[l[0]];
+            return b.includes(null) ? null : 'Draw';
+        }
+
+        function startC4() {
+            game = 'c4'; history = []; over = false;
+            state = { board: Array(6).fill().map(() => Array(7).fill(null)), turn: 'R' };
+            document.getElementById('controls').style.display = 'flex';
+            status.innerText = "RED PROTOCOL";
+            render();
+        }
+
+        function checkC4Win(b) {
+            for(let r=0;r<6;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r][c+1] && b[r][c]===b[r][c+2] && b[r][c]===b[r][c+3]) return b[r][c];
+            for(let c=0;c<7;c++) for(let r=0;r<3;r++) if(b[r][c] && b[r][c]===b[r+1][c] && b[r][c]===b[r+2][c] && b[r][c]===b[r+3][c]) return b[r][c];
+            for(let r=3;r<6;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r-1][c+1] && b[r][c]===b[r-2][c+2] && b[r][c]===b[r-3][c+3]) return b[r][c];
+            for(let r=0;r<3;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r+1][c+1] && b[r][c]===b[r+2][c+2] && b[r][c]===b[r+3][c+3]) return b[r][c];
+            return null;
+        }
+
+        function startSnake() {
+            game = 'snake'; over = false; status.innerText = "SNAKE_CORE.EXE";
+            view.innerHTML = `
+                <canvas id="s" width="300" height="300" style="filter:drop-shadow(0 0 10px var(--primary))"></canvas>
+                <div class="mobile-controls">
+                    <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
+                    <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
+                    <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
+                    <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
+                </div>
+            `;
+            document.getElementById('controls').style.display = 'flex';
+            const c = document.getElementById('s'), ctx = c.getContext('2d');
+            let s = [{x:10,y:10}], f = {x:15,y:15}, dx=1, dy=0;
+            
+            window.handleControl = (key) => {
+                if(key==='ArrowUp'&&dy===0){dx=0;dy=-1}
+                if(key==='ArrowDown'&&dy===0){dx=0;dy=1}
+                if(key==='ArrowLeft'&&dx===0){dx=-1;dy=0}
+                if(key==='ArrowRight'&&dx===0){dx=1;dy=0}
+            };
+            document.onkeydown = e => handleControl(e.key);
+            const loop = setInterval(() => {
+                if(game !== 'snake' || over) return clearInterval(loop);
+                let head = {x: s[0].x+dx, y: s[0].y+dy};
+                if(head.x<0||head.x>=20||head.y<0||head.y>=20||s.some(b=>b.x===head.x&&b.y===head.y)) {
+                    over = true; status.innerText = "CORE COLLAPSE"; return clearInterval(loop);
+                }
+                s.unshift(head);
+                if(head.x===f.x&&head.y===f.y) f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}; else s.pop();
+                ctx.fillStyle='#000'; ctx.fillRect(0,0,300,300);
+                ctx.fillStyle='var(--primary)'; s.forEach(b=>ctx.fillRect(b.x*15,b.y*15,14,14));
+                ctx.fillStyle='var(--tertiary)'; ctx.fillRect(f.x*15,f.y*15,14,14);
+            }, 120);
+        }
+
+        function render() {
+            if(game === 'ttt') {
+                view.innerHTML = '<div class="ttt-grid">' + state.board.map((v, i) => `<div class="ttt-node" onclick="move(${i})" style="color:${v==='X'?'var(--primary)':'var(--tertiary)'}">${v||''}</div>`).join('') + '</div>';
+            } else if(game === 'c4') {
+                view.innerHTML = '<div class="c4-frame">' + state.board.map((row, r) => row.map((v, c) => `<div class="c4-slot" style="background:${v==='R'?'var(--tertiary)':v==='Y'?'var(--primary)':'rgba(255,255,255,0.05)'}" onclick="drop(${c})"></div>`).join('')).join('') + '</div>';
+            }
+        }
+
+        window.move = (i) => {
+            if(state.board[i] || over) return;
+            history.push(JSON.parse(JSON.stringify(state)));
+            state.board[i] = state.turn;
+            let res = checkTTTWin(state.board);
+            if(res) { over = true; status.innerText = res === 'Draw' ? "DRAW DETECTED" : res + " VICTORIOUS"; }
+            else { state.turn = state.turn === 'X' ? 'O' : 'X'; status.innerText = "PLAYER " + state.turn + " ACTIVE"; }
+            render();
+        }
+
+        window.drop = (c) => {
+            if(over) return;
+            for(let r=5; r>=0; r--) {
+                if(!state.board[r][c]) {
+                    history.push(JSON.parse(JSON.stringify(state)));
+                    state.board[r][c] = state.turn;
+                    let res = checkC4Win(state.board);
+                    if(res) { over = true; status.innerText = (res === 'R' ? "RED" : "YELLOW") + " VICTORIOUS"; }
+                    else { state.turn = state.turn === 'R' ? 'Y' : 'R'; status.innerText = (state.turn === 'R' ? "RED" : "YELLOW") + " PROTOCOL"; }
+                    render(); break;
+                }
+            }
+        }
+
+        window.undo = () => { if(history.length && !over) { state = history.pop(); render(); status.innerText = (game==='ttt' ? "PLAYER " : "") + (state.turn==='X'||state.turn==='R' ? (game==='ttt'?"X":"RED") : (game==='ttt'?"O":"YELLOW")) + " ACTIVE"; } }
+        window.reset = () => { if(game==='ttt') startTTT(); else if(game==='c4') startC4(); else if(game==='snake') startSnake(); }
+
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/Classic/pac-refinery/index.html
+================================================
+<!-- ./gameroom/games/Classic/pac-refinery/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pac-Refinery | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--primary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow); }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { font-size: 1.5rem; font-weight: 900; background: var(--surface); color: var(--primary); padding: 10px 30px; border-radius: 30px; border: 1px solid var(--primary); display: inline-block; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">SCRAP: <span id="score">0000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="400" height="400"></canvas>
+        </div>
+        
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
+            <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
+            <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
+            <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS OR TOUCH: NAVIGATE</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+let score = 0, dots = [];
+let pacman = { x: 200, y: 200, size: 18, dir: 'right' };
+
+for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
+
+function handleControl(key) {
+    if(key === 'ArrowRight') pacman.dir = 'right';
+    if(key === 'ArrowLeft') pacman.dir = 'left';
+    if(key === 'ArrowUp') pacman.dir = 'up';
+    if(key === 'ArrowDown') pacman.dir = 'down';
+}
+
+function draw() {
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,400,400);
+    ctx.fillStyle = 'var(--primary)'; ctx.shadowBlur = 10; ctx.shadowColor = 'var(--primary)';
+    dots.forEach(dot => { ctx.beginPath(); ctx.arc(dot.x, dot.y, 3, 0, Math.PI*2); ctx.fill(); });
+    ctx.fillStyle = '#ffff00'; ctx.shadowColor = '#ffff00'; ctx.beginPath();
+    let sA = (pacman.dir==='right')?0.2:(pacman.dir==='left')?1.2:(pacman.dir==='up')?1.7:0.7;
+    let eA = sA + 1.6; ctx.moveTo(pacman.x, pacman.y); ctx.arc(pacman.x, pacman.y, pacman.size, sA*Math.PI, eA*Math.PI); ctx.fill();
+    ctx.shadowBlur = 0; update(); requestAnimationFrame(draw);
+}
+
+function update() {
+    const speed = 3;
+    if(pacman.dir==='right') pacman.x+=speed; if(pacman.dir==='left') pacman.x-=speed;
+    if(pacman.dir==='up') pacman.y-=speed; if(pacman.dir==='down') pacman.y+=speed;
+    if(pacman.x>400) pacman.x=0; if(pacman.x<0) pacman.x=400; if(pacman.y>400) pacman.y=0; if(pacman.y<0) pacman.y=400;
+    dots = dots.filter(dot => {
+        if(Math.hypot(pacman.x-dot.x, pacman.y-dot.y) < pacman.size) { score+=10; scoreEl.innerText = score.toString().padStart(4, '0'); return false; }
+        return true;
+    });
+    if(dots.length === 0) for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
+}
+
+window.addEventListener('keydown', e => handleControl(e.key));
+window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); draw(); }
+</script></body></html>
+
+# Update Asteroids with Mobile Controls
+cat << 'EOF' > gameroom/games/Classic/asteroids/index.html
+<!-- ./gameroom/games/Classic/asteroids/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asteroids Core | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--tertiary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px rgba(255, 0, 122, 0.3), inset 0 0 20px rgba(255, 0, 122, 0.2); }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { font-size: 1.2rem; font-weight: 900; background: var(--surface); color: var(--tertiary); padding: 10px 30px; border-radius: 30px; border: 1px solid var(--tertiary); display: inline-block; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
+        .fire-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--tertiary); color: #000; font-weight: 900; display: none; align-items: center; justify-content: center; position: fixed; bottom: 30px; right: 30px; z-index: 100; box-shadow: 0 0 20px var(--tertiary); }
+        @media (pointer: coarse) { .fire-btn { display: flex; } }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">DEBRIS_CLEARED: <span id="score">000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="600" height="450"></canvas>
+        </div>
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" ontouchstart="handleControl('ArrowUp', true)" ontouchend="handleControl('ArrowUp', false)">▲</div>
+            <div class="d-btn" style="grid-area: left" ontouchstart="handleControl('ArrowLeft', true)" ontouchend="handleControl('ArrowLeft', false)">◀</div>
+            <div class="d-btn" style="grid-area: right" ontouchstart="handleControl('ArrowRight', true)" ontouchend="handleControl('ArrowRight', false)">▶</div>
+        </div>
+        <div class="fire-btn" ontouchstart="fire()">FIRE</div>
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS OR TOUCH: COMMAND_SHIP</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+let score = 0, ship = { x:300, y:225, r:15, a:0, rot:0, thrust:false, vel:{x:0, y:0} };
+let bullets = [], debris = [];
+
+function fire() { bullets.push({x:ship.x, y:ship.y, vx:7*Math.cos(ship.a), vy:7*Math.sin(ship.a)}); }
+function handleControl(key, active) {
+    if(key=='ArrowUp') ship.thrust=active;
+    if(key=='ArrowLeft') ship.rot=active?-0.08:0;
+    if(key=='ArrowRight') ship.rot=active?0.08:0;
+    if(key==' ' && active) fire();
+}
+
+function draw() {
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = ship.thrust ? 'var(--primary)' : 'var(--text)'; ctx.shadowBlur = ship.thrust ? 15 : 0; ctx.shadowColor = 'var(--primary)'; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.moveTo(ship.x + ship.r * Math.cos(ship.a), ship.y + ship.r * Math.sin(ship.a));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) - Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) + Math.cos(ship.a)));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) + Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) - Math.cos(ship.a)));
+    ctx.closePath(); ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.fillStyle = 'var(--primary)'; bullets.forEach((b, i) => { ctx.beginPath(); ctx.arc(b.x, b.y, 2, 0, Math.PI*2); ctx.fill(); b.x += b.vx; b.y += b.vy; if(b.x<0 || b.x>canvas.width || b.y<0 || b.y>canvas.height) bullets.splice(i, 1); });
+    ctx.strokeStyle = 'var(--tertiary)'; debris.forEach((d, i) => {
+        ctx.beginPath(); for(let p=0; p<d.points; p++) { let ang = (p/d.points)*Math.PI*2; let rx = d.x + d.r * Math.cos(ang), ry = d.y + d.r * Math.sin(ang); if(p===0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry); }
+        ctx.closePath(); ctx.stroke(); d.x += d.vx; d.y += d.vy; if(d.x<0) d.x=canvas.width; if(d.x>canvas.width) d.x=0; if(d.y<0) d.y=canvas.height; if(d.y>canvas.height) d.y=0;
+        bullets.forEach((b, bi) => { if(Math.hypot(d.x-b.x, d.y-b.y) < d.r) { debris.splice(i, 1); bullets.splice(bi, 1); score += 10; document.getElementById('score').innerText = score.toString().padStart(3, '0'); if(debris.length < 5) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*3-1.5, vy:Math.random()*3-1.5, r:20, points:7}); } });
+    });
+    if(ship.thrust) { ship.vel.x += 0.15 * Math.cos(ship.a); ship.vel.y += 0.15 * Math.sin(ship.a); }
+    ship.vel.x *= 0.99; ship.vel.y *= 0.99; ship.x += ship.vel.x; ship.y += ship.vel.y; ship.a += ship.rot;
+    if(ship.x<0) ship.x=canvas.width; if(ship.x>canvas.width) ship.x=0; if(ship.y<0) ship.y=canvas.height; if(ship.y>canvas.height) ship.y=0;
+    requestAnimationFrame(draw);
+}
+window.onkeydown = e => handleControl(e.key, true);
+window.onkeyup = e => handleControl(e.key, false);
+window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); debris=[]; for(let i=0; i<8; i++) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*2-1, vy:Math.random()*2-1, r:Math.random()*20+15, points:Math.floor(Math.random()*5+5)}); draw(); }
+</script></body></html>
+
+# Update Pong with Mobile Controls
+cat << 'EOF' > gameroom/games/Classic/pong/index.html
+<!-- ./gameroom/games/Classic/pong/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neon Pong | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--primary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow); }
+        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; max-width: 90vw; height: auto; }
+        .score-row { display: flex; justify-content: space-around; font-size: 3rem; font-weight: 900; margin-bottom: 20px; color: #fff; text-shadow: 0 0 15px var(--glow); font-family: 'Space Mono', monospace; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-row"><span id="p1-score">0</span><span id="p2-score">0</span></div>
+        <div class="arcade-frame">
+            <canvas id="pong" width="600" height="400"></canvas>
+        </div>
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" ontouchstart="handleControl('ArrowUp', true)" ontouchend="handleControl('ArrowUp', false)">▲</div>
+            <div class="d-btn" style="grid-area: down" ontouchstart="handleControl('ArrowDown', true)" ontouchend="handleControl('ArrowDown', false)">▼</div>
+        </div>
+        <div style="margin-top: 30px;">
+            <button onclick="resetGame()">RE-INITIALIZE CORE</button>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
+        let p1Score = 0, p2Score = 0, p1Y = 160, p2Y = 160, ballX = 300, ballY = 200, ballDX = 5, ballDY = 5;
+        let upPressed = false, downPressed = false;
+        function handleControl(key, active) { if(key === 'ArrowUp') upPressed = active; if(key === 'ArrowDown') downPressed = active; }
+        function resetBall() { ballX = canvas.width/2; ballY = canvas.height/2; ballDX = -ballDX / Math.abs(ballDX) * 5; ballDY = (Math.random() - 0.5) * 10; }
+        function update() {
+            if(upPressed) p1Y = Math.max(0, p1Y - 6); if(downPressed) p1Y = Math.min(canvas.height - 80, p1Y + 6);
+            ballX += ballDX; ballY += ballDY; const targetY = ballY - 40;
+            if(p2Y < targetY) p2Y += 4.5; else p2Y -= 4.5; p2Y = Math.max(0, Math.min(canvas.height - 80, p2Y));
+            if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
+            if(ballX <= 10) { if(ballY > p1Y && ballY < p1Y + 80) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p1Y + 40)) * 0.3; } else { p2Score++; document.getElementById('p2-score').innerText = p2Score; resetBall(); } }
+            if(ballX >= canvas.width - 10) { if(ballY > p2Y && ballY < p2Y + 80) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p2Y + 40)) * 0.3; } else { p1Score++; document.getElementById('p1-score').innerText = p1Score; resetBall(); } }
+            draw();
+        }
+        function draw() {
+            ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
+            ctx.fillStyle = 'var(--primary)'; ctx.shadowBlur = 15; ctx.shadowColor = 'var(--primary)';
+            ctx.fillRect(2, p1Y, 10, 80); ctx.fillRect(canvas.width - 12, p2Y, 10, 80); ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+        }
+        function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
+        window.addEventListener('keydown', e => handleControl(e.key, true)); window.addEventListener('keyup', e => handleControl(e.key, false));
+        setInterval(update, 1000/60);
+        window.onload = () => { const t = localStorage.getItem('refinery-theme'); if(t) document.body.setAttribute('data-theme', t); }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/Classic/asteroids/index.html
+================================================
+<!-- ./gameroom/games/Classic/asteroids/index.html v11.1 - Mobile Friendly -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asteroids Core | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { 
+            background: #000; border: 4px solid var(--tertiary); border-radius: 24px; 
+            padding: 15px; display: inline-block; position: relative;
+            box-shadow: 0 0 30px rgba(255, 0, 122, 0.3), inset 0 0 20px rgba(255, 0, 122, 0.2);
+        }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { 
+            font-size: 1.2rem; font-weight: 900; background: var(--surface); 
+            color: var(--tertiary); padding: 10px 30px; border-radius: 30px; 
+            border: 1px solid var(--tertiary); display: inline-block;
+            margin-bottom: 20px; font-family: 'Space Mono', monospace;
+        }
+        .fire-btn { 
+            width: 80px; height: 80px; border-radius: 50%; background: var(--tertiary); 
+            color: #000; font-weight: 900; display: none; align-items: center; 
+            justify-content: center; position: fixed; bottom: 30px; right: 30px; 
+            z-index: 100; box-shadow: 0 0 20px var(--tertiary); user-select: none; touch-action: manipulation;
+        }
+        @media (pointer: coarse) { .fire-btn { display: flex; } }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">DEBRIS_CLEARED: <span id="score">000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="600" height="450"></canvas>
+        </div>
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" ontouchstart="handleControl('ArrowUp', true)" ontouchend="handleControl('ArrowUp', false)" onmousedown="handleControl('ArrowUp', true)" onmouseup="handleControl('ArrowUp', false)">▲</div>
+            <div class="d-btn" style="grid-area: left" ontouchstart="handleControl('ArrowLeft', true)" ontouchend="handleControl('ArrowLeft', false)" onmousedown="handleControl('ArrowLeft', true)" onmouseup="handleControl('ArrowLeft', false)">◀</div>
+            <div class="d-btn" style="grid-area: right" ontouchstart="handleControl('ArrowRight', true)" ontouchend="handleControl('ArrowRight', false)" onmousedown="handleControl('ArrowRight', true)" onmouseup="handleControl('ArrowRight', false)">▶</div>
+        </div>
+        <div class="fire-btn" ontouchstart="fire()" onmousedown="fire()">FIRE</div>
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">ARROWS OR TOUCH: COMMAND_SHIP | SPACE/FIRE: PULSE_CANNON</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+let score = 0;
+let ship = { x:300, y:225, r:15, a:0, rot:0, thrust:false, vel:{x:0, y:0} };
+let bullets = [], debris = [];
+
+function fire() { bullets.push({x:ship.x, y:ship.y, vx:7*Math.cos(ship.a), vy:7*Math.sin(ship.a)}); }
+function handleControl(key, active) {
+    if(key=='ArrowUp') ship.thrust=active;
+    if(key=='ArrowLeft') ship.rot=active?-0.08:0;
+    if(key=='ArrowRight') ship.rot=active?0.08:0;
+    if(key==' ' && active) fire();
+}
+
+function initDebris() {
+    debris = [];
+    for(let i=0; i<8; i++) {
+        debris.push({ 
+            x:Math.random()*canvas.width, y:Math.random()*canvas.height, 
+            vx:Math.random()*2-1, vy:Math.random()*2-1, r:Math.random()*20+15,
+            points: Math.floor(Math.random()*5+5)
+        });
+    }
+}
+
+function draw() {
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    
+    // Draw Ship
+    ctx.strokeStyle = ship.thrust ? 'var(--primary)' : 'var(--text)';
+    ctx.shadowBlur = ship.thrust ? 15 : 0; ctx.shadowColor = 'var(--primary)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(ship.x + ship.r * Math.cos(ship.a), ship.y + ship.r * Math.sin(ship.a));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) - Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) + Math.cos(ship.a)));
+    ctx.lineTo(ship.x - ship.r * (Math.cos(ship.a) + Math.sin(ship.a)), ship.y - ship.r * (Math.sin(ship.a) - Math.cos(ship.a)));
+    ctx.closePath(); ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Bullets
+    ctx.fillStyle = 'var(--primary)';
+    bullets.forEach((b, i) => {
+        ctx.beginPath(); ctx.arc(b.x, b.y, 2, 0, Math.PI*2); ctx.fill();
+        b.x += b.vx; b.y += b.vy;
+        if(b.x<0 || b.x>canvas.width || b.y<0 || b.y>canvas.height) bullets.splice(i, 1);
+    });
+
+    // Debris
+    ctx.strokeStyle = 'var(--tertiary)';
+    debris.forEach((d, i) => {
+        ctx.beginPath();
+        for(let p=0; p<d.points; p++) {
+            let angle = (p/d.points)*Math.PI*2;
+            let rx = d.x + d.r * Math.cos(angle);
+            let ry = d.y + d.r * Math.sin(angle);
+            if(p===0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry);
+        }
+        ctx.closePath(); ctx.stroke();
+        
+        d.x += d.vx; d.y += d.vy;
+        if(d.x<0) d.x=canvas.width; if(d.x>canvas.width) d.x=0;
+        if(d.y<0) d.y=canvas.height; if(d.y>canvas.height) d.y=0;
+
+        bullets.forEach((b, bi) => {
+            if(Math.hypot(d.x-b.x, d.y-b.y) < d.r) {
+                debris.splice(i, 1); bullets.splice(bi, 1);
+                score += 10; document.getElementById('score').innerText = score.toString().padStart(3, '0');
+                if(debris.length < 5) debris.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()*3-1.5, vy:Math.random()*3-1.5, r:20, points:7});
+            }
+        });
+    });
+
+    if(ship.thrust) { ship.vel.x += 0.15 * Math.cos(ship.a); ship.vel.y += 0.15 * Math.sin(ship.a); }
+    ship.vel.x *= 0.99; ship.vel.y *= 0.99;
+    ship.x += ship.vel.x; ship.y += ship.vel.y;
+    ship.a += ship.rot;
+    if(ship.x<0) ship.x=canvas.width; if(ship.x>canvas.width) ship.x=0;
+    if(ship.y<0) ship.y=canvas.height; if(ship.y>canvas.height) ship.y=0;
+
+    requestAnimationFrame(draw);
+}
+
+window.onkeydown = e => handleControl(e.key, true);
+window.onkeyup = e => handleControl(e.key, false);
+
+window.onload = () => {
+    const t = localStorage.getItem('refinery-theme');
+    if(t) document.body.setAttribute('data-theme', t);
+    initDebris();
+    draw();
+}
+</script></body></html>
+
+
+================================================
+FILE: ./games/Classic/snake/index.html
+================================================
+<!DOCTYPE html><html><head><title>REFINERY SNAKE</title>
+<style>
+    body { background:#000; color:#00ff41; font-family:monospace; text-align:center; }
+    canvas { border:2px solid #00ff41; background:#050505; margin-top:20px; }
+    .score { font-size:1.5em; margin:10px; }
+</style></head><body>
+    <h1>🐍 REFINERY SNAKE</h1>
+    <div class="score">SCRAPS: <span id="score">0</span></div>
+    <canvas id="game" width="300" height="300"></canvas>
+    <div style="margin-top:10px;">[ ARROWS TO NAVIGATE ]</div>
+    <a href="../index.html" style="display:block;margin-top:15px;color:#00ff41;">← BACK</a>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+
+let score = 0;
+let grid = 15;
+let count = 0;
+let snake = { x: 150, y: 150, dx: grid, dy: 0, cells: [], maxCells: 4 };
+let scrap = { x: 30, y: 30 };
+
+function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+
+function loop() {
+    requestAnimationFrame(loop);
+    if (++count < 6) return; // Slow down the frame rate for 8-bit feel
+    count = 0;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    snake.x += snake.dx;
+    snake.y += snake.dy;
+
+    // Screen wrap logic
+    if (snake.x < 0) snake.x = canvas.width - grid;
+    else if (snake.x >= canvas.width) snake.x = 0;
+    if (snake.y < 0) snake.y = canvas.height - grid;
+    else if (snake.y >= canvas.height) snake.y = 0;
+
+    snake.cells.unshift({x: snake.x, y: snake.y});
+    if (snake.cells.length > snake.maxCells) snake.cells.pop();
+
+    // Draw Scrap
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(scrap.x, scrap.y, grid-1, grid-1);
+
+    // Draw Snake
+    ctx.fillStyle = '#00ff41';
+    snake.cells.forEach(function(cell, index) {
+        ctx.fillRect(cell.x, cell.y, grid-1, grid-1);
+        if (cell.x === scrap.x && cell.y === scrap.y) {
+            snake.maxCells++;
+            score += 10;
+            scoreEl.innerText = score;
+            scrap.x = getRandomInt(0, 20) * grid;
+            scrap.y = getRandomInt(0, 20) * grid;
+        }
+        // Collision check
+        for (let i = index + 1; i < snake.cells.length; i++) {
+            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                snake.maxCells = 4;
+                score = 0;
+                scoreEl.innerText = score;
+            }
+        }
+    });
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.which === 37 && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+    else if (e.which === 38 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+    else if (e.which === 39 && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+    else if (e.which === 40 && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+});
+
+requestAnimationFrame(loop);
+</script></body></html>
+
+
+================================================
+FILE: ./games/Classic/pong/index.html
+================================================
+<!-- ./gameroom/games/Classic/pong/index.html v11.0 - Ultra Neon -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neon Pong | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { 
+            background: #000; border: 4px solid var(--primary); border-radius: 24px; 
+            padding: 15px; display: inline-block; position: relative;
+            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
+        }
+        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; }
+        .score-row { 
+            display: flex; justify-content: space-around; font-size: 3rem; 
+            font-weight: 900; margin-bottom: 20px; color: #fff;
+            text-shadow: 0 0 15px var(--glow); font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-row">
+            <span id="p1-score">0</span>
+            <span id="p2-score">0</span>
+        </div>
+        <div class="arcade-frame">
+            <canvas id="pong" width="600" height="400"></canvas>
+        </div>
+        <div style="margin-top: 30px;">
+            <button onclick="resetGame()">RE-INITIALIZE CORE</button>
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top:15px; letter-spacing: 2px;">MANUAL OVERRIDE: ARROW_KEYS</p>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
+        let p1Score = 0, p2Score = 0;
+        const paddleWidth = 10, paddleHeight = 80;
+        let p1Y = 160, p2Y = 160;
+        let ballX = 300, ballY = 200, ballDX = 5, ballDY = 5;
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'ArrowUp') p1Y = Math.max(0, p1Y - 30);
+            if(e.key === 'ArrowDown') p1Y = Math.min(canvas.height - paddleHeight, p1Y + 30);
+        });
+
+        function resetBall() {
+            ballX = canvas.width/2; ballY = canvas.height/2;
+            ballDX = -ballDX / Math.abs(ballDX) * 5; ballDY = (Math.random() - 0.5) * 10;
+        }
+
+        function update() {
+            ballX += ballDX; ballY += ballDY;
+            // AI Logic
+            const targetY = ballY - paddleHeight/2;
+            if(p2Y < targetY) p2Y += 4.5; else p2Y -= 4.5;
+            p2Y = Math.max(0, Math.min(canvas.height - paddleHeight, p2Y));
+
+            if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
+            if(ballX <= paddleWidth) {
+                if(ballY > p1Y && ballY < p1Y + paddleHeight) {
+                    ballDX = -ballDX * 1.05;
+                    const deltaY = ballY - (p1Y + paddleHeight/2);
+                    ballDY = deltaY * 0.3;
+                } else {
+                    p2Score++; document.getElementById('p2-score').innerText = p2Score;
+                    resetBall();
+                }
+            }
+            if(ballX >= canvas.width - paddleWidth) {
+                if(ballY > p2Y && ballY < p2Y + paddleHeight) {
+                    ballDX = -ballDX * 1.05;
+                    const deltaY = ballY - (p2Y + paddleHeight/2);
+                    ballDY = deltaY * 0.3;
+                } else {
+                    p1Score++; document.getElementById('p1-score').innerText = p1Score;
+                    resetBall();
+                }
+            }
+            draw();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            // Center Line
+            ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = 'var(--primary)';
+            ctx.shadowBlur = 15; ctx.shadowColor = 'var(--primary)';
+            ctx.fillRect(2, p1Y, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth - 2, p2Y, paddleWidth, paddleHeight);
+            ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
+        setInterval(update, 1000/60);
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./games/Classic/quix/index.html
+================================================
+<!-- ./gameroom/games/Classic/quix/index.html v11.0 - Ultra Flow -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quix Flow | Digital Refinery</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
+        .node { 
+            height: 90px; background: rgba(255,255,255,0.02); border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; 
+            justify-content: center; font-size: 1.5rem; font-weight: 900; 
+            cursor: pointer; transition: all 0.3s var(--transition-bounce);
+            color: rgba(255,255,255,0.1); font-family: 'Space Mono', monospace;
+        }
+        .node.active { 
+            border-color: var(--primary); background: var(--primary); 
+            color: var(--bg-deep); transform: scale(1.1); 
+            box-shadow: 0 0 30px var(--glow); z-index: 5;
+        }
+        .node:hover:not(.active) { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+        
+        .level-badge { 
+            font-size: 1rem; font-weight: 900; background: var(--surface); 
+            color: var(--primary); padding: 8px 25px; border-radius: 30px; 
+            border: 1px solid var(--primary); display: inline-block;
+            margin-bottom: 20px; letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="level-badge" id="score">LEVEL: 01</div>
+        <div id="status" style="font-weight: 800; letter-spacing: 5px; color: var(--tertiary); text-transform: uppercase;">SYNCHRONIZE MODULE</div>
+        
+        <div class="game-box">
+            <div class="grid" id="node-grid"></div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <button id="start-btn" onclick="startGame()" style="min-width: 250px;">INITIALIZE SEQUENCE</button>
+        </div>
+        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+    </div>
+    <script>
+        let sequence = [], userSequence = [], level = 1, playing = false;
+        function initGrid() {
+            const grid = document.getElementById('node-grid');
+            for(let i=0; i<16; i++) {
+                grid.innerHTML += `<div class="node" id="n${i}" onclick="nodeClick(${i})">${(i+1).toString().padStart(2, '0')}</div>`;
+            }
+        }
+        function startGame() {
+            sequence = []; userSequence = []; level = 1; playing = true;
+            document.getElementById('start-btn').style.display = 'none';
+            nextLevel();
+        }
+        function nextLevel() {
+            userSequence = [];
+            sequence.push(Math.floor(Math.random() * 16));
+            document.getElementById('score').innerText = "LEVEL: " + level.toString().padStart(2, '0');
+            playSequence();
+        }
+        async function playSequence() {
+            playing = false;
+            document.getElementById('status').innerText = "ANALYZING...";
+            document.getElementById('status').style.color = "var(--primary)";
+            await new Promise(r => setTimeout(r, 800));
+            for(let id of sequence) {
+                await flashNode(id);
+                await new Promise(r => setTimeout(r, 200));
+            }
+            playing = true;
+            document.getElementById('status').innerText = "REPEAT FLOW";
+            document.getElementById('status').style.color = "var(--tertiary)";
+        }
+        function flashNode(id) {
+            return new Promise(r => {
+                const el = document.getElementById('n'+id);
+                el.classList.add('active');
+                setTimeout(() => { el.classList.remove('active'); r(); }, 500);
+            });
+        }
+        function nodeClick(id) {
+            if(!playing) return;
+            userSequence.push(id);
+            const expected = sequence[userSequence.length-1];
+            if(id !== expected) {
+                document.getElementById('status').innerText = "SYNC FAILED - REBOOT";
+                document.getElementById('status').style.color = "#ef4444";
+                document.getElementById('start-btn').style.display = 'inline-block';
+                document.getElementById('start-btn').innerText = "RE-INITIALIZE";
+                playing = false;
+            } else if(userSequence.length === sequence.length) {
+                level++;
+                document.getElementById('status').innerText = "LEVEL SYNCED";
+                document.getElementById('status').style.color = "var(--primary)";
+                setTimeout(nextLevel, 1000);
+            }
+        }
+        initGrid();
+        window.onload = () => {
+            const t = localStorage.getItem('refinery-theme');
+            if(t) document.body.setAttribute('data-theme', t);
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./index.html
+================================================
+<!-- ./gameroom/index.html v11.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digital Refinery | Premium Gaming Suite</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hero { margin: 80px 0; text-align: center; }
+        .hero p { color: var(--primary); font-weight: 800; letter-spacing: 10px; margin-top: 10px; text-transform: uppercase; font-size: 0.8rem; }
+        .theme-selector { position: fixed; top: 20px; right: 20px; z-index: 100; }
+        select { background: var(--surface); color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 8px; outline: none; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body id="main-body">
+    <div class="theme-selector">
+        <select id="theme-selector" onchange="changeTheme(this.value)">
+            <option value="cyber">CYBER NEON</option>
+            <option value="royal">ROYAL CASINO</option>
+            <option value="synthwave">SYNTHWAVE</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>DIGITAL REFINERY</h1>
+            <p>High-Fidelity Interaction Core</p>
+        </div>
+
+        <div class="grid">
+            <a href="games/SLOTS/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
+                <h3>Quantum Slots</h3>
+            </a>
+            <a href="games/blackjack/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg>
+                <h3>Blackjack Pro</h3>
+            </a>
+            <a href="games/fishing/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M20,2H4C2.89,2 2,2.89 2,4V20C2,21.11 2.89,22 4,22H20C21.11,22 22,21.11 22,20V4C22,2.89 21.11,2 hide 20,2M20,20H4V4H20V20M12,6C8.69,6 6,8.69 6,12C6,15.31 8.69,18 12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6Z"/></svg>
+                <h3>Deep Sea Fishing</h3>
+            </a>
+            <a href="games/WIN-WHEEL/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
+                <h3>Win Wheel</h3>
+            </a>
+            <a href="games/Classic/pong/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M21,11H18V13H21V11M6,11H3V13H6V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
+                <h3>Neon Pong</h3>
+            </a>
+            <a href="games/Classic/quix/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M7,15H9V17H7V15M15,15H17V17H15V15M7,7H9V9H7V7M15,7H17V9H15V7M11,11H13V13H11V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
+                <h3>Quix Flow</h3>
+            </a>
+            <a href="games/Classic/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4C16.42,4 20,7.58 20,12C20,16.42 16.42,20 12,20M11,7H13V13H11V7M11,15H13V17H11V15Z"/></svg>
+                <h3>All Classics</h3>
+            </a>
+        </div>
+        
+        <div style="margin-top: 80px; text-align: center; opacity: 0.2; font-size: 0.7rem; letter-spacing: 5px;">
+            V11.0 ULTRA-REFINED // REFINERY ENGINE
+        </div>
+    </div>
+
+    <script>
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('refinery-theme', theme);
+        }
+        window.onload = () => {
+            const saved = localStorage.getItem('refinery-theme');
+            if(saved) {
+                document.getElementById('theme-selector').value = saved;
+                changeTheme(saved);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+================================================
+FILE: ./style.css
+================================================
+/* ./gameroom/style.css v11.0 - Ultra-Refined Animations & Graphics */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+    --primary: #00f2ff;
+    --secondary: #7000ff;
+    --tertiary: #ff007a;
+    --bg-deep: #030305;
+    --surface: #0a0a12;
+    --text: #ffffff;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --glow: rgba(0, 242, 255, 0.5);
+    --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+[data-theme="royal"] {
+    --primary: #ffd700;
+    --secondary: #8b0000;
+    --tertiary: #ffffff;
+    --bg-deep: #0a0a0a;
+    --surface: #1a1a1a;
+    --glow: rgba(255, 215, 0, 0.4);
+}
+
+[data-theme="synthwave"] {
+    --primary: #ff00ff;
+    --secondary: #00ffff;
+    --tertiary: #fce803;
+    --bg-deep: #12042b;
+    --surface: #2b0b4c;
+    --glow: rgba(255, 0, 255, 0.6);
+}
+
+body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: var(--font);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.8s var(--transition-smooth);
+    overflow-x: hidden;
+}
+
+body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 70%);
+    pointer-events: none; z-index: -1;
+}
+
+.container {
+    max-width: 1000px; width: 100%;
+    animation: slideUp 0.8s var(--transition-bounce) both;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-weight: 900; font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 40px; text-align: center;
+    background: linear-gradient(135deg, var(--text), var(--primary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+}
+
+.grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 40px 20px; border-radius: 20px;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center;
+    transition: all 0.4s var(--transition-bounce);
+    position: relative; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: skewX(-20deg); transition: 0.5s;
+}
+
+.card:hover::before { left: 150%; }
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px var(--glow);
+}
+
+.card svg {
+    width: 60px; height: 60px; margin-bottom: 20px;
+    fill: var(--primary); transition: transform 0.4s var(--transition-bounce);
+    filter: drop-shadow(0 0 10px var(--glow));
+}
+
+.card:hover svg { transform: scale(1.2) rotate(5deg); }
+
+button {
+    background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+    border: 1px solid var(--primary); color: var(--text);
+    padding: 14px 28px; border-radius: 12px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative; overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+button:hover {
+    background: var(--primary); color: var(--bg-deep);
+    box-shadow: 0 0 20px var(--glow); transform: translateY(-2px);
+}
+
+button:active { transform: translateY(2px) scale(0.98); box-shadow: none; }
+button:disabled { background: #222; border-color: #444; color: #666; cursor: not-allowed; box-shadow: none; }
+
+.back-link {
+    margin-top: 40px; display: inline-block; color: rgba(255,255,255,0.5);
+    text-decoration: none; font-weight: 800; letter-spacing: 2px;
+    transition: color 0.3s;
+}
+.back-link:hover { color: var(--primary); text-shadow: 0 0 10px var(--glow); }
+
+.game-box {
+    background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 24px; padding: 40px; margin: 30px 0;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.4);
+    position: relative;
+}
+
+/* Base Glassmorphism */
+/* Mobile Control Overlays */
+.mobile-controls {
+    display: none;
+    grid-template-areas: "up up" "left right" "down down";
+    gap: 10px;
+    margin-top: 30px;
+    user-select: none;
+}
+
+@media (pointer: coarse) {
+    .mobile-controls { display: grid; justify-content: center; }
+}
+
+.d-btn {
+    width: 60px; height: 60px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: var(--primary);
+    touch-action: manipulation;
+}
+
+.d-btn:active { background: var(--primary); color: var(--bg-deep); }
+
+

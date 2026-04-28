@@ -1,0 +1,21 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ./gameroom/dump v1.0
+# Aggregates project source code for analysis
+
+OUTPUT="gameroom_dump.txt"
+TIMESTAMP=$(date '+%D %I:%M %p')
+
+echo "------------------------------------------------" > $OUTPUT
+echo "PROJECT DUMP: gameroom" >> $OUTPUT
+echo "GENERATED: $TIMESTAMP" >> $OUTPUT
+echo "------------------------------------------------" >> $OUTPUT
+
+find . -maxdepth 4 -not -path '*/.*' -type f \( -name "*.html" -o -name "*.css" -o -name "*.sh" -o -name "start" \) | while read file; do
+    echo "================================================" >> $OUTPUT
+    echo "FILE: $file" >> $OUTPUT
+    echo "================================================" >> $OUTPUT
+    cat "$file" >> $OUTPUT
+    echo -e "\n" >> $OUTPUT
+done
+
+echo "Dump complete: $OUTPUT"
