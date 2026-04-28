@@ -168,16 +168,16 @@
 
         function finalize() {
             let pv = val(pHand), dv = val(dHand);
-            if(dv > 21) end("DEALER BUST - ASSETS SECURED");
-            else if(pv > dv) end("VICTORY - SCORE SURPASSED");
+            if(dv > 21) { balance += bet * 2; end("DEALER BUST - ASSETS SECURED"); }
+            else if(pv > dv) { balance += bet * 2; end("VICTORY - SCORE SURPASSED"); }
             else if(dv > pv) end("DEFEAT - HOUSE PREVAILS");
-            else end("NEUTRAL OUTCOME - PUSH");
+            else { balance += bet; end("NEUTRAL OUTCOME - PUSH"); }
         }
 
         function end(m) {
             gameOver = true; render();
             document.getElementById('status').innerText = m;
-            document.getElementById('deal-btn').style.display = 'inline-block';
+            document.getElementById('bet-controls').style.display = 'flex';
             document.getElementById('deal-btn').innerText = "NEW SESSION";
             document.getElementById('game-controls').style.display = 'none';
         }

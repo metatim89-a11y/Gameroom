@@ -43,7 +43,7 @@
 <body id="game-body">
     <div class="container" style="text-align: center;">
         <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900;">
-            <div>PRESSURE: <span style="color:var(--primary)">OPTIMAL</span></div>
+            <div>TREASURY: <span id="balance" style="color:var(--primary)">1000.00</span></div>
             <div>STATUS: <span id="status-text" style="color:var(--tertiary)">IDLE</span></div>
         </div>
 
@@ -63,8 +63,17 @@
 
     <script>
         let state = 'idle';
+        let balance = parseFloat(localStorage.getItem('refinery_balance') || "1000");
+
+        function updateUI() {
+            document.getElementById('balance').innerText = balance.toFixed(2);
+            localStorage.setItem('refinery_balance', balance.toFixed(2));
+        }
+
         function cast() {
-            if(state !== 'idle') return;
+            if(state !== 'idle' || balance < 10) return;
+            balance -= 10;
+            updateUI();
             state = 'waiting';
             const hook = document.getElementById('hook');
             const depth = document.getElementById('depth-fill');
@@ -92,15 +101,30 @@
             const lowTier = ['🐟','🐠','🐡','🦀'];
             const highTier = ['💎','👑','🦈','🐙'];
             
-            let c;
+            let c, reward = 0;
             // RTP Influence
             if (Math.random() < rtp / 100) {
                 // Good catch
-                c = Math.random() < 0.3 ? highTier[Math.floor(Math.random()*highTier.length)] : lowTier[Math.floor(Math.random()*lowTier.length)];
+                if(Math.random() < 0.3) {
+                    c = highTier[Math.floor(Math.random()*highTier.length)];
+                    reward = 50 + Math.random()*100;
+                } else {
+                    c = lowTier[Math.floor(Math.random()*lowTier.length)];
+                    reward = 15 + Math.random()*20;
+                }
             } else {
                 // Bad luck or garbage
-                c = Math.random() < 0.2 ? lowTier[Math.floor(Math.random()*lowTier.length)] : '👞';
+                if(Math.random() < 0.2) {
+                    c = lowTier[Math.floor(Math.random()*lowTier.length)];
+                    reward = 5;
+                } else {
+                    c = '👞';
+                    reward = 0;
+                }
             }
+
+            balance += reward;
+            updateUI();
 
             const hook = document.getElementById('hook');
             const depth = document.getElementById('depth-fill');
@@ -124,6 +148,7 @@
         window.onload = () => {
             const t = localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            updateUI();
         }
     </script>
 </body>
