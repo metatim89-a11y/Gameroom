@@ -46,8 +46,8 @@
             const p = document.getElementById('password').value;
             let users = JSON.parse(localStorage.getItem('refinery_users') || "{}");
             
-            // Hardcoded Admin
-            users['Admin'] = 'Admin';
+            // Initialize Admin if not present
+            if(!users['Admin']) users['Admin'] = 'Admin';
             
             if(users[u] && users[u] === p) {
                 localStorage.setItem('session_user', u);
