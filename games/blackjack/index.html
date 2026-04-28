@@ -41,6 +41,11 @@
 </head>
 <body id="game-body">
     <div class="container">
+        <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900;">
+            <div>TREASURY: <span id="balance" style="color:var(--primary)">1000.00</span></div>
+            <div>STAKE: <span id="current-bet" style="color:var(--tertiary)">10.00</span></div>
+        </div>
+
         <div id="status" class="status-msg">READY TO DEAL</div>
         
         <div class="table">
@@ -54,7 +59,11 @@
         </div>
 
         <div style="display:flex; gap:20px; justify-content:center; margin-top:40px;">
-            <button id="deal-btn" onclick="deal()" style="min-width: 250px;">INITIALIZE DEAL</button>
+            <div id="bet-controls" style="display:flex; gap:10px;">
+                <button onclick="adjustBet(-10)">-</button>
+                <button id="deal-btn" onclick="deal()" style="min-width: 200px;">INITIALIZE DEAL</button>
+                <button onclick="adjustBet(10)">+</button>
+            </div>
             <div id="game-controls" style="display:none; gap:15px;">
                 <button onclick="hit()">HIT</button>
                 <button onclick="stand()" style="background:var(--surface); border-color:#ef4444; color:#ef4444;">STAND</button>
@@ -72,6 +81,20 @@
         };
 
         let deck = [], pHand = [], dHand = [], gameOver = false;
+        let balance = parseFloat(localStorage.getItem('refinery_balance') || "1000");
+        let bet = 10;
+
+        function updateUI() {
+            document.getElementById('balance').innerText = balance.toFixed(2);
+            localStorage.setItem('refinery_balance', balance.toFixed(2));
+            document.getElementById('current-bet').innerText = bet.toFixed(2);
+        }
+
+        function adjustBet(amt) {
+            if(!gameOver && pHand.length > 0) return;
+            bet = Math.max(10, Math.min(500, bet + amt));
+            updateUI();
+        }
 
         function getDeck() {
             const s = ['♠','♥','♦','♣'], v = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -88,6 +111,7 @@
         }
 
         function render() {
+            updateUI();
             document.getElementById('player-hand').innerHTML = pHand.map(c => `<div class="card ${c.r?'red':''}"><div>${c.v}</div>${suitIcons[c.s]}<div style="transform:rotate(180deg)">${c.v}</div></div>`).join('');
             document.getElementById('player-score').innerText = "PLAYER: " + val(pHand);
             if(gameOver) {
@@ -117,11 +141,13 @@
         }
 
         function deal() {
+            if(balance < bet) return;
+            balance -= bet;
             deck = getDeck(); 
             pHand = [drawCard(), drawCard()]; 
             dHand = [drawCard(), drawCard()];
             gameOver = false; document.getElementById('status').innerText = "PLAYER DECISION REQUIRED";
-            document.getElementById('deal-btn').style.display = 'none';
+            document.getElementById('bet-controls').style.display = 'none';
             document.getElementById('game-controls').style.display = 'flex';
             render();
         }
