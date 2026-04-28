@@ -219,7 +219,8 @@ const SYMBOLS = [
 ];
 
 let state = {
-    balance: 1000, bet: 10, isSpinning: false, canStop: false, autoPlay: false, fastMode: false,
+    balance: parseFloat(localStorage.getItem('refinery_balance') || "1000"), 
+    bet: 10, isSpinning: false, canStop: false, autoPlay: false, fastMode: false,
     freeSpins: 0, bonusMode: false, bonusType: -1, gridRows: 5, colossalIdx: -1
 };
 
@@ -238,6 +239,7 @@ function rainWealth(count = 30) {
 
 function updateUI() {
     $('balance').innerText = state.balance.toFixed(2);
+    localStorage.setItem('refinery_balance', state.balance.toFixed(2));
     $('current-bet').innerText = state.bet.toFixed(2);
     $('auto-btn').classList.toggle('active', state.autoPlay);
     $('fast-btn').classList.toggle('active', state.fastMode);

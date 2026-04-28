@@ -45,12 +45,10 @@
             document.getElementById('username-display').innerText = user;
             document.getElementById('avatar').innerText = user.charAt(0).toUpperCase();
             
-            // Just displaying a placeholder balance or pulling from a global generic balance if it exists.
-            // Using Slots balance as global balance if it exists:
-            // But we don't have a global one mapped, so we just show a static 1000.00 for now.
-            
-            if(user === 'Admin') {
-                document.getElementById('admin-btn').style.display = 'block';
+            const balance = localStorage.getItem('refinery_balance') || "1000.00";
+            document.getElementById('balance-display').innerText = parseFloat(balance).toFixed(2);
+
+            if(user === 'Admin') {                document.getElementById('admin-btn').style.display = 'block';
             }
         }
         
