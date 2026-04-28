@@ -1,0 +1,63 @@
+<!-- ./gameroom/signup.html v1.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup | Digital Refinery</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg-deep); }
+        .auth-card { background: var(--surface); padding: 40px; border-radius: 20px; border: 1px solid var(--tertiary); box-shadow: 0 0 20px rgba(255,0,122,0.2); width: 300px; text-align: center; }
+        .auth-card h2 { color: var(--tertiary); margin-top: 0; text-transform: uppercase; letter-spacing: 3px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; border-radius: 8px; outline: none; box-sizing: border-box; }
+        .input-group input:focus { border-color: var(--tertiary); }
+        .btn { background: var(--tertiary); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn:hover { filter: brightness(1.2); }
+        .links { margin-top: 20px; font-size: 0.8rem; }
+        .links a { color: var(--tertiary); text-decoration: none; }
+        #error-msg { color: var(--danger); font-size: 0.8rem; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body data-theme="cyber">
+    <div class="auth-card">
+        <h2>Request Access</h2>
+        <div id="error-msg">Username already exists</div>
+        <form id="signup-form">
+            <div class="input-group">
+                <label>Desired Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="links">
+            <p>Have clearance? <a href="login.html">Login Here</a></p>
+            <p><a href="index.html">Return to Hub</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            let users = JSON.parse(localStorage.getItem('refinery_users') || "{}");
+            
+            // Hardcoded Admin protection
+            users['Admin'] = 'Admin';
+            
+            if(users[u]) {
+                document.getElementById('error-msg').style.display = 'block';
+            } else {
+                users[u] = p;
+                localStorage.setItem('refinery_users', JSON.stringify(users));
+                localStorage.setItem('session_user', u);
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

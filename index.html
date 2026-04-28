@@ -12,7 +12,10 @@
     </style>
 </head>
 <body id="main-body">
-    <div class="theme-selector">
+    <div class="theme-selector" style="display:flex; gap:15px; align-items:center;">
+        <div id="auth-links" style="display:flex; gap:10px; font-weight:bold; font-size:0.8rem; text-transform:uppercase;">
+            <!-- Populated by JS -->
+        </div>
         <select id="theme-selector" onchange="changeTheme(this.value)">
             <option value="cyber">CYBER NEON</option>
             <option value="royal">ROYAL CASINO</option>
@@ -72,6 +75,14 @@
             if(saved) {
                 document.getElementById('theme-selector').value = saved;
                 changeTheme(saved);
+            }
+            
+            const user = localStorage.getItem('session_user');
+            const authLinks = document.getElementById('auth-links');
+            if(user) {
+                authLinks.innerHTML = `<a href="profile.html" style="color:var(--primary); text-decoration:none;">[ Profile: ${user} ]</a>`;
+            } else {
+                authLinks.innerHTML = `<a href="login.html" style="color:var(--primary); text-decoration:none;">Login</a> | <a href="signup.html" style="color:var(--primary); text-decoration:none;">Signup</a>`;
             }
         }
     </script>
