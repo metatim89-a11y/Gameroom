@@ -1,84 +1,155 @@
-<!-- ./gameroom/index.html v11.0 -->
+<!-- ./gameroom/index.html v12.0 - Holographic HUD Overhaul -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Digital Refinery | Premium Gaming Suite</title>
+    <title>Digital Refinery | Holographic Console</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .hero { margin: 80px 0; text-align: center; }
-        .hero p { color: var(--primary); font-weight: 800; letter-spacing: 10px; margin-top: 10px; text-transform: uppercase; font-size: 0.8rem; }
-        .theme-selector { position: fixed; top: 20px; right: 20px; z-index: 100; }
-        select { background: var(--surface); color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 8px; outline: none; cursor: pointer; font-weight: 600; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body id="main-body">
-    <div class="theme-selector" style="display:flex; gap:15px; align-items:center;">
-        <div id="auth-links" style="display:flex; gap:10px; font-weight:bold; font-size:0.8rem; text-transform:uppercase;">
-            <!-- Populated by JS -->
+
+    <header class="main-header">
+        <div style="font-weight:900; letter-spacing:2px; font-size:1.2rem; color:var(--primary);">REFINERY // CORE</div>
+        <div class="menu-trigger" id="menu-trigger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <select id="theme-selector" onchange="changeTheme(this.value)">
-            <option value="cyber">CYBER NEON</option>
-            <option value="royal">ROYAL CASINO</option>
-            <option value="synthwave">SYNTHWAVE</option>
-        </select>
+    </header>
+
+    <div class="hud-overlay" id="hud-overlay">
+        <div class="hud-menu glass-panel">
+            <h2 style="color:var(--primary); text-transform:uppercase; letter-spacing:5px; margin-bottom:30px;">User Protocol</h2>
+            
+            <div id="auth-links" style="margin-bottom:40px;">
+                <!-- Populated by JS -->
+            </div>
+
+            <div style="margin-top:20px;">
+                <label style="display:block; font-size:0.7rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">Select Atmosphere</label>
+                <select id="theme-selector" onchange="changeTheme(this.value)" style="background:rgba(0,0,0,0.5); color:var(--primary); border:1px solid var(--primary); padding:10px 20px; border-radius:15px; width:100%; outline:none;">
+                    <option value="high-roller">HIGH ROLLER (DEF)</option>
+                    <option value="cyber">CYBER NEON</option>
+                    <option value="royal">ROYAL CASINO</option>
+                    <option value="synthwave">SYNTHWAVE</option>
+                </select>
+            </div>
+
+            <button onclick="toggleMenu()" style="margin-top:40px; width:100%;">Return to Core</button>
+        </div>
     </div>
 
     <div class="container">
-        <div class="hero">
-            <h1>DIGITAL REFINERY</h1>
-            <p>High-Fidelity Interaction Core</p>
-        </div>
-
-        <div class="grid">
-            <a href="games/SLOTS/index.html" class="card">
+        <h1>DIGITAL REFINERY</h1>
+        
+        <div class="flow-container" id="game-flow">
+            <div class="flow-item"><a href="games/SLOTS/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
                 <h3>Quantum Slots</h3>
-            </a>
-            <a href="games/blackjack/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/blackjack/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg>
                 <h3>Blackjack Pro</h3>
-            </a>
-            <a href="games/fishing/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/fishing/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M20,2H4C2.89,2 2,2.89 2,4V20C2,21.11 2.89,22 4,22H20C21.11,22 22,21.11 22,20V4C22,2.89 21.11,2 20,2M20,20H4V4H20V20M12,6C8.69,6 6,8.69 6,12C6,15.31 8.69,18 12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6Z"/></svg>
                 <h3>Deep Sea Fishing</h3>
-            </a>
-            <a href="games/WIN-WHEEL/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/WIN-WHEEL/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
                 <h3>Win Wheel</h3>
-            </a>
-            <a href="games/Classic/pong/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/Classic/pong/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M21,11H18V13H21V11M6,11H3V13H6V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
                 <h3>Neon Pong</h3>
-            </a>
-            <a href="games/Classic/asteroids/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/Classic/asteroids/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" style="fill:var(--tertiary)"/></svg>
                 <h3>Asteroids Core</h3>
-            </a>
-            <a href="games/Classic/pac-refinery/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/Classic/pac-refinery/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 1,1 20,12A8,8 0 0,1 12,20M12,11A1,1 0 1,0 11,12A1,1 0 0,0 12,11Z"/></svg>
                 <h3>Pac-Refinery</h3>
-            </a>
-            <a href="games/Classic/quix/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/Classic/quix/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M7,15H9V17H7V15M15,15H17V17H15V15M7,7H9V9H7V7M15,7H17V9H15V7M11,11H13V13H11V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
                 <h3>Quix Flow</h3>
-            </a>
-            <a href="games/Classic/index.html" class="card">
+            </a></div>
+            <div class="flow-item"><a href="games/Classic/index.html" class="card">
                 <svg viewBox="0 0 24 24"><path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4C16.42,4 20,7.58 20,12C20,16.42 16.42,20 12,20M11,7H13V13H11V7M11,15H13V17H11V15Z"/></svg>
                 <h3>All Classics</h3>
-            </a>
-        </div>
-        
-        <div style="margin-top: 80px; text-align: center; opacity: 0.2; font-size: 0.7rem; letter-spacing: 5px;">
-            V11.0 ULTRA-REFINED // REFINERY ENGINE
+            </a></div>
         </div>
     </div>
 
+    <div class="activity-feed glass-panel" id="activity-feed">
+        <h4>Network Activity</h4>
+        <!-- Feed entries -->
+    </div>
+
     <script>
+        function toggleMenu() {
+            const overlay = document.getElementById('hud-overlay');
+            const trigger = document.getElementById('menu-trigger');
+            overlay.classList.toggle('active');
+            trigger.classList.toggle('active');
+        }
+
         function changeTheme(theme) {
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('refinery-theme', theme);
         }
+
+        // 3D Cover Flow Logic
+        const flow = document.getElementById('game-flow');
+        const items = document.querySelectorAll('.flow-item');
+        
+        flow.onscroll = () => {
+            const centerX = flow.scrollLeft + (flow.offsetWidth / 2);
+            items.forEach(item => {
+                const itemX = item.offsetLeft + (item.offsetWidth / 2);
+                const distance = Math.abs(centerX - itemX);
+                if (distance < 150) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        };
+
+        // Activity Feed Simulation
+        const feed = document.getElementById('activity-feed');
+        const events = [
+            "User '{user}' extracted {amt} SCRAP in {game}.",
+            "Security breach bypassed by '{user}' in Core Systems.",
+            "Global Treasury payout of {amt} detected.",
+            "High-fidelity sync complete for '{user}'.",
+            "Atmospheric recalibration successful."
+        ];
+        const names = ["NeonFox", "ZeroDay", "Ghost_Int", "Cipher8", "BitRunner", "Admin"];
+        const games = ["Quantum Slots", "Blackjack Pro", "Win Wheel", "Deep Sea Fishing"];
+
+        function addFeedEntry() {
+            const user = names[Math.floor(Math.random()*names.length)];
+            const game = games[Math.floor(Math.random()*games.length)];
+            const amt = (Math.random()*500 + 10).toFixed(0);
+            let template = events[Math.floor(Math.random()*events.length)];
+            const text = template.replace('{user}', user).replace('{amt}', amt).replace('{game}', game);
+            
+            const entry = document.createElement('div');
+            entry.className = 'feed-entry';
+            entry.innerText = text;
+            feed.appendChild(entry);
+            
+            if(feed.children.length > 6) feed.removeChild(feed.children[1]); // Keep title
+        }
+        setInterval(addFeedEntry, 4000);
+
         window.onload = () => {
+            // Initial active item
+            flow.scrollLeft = 1;
+            flow.onscroll();
+
             const saved = localStorage.getItem('refinery-theme');
             if(saved) {
                 document.getElementById('theme-selector').value = saved;
@@ -86,12 +157,26 @@
             }
             
             const user = localStorage.getItem('session_user');
+            const balance = localStorage.getItem('refinery_balance') || "1000.00";
             const authLinks = document.getElementById('auth-links');
             if(user) {
-                authLinks.innerHTML = `<a href="profile.html" style="color:var(--primary); text-decoration:none;">[ Profile: ${user} ]</a>`;
+                authLinks.innerHTML = `
+                    <div style="font-size:1.5rem; font-weight:900; color:var(--primary); margin-bottom:10px;">${user}</div>
+                    <div style="font-family:'Space Mono'; color:var(--secondary); font-size:1.2rem; margin-bottom:30px;">$ ${parseFloat(balance).toFixed(2)}</div>
+                    <button onclick="window.location.href='profile.html'" style="width:100%; margin-bottom:10px;">View Identity</button>
+                    <button onclick="logout()" style="width:100%; background:transparent; border-color:var(--secondary); color:var(--secondary);">Terminate Session</button>
+                `;
             } else {
-                authLinks.innerHTML = `<a href="login.html" style="color:var(--primary); text-decoration:none;">Login</a> | <a href="signup.html" style="color:var(--primary); text-decoration:none;">Signup</a>`;
+                authLinks.innerHTML = `
+                    <button onclick="window.location.href='login.html'" style="width:100%; margin-bottom:15px;">Authenticate</button>
+                    <button onclick="window.location.href='signup.html'" style="width:100%; background:transparent; border-color:rgba(255,255,255,0.2);">Request Access</button>
+                `;
             }
+        }
+
+        function logout() {
+            localStorage.removeItem('session_user');
+            window.location.href = 'index.html';
         }
     </script>
 </body>

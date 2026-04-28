@@ -1,4 +1,4 @@
-<!-- ./gameroom/signup.html v1.0 -->
+<!-- ./gameroom/signup.html v2.0 - Holographic Overhaul -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,37 +6,48 @@
     <link rel="stylesheet" href="style.css">
     <style>
         body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg-deep); }
-        .auth-card { background: var(--surface); padding: 40px; border-radius: 20px; border: 1px solid var(--tertiary); box-shadow: 0 0 20px rgba(255,0,122,0.2); width: 300px; text-align: center; }
-        .auth-card h2 { color: var(--tertiary); margin-top: 0; text-transform: uppercase; letter-spacing: 3px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
-        .input-group input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; border-radius: 8px; outline: none; box-sizing: border-box; }
-        .input-group input:focus { border-color: var(--tertiary); }
-        .btn { background: var(--tertiary); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        .btn:hover { filter: brightness(1.2); }
-        .links { margin-top: 20px; font-size: 0.8rem; }
-        .links a { color: var(--tertiary); text-decoration: none; }
-        #error-msg { color: var(--danger); font-size: 0.8rem; margin-bottom: 15px; display: none; }
+        .auth-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px);
+            padding: 50px; border-radius: 40px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); 
+            width: 350px; text-align: center; 
+        }
+        .auth-card h2 { color: var(--primary); margin-top: 0; text-transform: uppercase; letter-spacing: 5px; font-weight: 900; margin-bottom: 30px; }
+        .input-group { margin-bottom: 25px; text-align: left; }
+        .input-group label { display: block; color: rgba(255,255,255,0.5); font-size: 0.7rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+        .input-group input { 
+            width: 100%; padding: 15px; background: rgba(0,0,0,0.5); 
+            border: 1px solid rgba(255,255,255,0.1); color: #fff; 
+            border-radius: 15px; outline: none; box-sizing: border-box; 
+            transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--glow); }
+        .btn { width: 100%; margin-top: 10px; }
+        .links { margin-top: 30px; font-size: 0.8rem; opacity: 0.7; }
+        .links a { color: var(--primary); text-decoration: none; font-weight: 800; }
+        #error-msg { color: var(--secondary); font-size: 0.8rem; margin-bottom: 20px; display: none; font-weight: bold; }
     </style>
 </head>
-<body data-theme="cyber">
-    <div class="auth-card">
-        <h2>Request Access</h2>
-        <div id="error-msg">Username already exists</div>
+<body data-theme="high-roller">
+    <div class="auth-card glass-panel">
+        <h2>New Operative</h2>
+        <div id="error-msg">IDENTIFIER ALREADY ASSIGNED</div>
         <form id="signup-form">
             <div class="input-group">
-                <label>Desired Username</label>
+                <label>Desired Identifier (Username)</label>
                 <input type="text" id="username" required>
             </div>
             <div class="input-group">
-                <label>Password</label>
+                <label>Secure Pulse (Password)</label>
                 <input type="password" id="password" required>
             </div>
-            <button type="submit" class="btn">Register</button>
+            <button type="submit" class="btn">Register Profile</button>
         </form>
         <div class="links">
-            <p>Have clearance? <a href="login.html">Login Here</a></p>
-            <p><a href="index.html">Return to Hub</a></p>
+            <p>Already registered? <a href="login.html">Authenticate</a></p>
+            <p><a href="index.html" style="color:rgba(255,255,255,0.4)">← Exit Console</a></p>
         </div>
     </div>
     <script>
@@ -46,7 +57,6 @@
             const p = document.getElementById('password').value;
             let users = JSON.parse(localStorage.getItem('refinery_users') || "{}");
             
-            // Initialize Admin if not present
             if(!users['Admin']) users['Admin'] = 'Admin';
             
             if(users[u]) {
@@ -58,6 +68,10 @@
                 window.location.href = 'index.html';
             }
         });
+        window.onload = () => {
+            const saved = localStorage.getItem('refinery-theme');
+            if(saved) document.body.setAttribute('data-theme', saved);
+        }
     </script>
 </body>
 </html>

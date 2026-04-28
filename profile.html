@@ -1,4 +1,4 @@
-<!-- ./gameroom/profile.html v1.0 -->
+<!-- ./gameroom/profile.html v2.0 - Holographic Overhaul -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,36 +6,50 @@
     <link rel="stylesheet" href="style.css">
     <style>
         body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg-deep); }
-        .profile-card { background: var(--surface); padding: 40px; border-radius: 20px; border: 1px solid var(--secondary); box-shadow: 0 0 20px rgba(112,0,255,0.2); width: 350px; text-align: center; }
-        .profile-card h2 { color: var(--secondary); margin-top: 0; text-transform: uppercase; letter-spacing: 3px; }
-        
-        .avatar { width: 80px; height: 80px; background: var(--secondary); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: #000; }
-        .stat-box { background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
-        .stat-box label { display: block; color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-box span { font-size: 1.5rem; font-weight: 900; color: var(--gold, #ffd700); font-family: 'Space Mono', monospace; }
-        
-        .btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: all 0.2s; margin-top: 10px; }
-        .btn:hover { background: var(--danger); color: #fff; }
-        .btn-hub { background: var(--secondary); color: #fff; border: none; border-color: var(--secondary); }
-        .btn-hub:hover { filter: brightness(1.2); background: var(--secondary); }
-        .btn-admin { display: none; background: transparent; border: 1px solid var(--primary); color: var(--primary); margin-bottom: 10px; }
-        .btn-admin:hover { background: var(--primary); color: #000; }
+        .profile-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px);
+            padding: 50px; border-radius: 40px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); 
+            width: 400px; text-align: center; 
+        }
+        .profile-card h2 { color: var(--primary); margin-top: 0; text-transform: uppercase; letter-spacing: 5px; font-weight: 900; }
 
+        .avatar { 
+            width: 100px; height: 100px; background: var(--primary); 
+            border-radius: 50%; margin: 30px auto; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 3rem; font-weight: 900; color: #000; 
+            box-shadow: 0 0 30px var(--glow);
+        }
+        .stat-box { 
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); 
+            padding: 20px; border-radius: 20px; margin-bottom: 20px; 
+        }
+        .stat-box label { display: block; color: rgba(255,255,255,0.4); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        .stat-box span { font-size: 1.8rem; font-weight: 900; color: var(--tertiary); font-family: 'Space Mono', monospace; }
+
+        .btn-danger { background: transparent; border-color: var(--secondary); color: var(--secondary); }
+        .btn-danger:hover { background: var(--secondary); color: #fff; }
+        
+        .btn-admin { display: none; background: transparent; border-color: var(--primary); color: var(--primary); margin-bottom: 10px; }
     </style>
 </head>
-<body data-theme="cyber">
-    <div class="profile-card">
+<body data-theme="high-roller">
+    <div class="profile-card glass-panel">
+        <h2>Operative Identity</h2>
         <div class="avatar" id="avatar">?</div>
-        <h2 id="username-display">User</h2>
-        
+        <h3 id="username-display" style="margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;">User</h3>
+
         <div class="stat-box">
             <label>Global Treasury Balance</label>
-            <span id="balance-display">1000.00</span>
+            <span id="balance-display">$ 1000.00</span>
         </div>
-        
+
         <button id="admin-btn" class="btn btn-admin" onclick="window.location.href='dev.html'">Dev Ops Panel</button>
-        <button class="btn btn-hub" onclick="window.location.href='index.html'" style="margin-bottom: 10px;">Return to Hub</button>
-        <button class="btn" onclick="logout()">Terminate Session</button>
+        <button class="btn" onclick="window.location.href='index.html'" style="width:100%; margin-bottom: 10px;">Return to Core</button>
+        <button class="btn btn-danger" onclick="logout()" style="width:100%;">Terminate Session</button>
     </div>
     <script>
         const user = localStorage.getItem('session_user');
@@ -46,15 +60,21 @@
             document.getElementById('avatar').innerText = user.charAt(0).toUpperCase();
             
             const balance = localStorage.getItem('refinery_balance') || "1000.00";
-            document.getElementById('balance-display').innerText = parseFloat(balance).toFixed(2);
+            document.getElementById('balance-display').innerText = "$ " + parseFloat(balance).toFixed(2);
 
-            if(user === 'Admin') {                document.getElementById('admin-btn').style.display = 'block';
+            if(user === 'Admin') {
+                document.getElementById('admin-btn').style.display = 'block';
             }
         }
-        
+
         function logout() {
             localStorage.removeItem('session_user');
             window.location.href = 'index.html';
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('refinery-theme');
+            if(saved) document.body.setAttribute('data-theme', saved);
         }
     </script>
 </body>
