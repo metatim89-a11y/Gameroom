@@ -304,3 +304,9 @@ To github.com:metatim89-a11y/Gameroom.git
    3ebde40..9275cfa  main -> main
 To github.com:metatim89-a11y/Gameroom.git
    9275cfa..5021d42  main -> main
+From github.com:metatim89-a11y/Gameroom
+ * branch            main       -> FETCH_HEAD
+To github.com:metatim89-a11y/Gameroom.git
+   5021d42..a0ffe08  main -> main
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
