@@ -1,25 +1,23 @@
-<!-- ./gameroom/games/SLOTS/index.html v12.0 - High-End Casino Remake -->
+<!-- ./gameroom/games/SLOTS/index.html v13.0 - Wealth Refinery 5x5 Expanded -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Quantum Slots | Premium Suite</title>
+<title>Wealth Refinery | Premium Suite</title>
 <link rel="stylesheet" href="../../style.css">
 <style>
-/* 
-    GAMEROOM OVERRIDE & EXTENSION 
-    Using root variables from style.css for theme consistency
-*/
 :root {
     --gold: #ffd700;
     --gold-glow: rgba(255, 215, 0, 0.6);
     --silver: #e0e0e0;
     --money-green: #00ff88;
+    --danger: #ff3366;
     --slot-bg: #050508;
-    --reel-width: 120px;
-    --reel-height: 360px;
-    --symbol-size: 120px;
+    --reel-width: 90px;
+    --symbol-size: 90px;
+    --grid-rows: 5;
+    --grid-cols: 5;
 }
 
 body {
@@ -32,12 +30,11 @@ body {
     height: 100vh;
 }
 
-/* Machine Frame */
 .slot-container {
     position: relative;
     width: 100%;
-    max-width: 900px;
-    padding: 40px;
+    max-width: 1000px;
+    padding: 30px;
     background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
     border: 4px solid #444;
     border-radius: 40px;
@@ -45,83 +42,92 @@ body {
         0 0 0 10px #222,
         0 20px 50px rgba(0,0,0,0.9),
         inset 0 0 40px var(--gold);
-    transform: perspective(1000px) rotateX(5deg);
+    transform: perspective(1000px) rotateX(2deg);
+    transition: all 0.5s ease;
+}
+
+.slot-container.bonus-mode {
+    box-shadow: 
+        0 0 0 10px #222,
+        0 20px 50px rgba(0,0,0,0.9),
+        inset 0 0 80px #aa00ff;
+    border-color: #aa00ff;
 }
 
 .machine-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .machine-header h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 5px;
     color: var(--gold);
     text-shadow: 0 0 20px var(--gold-glow);
+    transition: color 0.5s;
 }
 
-/* Reels Display */
+.bonus-mode .machine-header h1 {
+    color: #e066ff;
+    text-shadow: 0 0 20px #aa00ff;
+    content: "WEALTH EXPANSION";
+}
+
 .reels-window {
     position: relative;
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     background: var(--slot-bg);
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     border: 2px solid rgba(255,255,255,0.1);
     box-shadow: inset 0 0 50px #000;
     overflow: hidden;
+    height: calc(var(--grid-rows) * var(--symbol-size));
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Curvature Effect */
 .reels-window::before,
 .reels-window::after {
     content: "";
     position: absolute;
-    left: 0; right: 0; height: 80px;
+    left: 0; right: 0; height: 60px;
     z-index: 10;
     pointer-events: none;
 }
-.reels-window::before {
-    top: 0;
-    background: linear-gradient(to bottom, var(--slot-bg) 0%, transparent 100%);
-}
-.reels-window::after {
-    bottom: 0;
-    background: linear-gradient(to top, var(--slot-bg) 0%, transparent 100%);
-}
+.reels-window::before { top: 0; background: linear-gradient(to bottom, var(--slot-bg) 0%, transparent 100%); }
+.reels-window::after { bottom: 0; background: linear-gradient(to top, var(--slot-bg) 0%, transparent 100%); }
 
 .reel {
     width: var(--reel-width);
-    height: var(--reel-height);
+    height: 100%;
     background: rgba(255,255,255,0.02);
     border-radius: 10px;
     position: relative;
-    overflow: hidden;
     border: 1px solid rgba(255,255,255,0.05);
+}
+
+.reel.sticky {
+    border-color: #aa00ff;
+    box-shadow: inset 0 0 20px rgba(170,0,255,0.4);
 }
 
 .symbol-strip {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+    top: 0; left: 0; width: 100%;
+    display: flex; flex-direction: column;
     will-change: transform;
 }
 
 .symbol {
     height: var(--symbol-size);
     width: var(--reel-width);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    transition: filter 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 .symbol.win-pulse {
@@ -131,132 +137,66 @@ body {
 
 @keyframes win-flash {
     from { transform: scale(1); filter: brightness(1) drop-shadow(0 0 5px var(--gold)); }
-    to { transform: scale(1.1); filter: brightness(1.5) drop-shadow(0 0 20px var(--gold)); }
+    to { transform: scale(1.15); filter: brightness(1.5) drop-shadow(0 0 25px var(--gold)); }
 }
 
-/* Payline overlay */
-.paylines-canvas {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 15;
-}
-
-/* HUD / Controls */
 .dashboard {
-    margin-top: 30px;
+    margin-top: 20px;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1.5fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 15px;
     align-items: center;
 }
 
 .display-box {
-    background: #000;
-    border: 1px solid var(--primary);
-    border-radius: 10px;
-    padding: 10px 20px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,242,255,0.2);
+    background: #000; border: 1px solid var(--primary);
+    border-radius: 10px; padding: 8px 15px; text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-.display-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
+.display-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+.display-value { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; }
 
-.display-value {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.controls-group {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
+.controls-group { display: flex; gap: 10px; justify-content: center; align-items: center; }
 .btn-slot {
     background: linear-gradient(180deg, #333 0%, #111 100%);
-    border: 2px solid #555;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: all 0.2s;
+    border: 2px solid #555; color: #fff; padding: 10px 15px;
+    border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s;
 }
+.btn-slot:hover:not(:disabled) { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
 
-.btn-slot:hover:not(:disabled) {
-    border-color: var(--primary);
-    box-shadow: 0 0 15px var(--primary);
-}
+.action-row { display: flex; gap: 15px; margin-top: 15px; }
 
 .btn-spin {
-    background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
-    border: none;
-    color: #000;
-    width: 100%;
-    padding: 20px;
-    font-size: 1.5rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 0 #0088aa;
-    margin-top: 20px;
+    border: none; color: #000; padding: 15px; font-size: 1.4rem;
+    border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase;
+    transition: transform 0.1s, filter 0.2s;
 }
+.btn-spin:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.5) !important; }
+.btn-spin:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
 
-.btn-spin:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #0088aa;
-}
-
-.btn-spin:disabled {
-    filter: grayscale(1);
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Navigation */
-.nav-bar {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.back-btn {
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.8rem;
-    padding: 8px 15px;
-    border: 1px solid var(--primary);
-    border-radius: 20px;
-}
+.nav-bar { position: absolute; top: 15px; left: 20px; right: 20px; display: flex; justify-content: space-between; }
+.back-btn { text-decoration: none; color: var(--text); font-size: 0.8rem; padding: 6px 12px; border: 1px solid var(--gold); border-radius: 20px; }
 </style>
 </head>
 <body>
 
 <div class="nav-bar">
     <a href="../../index.html" class="back-btn">← HUB</a>
-    <div class="status-indicator">SYSTEM: STABLE</div>
+    <div class="status-indicator" id="status-ind" style="color: var(--gold)">SYSTEM: STABLE</div>
 </div>
 
-<div class="slot-container">
+<div class="slot-container" id="main-container">
     <div class="machine-header">
-        <h1>WEALTH REFINERY</h1>
+        <h1 id="game-title">WEALTH REFINERY</h1>
     </div>
 
-    <div class="reels-window">
-        <canvas id="paylines" class="paylines-canvas"></canvas>
-        <div class="reel"><div class="symbol-strip" id="reel-0"></div></div>
-        <div class="reel"><div class="symbol-strip" id="reel-1"></div></div>
-        <div class="reel"><div class="symbol-strip" id="reel-2"></div></div>
+    <div class="reels-window" id="reels-window">
+        <div class="reel" id="reel-0"><div class="symbol-strip" id="strip-0"></div></div>
+        <div class="reel" id="reel-1"><div class="symbol-strip" id="strip-1"></div></div>
+        <div class="reel" id="reel-2"><div class="symbol-strip" id="strip-2"></div></div>
+        <div class="reel" id="reel-3"><div class="symbol-strip" id="strip-3"></div></div>
+        <div class="reel" id="reel-4"><div class="symbol-strip" id="strip-4"></div></div>
     </div>
 
     <div class="dashboard">
@@ -266,12 +206,12 @@ body {
         </div>
         
         <div class="controls-group">
-            <button class="btn-slot" onclick="adjustBet(-5)">-</button>
-            <div class="display-box" style="border-color: var(--gold)">
+            <button class="btn-slot" onclick="adjustBet(-10)">-</button>
+            <div class="display-box" style="border-color: var(--gold); min-width: 100px;">
                 <div class="display-label">Investment</div>
                 <div class="display-value" id="current-bet" style="color: var(--gold)">10</div>
             </div>
-            <button class="btn-slot" onclick="adjustBet(5)">+</button>
+            <button class="btn-slot" onclick="adjustBet(10)">+</button>
         </div>
 
         <div class="display-box" style="border-color: var(--gold)">
@@ -280,132 +220,297 @@ body {
         </div>
     </div>
 
-    <button class="btn-spin" id="spin-btn" style="background: linear-gradient(180deg, var(--gold) 0%, #b8860b 100%); color: #000; box-shadow: 0 5px 0 #8b6508;">SPIN REELS</button>
+    <div class="action-row">
+        <button class="btn-spin" onclick="buyBonus()" id="buy-btn" style="flex: 0.4; background: linear-gradient(180deg, #aa00ff 0%, #5500aa 100%); color: #fff; box-shadow: 0 5px 0 #330066;">
+            BUY BONUS<br><span id="buy-cost" style="font-size:0.8rem; color: #e066ff;">1000</span>
+        </button>
+        <button class="btn-spin" id="spin-btn" style="flex: 1; background: linear-gradient(180deg, var(--gold) 0%, #b8860b 100%); box-shadow: 0 5px 0 #8b6508;">
+            SPIN REELS
+        </button>
+    </div>
 </div>
 
 <script>
-/**
- * WEALTH REFINERY ENGINE v12.1
- */
-
 const SYMBOLS = [
-    { s: "💎", v: 100, n: "Diamond" },
-    { s: "💰", v: 50, n: "Money Bag" },
-    { s: "🥇", v: 30, n: "Gold" },
-    { s: "🥈", v: 20, n: "Silver" },
-    { s: "💵", v: 10,  n: "Cash" },
-    { s: "🪙", v: 5,   n: "Coin" },
-    { s: "👑", v: 250, n: "Jackpot" }
+    { s: "👑", v: 100, n: "Jackpot" },
+    { s: "💎", v: 50,  n: "Diamond" },
+    { s: "💰", v: 25,  n: "MoneyBag" },
+    { s: "🥇", v: 15,  n: "Gold" },
+    { s: "🥈", v: 10,  n: "Silver" },
+    { s: "💵", v: 5,   n: "Cash" },
+    { s: "🪙", v: 2,   n: "Coin" },
+    { s: "🌟", v: 0,   n: "Scatter" } // 3+ triggers bonus
 ];
 
 let state = {
     balance: 1000,
     bet: 10,
     isSpinning: false,
-    reels: [[], [], []]
+    canStop: false,
+    freeSpins: 0,
+    bonusMode: false,
+    gridRows: 5,
+    lockedReels: [] // Stores symbol indices for sticky middle reels
 };
 
 const $ = (id) => document.getElementById(id);
-const reelElems = [$('reel-0'), $('reel-1'), $('reel-2')];
-const balanceDisplay = $('balance');
+const reelElems = [0,1,2,3,4].map(i => $(`strip-${i}`));
+const reelContainers = [0,1,2,3,4].map(i => $(`reel-${i}`));
 const winDisplay = $('last-win');
-const betDisplay = $('current-bet');
 const spinBtn = $('spin-btn');
+let stopResolver = null;
 
-// Initialize Reels
 function init() {
-    reelElems.forEach((reel, i) => {
-        populateStrip(reel, true);
-    });
+    reelElems.forEach(strip => populateStrip(strip, true));
     updateUI();
 }
 
 function populateStrip(strip, isStatic = false) {
-    const symbolsCount = isStatic ? 3 : 30;
+    const count = isStatic ? state.gridRows : 40;
     let html = '';
-    for (let i = 0; i < symbolsCount; i++) {
-        const symbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        html += `<div class="symbol">${symbol.s}</div>`;
+    for (let i = 0; i < count; i++) {
+        html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].s}</div>`;
     }
     strip.innerHTML = html;
 }
 
 function updateUI() {
-    balanceDisplay.innerText = state.balance.toFixed(2);
-    betDisplay.innerText = state.bet;
-    spinBtn.disabled = state.isSpinning || state.balance < state.bet;
+    $('balance').innerText = state.balance.toFixed(2);
+    $('current-bet').innerText = state.bet;
+    $('buy-cost').innerText = state.bet * 100;
+    $('buy-btn').disabled = state.isSpinning || state.balance < (state.bet * 100) || state.bonusMode;
+    
+    if (!state.isSpinning) {
+        if (state.freeSpins > 0) {
+            spinBtn.innerText = `AUTO SPIN (${state.freeSpins})`;
+            spinBtn.style.background = "linear-gradient(180deg, #aa00ff 0%, #5500aa 100%)";
+            spinBtn.style.color = "#fff";
+            spinBtn.style.boxShadow = "0 5px 0 #330066";
+        } else {
+            spinBtn.innerText = "SPIN REELS";
+            spinBtn.style.background = "linear-gradient(180deg, var(--gold) 0%, #b8860b 100%)";
+            spinBtn.style.color = "#000";
+            spinBtn.style.boxShadow = "0 5px 0 #8b6508";
+        }
+    }
 }
 
 function adjustBet(amount) {
-    state.bet = Math.max(5, Math.min(100, state.bet + amount));
+    if (state.isSpinning || state.bonusMode) return;
+    state.bet = Math.max(10, Math.min(500, state.bet + amount));
     updateUI();
 }
 
+function triggerBonus() {
+    state.bonusMode = true;
+    state.freeSpins = 10;
+    state.gridRows = 7;
+    document.documentElement.style.setProperty('--grid-rows', '7');
+    $('main-container').classList.add('bonus-mode');
+    $('game-title').innerText = "WEALTH EXPANSION";
+    $('status-ind').innerText = "BONUS ACTIVE";
+    $('status-ind').style.color = "#aa00ff";
+    state.lockedReels = []; // Will populate on first free spin
+    
+    // Expand visible symbols immediately
+    reelElems.forEach(strip => populateStrip(strip, true));
+    updateUI();
+}
+
+function endBonus() {
+    state.bonusMode = false;
+    state.gridRows = 5;
+    document.documentElement.style.setProperty('--grid-rows', '5');
+    $('main-container').classList.remove('bonus-mode');
+    $('game-title').innerText = "WEALTH REFINERY";
+    $('status-ind').innerText = "SYSTEM: STABLE";
+    $('status-ind').style.color = "var(--gold)";
+    state.lockedReels = [];
+    reelContainers.forEach(r => r.classList.remove('sticky'));
+    
+    // Shrink visible symbols
+    reelElems.forEach(strip => populateStrip(strip, true));
+    updateUI();
+}
+
+function buyBonus() {
+    const cost = state.bet * 100;
+    if (state.balance >= cost && !state.isSpinning && !state.bonusMode) {
+        state.balance -= cost;
+        triggerBonus();
+        setTimeout(spin, 1500);
+    }
+}
+
+function evaluateWays(resultsGrid) {
+    let totalWin = 0;
+    let scatterCount = 0;
+
+    // Megaways style: count occurrences in each column
+    SYMBOLS.forEach((symDef, symIdx) => {
+        if (symIdx === 7) return; // Skip scatter
+        
+        let ways = 1;
+        let matchLength = 0;
+        
+        for (let c = 0; c < 5; c++) {
+            let countInCol = 0;
+            for (let r = 0; r < state.gridRows; r++) {
+                if (resultsGrid[c][r] === symIdx) countInCol++;
+            }
+            if (countInCol > 0) {
+                ways *= countInCol;
+                matchLength++;
+            } else {
+                break; // Contiguous left-to-right broken
+            }
+        }
+        
+        if (matchLength >= 3) {
+            const lengthMult = [0, 0, 0, 1, 2, 5][matchLength]; // 3=1x, 4=2x, 5=5x base
+            totalWin += symDef.v * ways * lengthMult * (state.bet / 10);
+        }
+    });
+
+    // Count Scatters
+    for (let c = 0; c < 5; c++) {
+        for (let r = 0; r < state.gridRows; r++) {
+            if (resultsGrid[c][r] === 7) scatterCount++;
+        }
+    }
+
+    return { win: totalWin, scatters: scatterCount };
+}
+
 async function spin() {
-    if (state.isSpinning || state.balance < state.bet) return;
+    if (state.isSpinning) {
+        if (state.canStop && stopResolver) stopResolver(); // Slam stop!
+        return;
+    }
+    
+    if (state.balance < state.bet && state.freeSpins === 0) return;
 
     state.isSpinning = true;
-    state.balance -= state.bet;
+    state.canStop = false;
+    
+    if (state.freeSpins > 0) {
+        state.freeSpins--;
+    } else {
+        state.balance -= state.bet;
+    }
+    
     winDisplay.innerText = "0.00";
+    spinBtn.innerText = "STOP";
+    spinBtn.style.background = "linear-gradient(180deg, var(--danger) 0%, #aa0022 100%)";
+    spinBtn.style.color = "#fff";
+    spinBtn.style.boxShadow = "0 5px 0 #660011";
+    
+    document.querySelectorAll('.symbol.win-pulse').forEach(s => s.classList.remove('win-pulse'));
     updateUI();
 
-    const results = [
-        Math.floor(Math.random() * SYMBOLS.length),
-        Math.floor(Math.random() * SYMBOLS.length),
-        Math.floor(Math.random() * SYMBOLS.length)
-    ];
-
-    // Animation Phase
-    const spinDurations = [2000, 2500, 3000];
-    
-    reelElems.forEach((strip, i) => {
-        // Prepend result to next strip generation
-        const resultSymbol = SYMBOLS[results[i]];
-        let html = '';
-        // Add 20 random ones for motion blur feel
-        for (let j = 0; j < 30; j++) {
-            html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].s}</div>`;
+    // 1. Generate Logical Results
+    const resultsGrid = [];
+    for (let c = 0; c < 5; c++) {
+        // Sticky Middle Reels Logic
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c]) {
+            resultsGrid.push(state.lockedReels[c]);
+            continue;
         }
-        // The final visible window (3 symbols)
-        html += `<div class="symbol">${resultSymbol.s}</div>`;
-        html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].s}</div>`;
-        html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].s}</div>`;
+
+        let col = [];
+        for (let r = 0; r < state.gridRows; r++) {
+            // Weighted random: Scatter is rare
+            let rand = Math.random();
+            let sym = rand < 0.04 ? 7 : Math.floor(Math.random() * (SYMBOLS.length - 1));
+            col.push(sym);
+        }
+        resultsGrid.push(col);
+        
+        // Lock middle reels after first bonus spin
+        if (state.bonusMode && c >= 1 && c <= 3 && state.freeSpins === 9) {
+            state.lockedReels[c] = col;
+            reelContainers[c].classList.add('sticky');
+        }
+    }
+
+    // 2. Build DOM Strips
+    reelElems.forEach((strip, c) => {
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) {
+            return; // Don't animate sticky reels
+        }
+
+        let html = '';
+        for (let j = 0; j < 35; j++) { // Blur symbols
+            html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))].s}</div>`;
+        }
+        // Result symbols at the bottom of the strip (will scroll to here)
+        resultsGrid[c].forEach(symIdx => {
+            html += `<div class="symbol" data-sym="${symIdx}">${SYMBOLS[symIdx].s}</div>`;
+        });
         
         strip.innerHTML = html;
         strip.style.transition = 'none';
         strip.style.transform = 'translateY(0)';
+        strip.offsetHeight; // Force reflow
+    });
+
+    setTimeout(() => state.canStop = true, 400);
+
+    // 3. Animate with Slam Stop Support
+    const spinPromise = new Promise(resolve => {
+        stopResolver = resolve;
+        setTimeout(resolve, 2500); // Max natural spin time
+    });
+
+    reelElems.forEach((strip, c) => {
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) return;
         
-        // Trigger reflow
-        strip.offsetHeight;
-        
-        const travel = (strip.children.length - 3) * 120;
-        strip.style.transition = `transform ${spinDurations[i]}ms cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
+        const travel = (strip.children.length - state.gridRows) * 90; // 90 is symbol size
+        strip.style.transition = `transform ${1200 + c*300}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
         strip.style.transform = `translateY(-${travel}px)`;
     });
 
-    await new Promise(r => setTimeout(r, 3100));
+    await spinPromise;
+    stopResolver = null;
 
-    checkWin(results);
-    state.isSpinning = false;
-    updateUI();
-}
+    // Force Snap (Handles Slam Stop)
+    reelElems.forEach((strip, c) => {
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) return;
+        const travel = (strip.children.length - state.gridRows) * 90;
+        strip.style.transition = 'transform 0.1s ease-out';
+        strip.style.transform = `translateY(-${travel}px)`;
+    });
 
-function checkWin(results) {
-    let win = 0;
-    const r1 = results[0], r2 = results[1], r3 = results[2];
+    await new Promise(r => setTimeout(r, 150));
 
-    if (r1 === r2 && r2 === r3) {
-        // Triple Match
-        win = state.bet * SYMBOLS[r1].v;
-        flashWin();
-    } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-        // Double Match
-        win = state.bet * 2;
+    // 4. Evaluate & Reward
+    const evalRes = evaluateWays(resultsGrid);
+    
+    if (evalRes.win > 0) {
+        state.balance += evalRes.win;
+        animateValue(winDisplay, 0, evalRes.win, 800);
+        
+        // Highlight win symbols
+        reelElems.forEach((strip, c) => {
+            const symbols = Array.from(strip.children).slice(-state.gridRows);
+            symbols.forEach(s => {
+                if (s.dataset.sym !== "7") s.classList.add('win-pulse'); // Simple highlight
+            });
+        });
     }
 
-    if (win > 0) {
-        state.balance += win;
-        animateValue(winDisplay, 0, win, 1000);
+    if (evalRes.scatters >= 3 && !state.bonusMode) {
+        setTimeout(triggerBonus, 1000);
+    }
+
+    state.isSpinning = false;
+    updateUI();
+
+    // Auto-continue free spins
+    if (state.freeSpins > 0) {
+        setTimeout(spin, 1200);
+    } else if (state.bonusMode && state.freeSpins === 0) {
+        setTimeout(endBonus, 2000);
     }
 }
 
@@ -415,23 +520,10 @@ function animateValue(obj, start, end, duration) {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         obj.innerText = (progress * (end - start) + start).toFixed(2);
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
+        if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
 }
-
-function flashWin() {
-    const symbols = document.querySelectorAll('.symbol');
-    // Simplified: pulse all for now, logic can be refined for specific line
-    symbols.forEach(s => s.classList.add('win-pulse'));
-    setTimeout(() => {
-        symbols.forEach(s => s.classList.remove('win-pulse'));
-    }, 2000);
-}
-
-spinBtn.onclick = spin;
 
 init();
 </script>
