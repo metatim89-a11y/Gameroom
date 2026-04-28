@@ -1,0 +1,61 @@
+<!-- ./gameroom/login.html v1.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | Digital Refinery</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg-deep); }
+        .auth-card { background: var(--surface); padding: 40px; border-radius: 20px; border: 1px solid var(--primary); box-shadow: 0 0 20px rgba(0,242,255,0.2); width: 300px; text-align: center; }
+        .auth-card h2 { color: var(--primary); margin-top: 0; text-transform: uppercase; letter-spacing: 3px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; border-radius: 8px; outline: none; box-sizing: border-box; }
+        .input-group input:focus { border-color: var(--primary); }
+        .btn { background: var(--primary); color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn:hover { background: var(--text); }
+        .links { margin-top: 20px; font-size: 0.8rem; }
+        .links a { color: var(--primary); text-decoration: none; }
+        #error-msg { color: var(--danger); font-size: 0.8rem; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body data-theme="cyber">
+    <div class="auth-card">
+        <h2>System Login</h2>
+        <div id="error-msg">Invalid Credentials</div>
+        <form id="login-form">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn">Authenticate</button>
+        </form>
+        <div class="links">
+            <p>No account? <a href="signup.html">Request Access</a></p>
+            <p><a href="index.html">Return to Hub</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            let users = JSON.parse(localStorage.getItem('refinery_users') || "{}");
+            
+            // Hardcoded Admin
+            users['Admin'] = 'Admin';
+            
+            if(users[u] && users[u] === p) {
+                localStorage.setItem('session_user', u);
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
