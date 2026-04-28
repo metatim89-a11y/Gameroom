@@ -286,3 +286,9 @@ To github.com:metatim89-a11y/Gameroom.git
    46a19c0..9771f28  main -> main
 To github.com:metatim89-a11y/Gameroom.git
    9771f28..d3c48de  main -> main
+kex_exchange_identification: read: Connection reset by peer
+Connection reset by 2607:7700:0:4:0:2:8c52:7104 port 22
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
