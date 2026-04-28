@@ -258,3 +258,7 @@ To github.com:metatim89-a11y/Gameroom.git
    17688d6..c17705f  main -> main
 To github.com:metatim89-a11y/Gameroom.git
    c17705f..f544177  main -> main
+To github.com:metatim89-a11y/Gameroom.git
+   f544177..ea7c24d  main -> main
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.

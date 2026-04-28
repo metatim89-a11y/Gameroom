@@ -1,10 +1,10 @@
-<!-- ./gameroom/games/SLOTS/index.html v13.0 - Wealth Refinery 5x5 Expanded -->
+<!-- ./gameroom/games/SLOTS/index.html v13.2 - Wealth Refinery Pro: FX Overload -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Wealth Refinery | Premium Suite</title>
+<title>Wealth Refinery Pro | Premium Suite</title>
 <link rel="stylesheet" href="../../style.css">
 <style>
 :root {
@@ -30,6 +30,21 @@ body {
     height: 100vh;
 }
 
+/* FX LAYER */
+#fx-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.particle {
+    position: absolute;
+    font-size: 2rem;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
 .slot-container {
     position: relative;
     width: 100%;
@@ -44,6 +59,7 @@ body {
         inset 0 0 40px var(--gold);
     transform: perspective(1000px) rotateX(2deg);
     transition: all 0.5s ease;
+    z-index: 10;
 }
 
 .slot-container.bonus-mode {
@@ -54,10 +70,13 @@ body {
     border-color: #aa00ff;
 }
 
-.machine-header {
-    text-align: center;
-    margin-bottom: 20px;
+/* Flashy Ambient Animations */
+@keyframes ambient-flare {
+    0% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.3) saturate(1.5); }
+    100% { filter: brightness(1) saturate(1); }
 }
+.flare-up { animation: ambient-flare 0.5s ease-in-out; }
 
 .machine-header h1 {
     font-size: 2.5rem;
@@ -66,13 +85,6 @@ body {
     letter-spacing: 5px;
     color: var(--gold);
     text-shadow: 0 0 20px var(--gold-glow);
-    transition: color 0.5s;
-}
-
-.bonus-mode .machine-header h1 {
-    color: #e066ff;
-    text-shadow: 0 0 20px #aa00ff;
-    content: "WEALTH EXPANSION";
 }
 
 .reels-window {
@@ -89,17 +101,6 @@ body {
     height: calc(var(--grid-rows) * var(--symbol-size));
     transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.reels-window::before,
-.reels-window::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; height: 60px;
-    z-index: 10;
-    pointer-events: none;
-}
-.reels-window::before { top: 0; background: linear-gradient(to bottom, var(--slot-bg) 0%, transparent 100%); }
-.reels-window::after { bottom: 0; background: linear-gradient(to top, var(--slot-bg) 0%, transparent 100%); }
 
 .reel {
     width: var(--reel-width);
@@ -119,7 +120,6 @@ body {
     position: absolute;
     top: 0; left: 0; width: 100%;
     display: flex; flex-direction: column;
-    will-change: transform;
 }
 
 .symbol {
@@ -127,12 +127,10 @@ body {
     width: var(--reel-width);
     display: flex; align-items: center; justify-content: center;
     font-size: 3.5rem;
-    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 .symbol.win-pulse {
     animation: win-flash 0.5s ease infinite alternate;
-    filter: drop-shadow(0 0 15px var(--gold));
 }
 
 @keyframes win-flash {
@@ -151,35 +149,37 @@ body {
 .display-box {
     background: #000; border: 1px solid var(--primary);
     border-radius: 10px; padding: 8px 15px; text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-.display-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+.display-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; }
 .display-value { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; }
 
-.controls-group { display: flex; gap: 10px; justify-content: center; align-items: center; }
-.btn-slot {
-    background: linear-gradient(180deg, #333 0%, #111 100%);
-    border: 2px solid #555; color: #fff; padding: 10px 15px;
-    border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s;
-}
-.btn-slot:hover:not(:disabled) { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+.action-row { display: flex; gap: 10px; margin-top: 15px; }
 
-.action-row { display: flex; gap: 15px; margin-top: 15px; }
-
-.btn-spin {
+.btn-main {
     border: none; color: #000; padding: 15px; font-size: 1.4rem;
     border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase;
-    transition: transform 0.1s, filter 0.2s;
 }
-.btn-spin:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.5) !important; }
-.btn-spin:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
+
+.sub-controls {
+    display: flex; gap: 10px; margin-top: 10px; justify-content: center;
+}
+.btn-small {
+    background: #222; border: 1px solid #444; color: #888; padding: 6px 12px;
+    border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;
+}
+.btn-small.active {
+    color: var(--money-green); border-color: var(--money-green);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
 
 .nav-bar { position: absolute; top: 15px; left: 20px; right: 20px; display: flex; justify-content: space-between; }
 .back-btn { text-decoration: none; color: var(--text); font-size: 0.8rem; padding: 6px 12px; border: 1px solid var(--gold); border-radius: 20px; }
 </style>
 </head>
 <body>
+
+<div id="fx-overlay"></div>
 
 <div class="nav-bar">
     <a href="../../index.html" class="back-btn">← HUB</a>
@@ -205,13 +205,13 @@ body {
             <div class="display-value" id="balance" style="color: var(--money-green)">1000.00</div>
         </div>
         
-        <div class="controls-group">
-            <button class="btn-slot" onclick="adjustBet(-10)">-</button>
+        <div class="controls-group" style="display:flex; gap:10px;">
+            <button class="btn-small" onclick="adjustBet(-10)">-</button>
             <div class="display-box" style="border-color: var(--gold); min-width: 100px;">
                 <div class="display-label">Investment</div>
                 <div class="display-value" id="current-bet" style="color: var(--gold)">10</div>
             </div>
-            <button class="btn-slot" onclick="adjustBet(10)">+</button>
+            <button class="btn-small" onclick="adjustBet(10)">+</button>
         </div>
 
         <div class="display-box" style="border-color: var(--gold)">
@@ -221,12 +221,17 @@ body {
     </div>
 
     <div class="action-row">
-        <button class="btn-spin" onclick="buyBonus()" id="buy-btn" style="flex: 0.4; background: linear-gradient(180deg, #aa00ff 0%, #5500aa 100%); color: #fff; box-shadow: 0 5px 0 #330066;">
+        <button class="btn-main" onclick="buyBonus()" id="buy-btn" style="flex: 0.4; background: linear-gradient(180deg, #aa00ff 0%, #5500aa 100%); color: #fff; box-shadow: 0 5px 0 #330066;">
             BUY BONUS<br><span id="buy-cost" style="font-size:0.8rem; color: #e066ff;">1000</span>
         </button>
-        <button class="btn-spin" id="spin-btn" style="flex: 1; background: linear-gradient(180deg, var(--gold) 0%, #b8860b 100%); box-shadow: 0 5px 0 #8b6508;">
+        <button class="btn-main" id="spin-btn" style="flex: 1; background: linear-gradient(180deg, var(--gold) 0%, #b8860b 100%); box-shadow: 0 5px 0 #8b6508;">
             SPIN REELS
         </button>
+    </div>
+
+    <div class="sub-controls">
+        <button class="btn-small" id="auto-btn" onclick="toggleAutoPlay()">Auto Play</button>
+        <button class="btn-small" id="fast-btn" onclick="toggleFastMode()">Fast Mode</button>
     </div>
 </div>
 
@@ -239,7 +244,7 @@ const SYMBOLS = [
     { s: "🥈", v: 10,  n: "Silver" },
     { s: "💵", v: 5,   n: "Cash" },
     { s: "🪙", v: 2,   n: "Coin" },
-    { s: "🌟", v: 0,   n: "Scatter" } // 3+ triggers bonus
+    { s: "🌟", v: 0,   n: "Scatter" }
 ];
 
 let state = {
@@ -247,19 +252,68 @@ let state = {
     bet: 10,
     isSpinning: false,
     canStop: false,
+    autoPlay: false,
+    fastMode: false,
     freeSpins: 0,
     bonusMode: false,
     gridRows: 5,
-    lockedReels: [] // Stores symbol indices for sticky middle reels
+    lockedReels: []
 };
 
 const $ = (id) => document.getElementById(id);
+const fxLayer = $('fx-overlay');
 const reelElems = [0,1,2,3,4].map(i => $(`strip-${i}`));
 const reelContainers = [0,1,2,3,4].map(i => $(`reel-${i}`));
 const winDisplay = $('last-win');
 const spinBtn = $('spin-btn');
 let stopResolver = null;
 
+// --- FX ENGINE ---
+function spawnParticle(emoji, x, y) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = emoji;
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    fxLayer.appendChild(p);
+
+    const destY = window.innerHeight + 100;
+    const destX = x + (Math.random() - 0.5) * 400;
+    const rot = Math.random() * 720;
+
+    p.animate([
+        { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate(${destX - x}px, ${destY - y}px) rotate(${rot}deg)`, opacity: 0.3 }
+    ], {
+        duration: 1000 + Math.random() * 2000,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+    }).onfinish = () => p.remove();
+}
+
+function rainWealth(count = 30) {
+    const emojis = ['💰', '🪙', '💵', '💎', '🥇'];
+    for(let i=0; i<count; i++) {
+        setTimeout(() => {
+            spawnParticle(emojis[Math.floor(Math.random()*emojis.length)], Math.random() * window.innerWidth, -50);
+        }, i * 50);
+    }
+}
+
+function ambientFlare() {
+    const container = $('main-container');
+    container.classList.add('flare-up');
+    setTimeout(() => container.classList.remove('flare-up'), 500);
+}
+
+// Random Ambient Events
+setInterval(() => {
+    if (!state.isSpinning && Math.random() > 0.8) {
+        ambientFlare();
+        if (Math.random() > 0.7) rainWealth(5);
+    }
+}, 5000);
+
+// --- GAME LOGIC ---
 function init() {
     reelElems.forEach(strip => populateStrip(strip, true));
     updateUI();
@@ -279,18 +333,22 @@ function updateUI() {
     $('current-bet').innerText = state.bet;
     $('buy-cost').innerText = state.bet * 100;
     $('buy-btn').disabled = state.isSpinning || state.balance < (state.bet * 100) || state.bonusMode;
-    
+    $('auto-btn').classList.toggle('active', state.autoPlay);
+    $('fast-btn').classList.toggle('active', state.fastMode);
+
     if (!state.isSpinning) {
         if (state.freeSpins > 0) {
-            spinBtn.innerText = `AUTO SPIN (${state.freeSpins})`;
+            spinBtn.innerText = `FREE SPINS (${state.freeSpins})`;
             spinBtn.style.background = "linear-gradient(180deg, #aa00ff 0%, #5500aa 100%)";
             spinBtn.style.color = "#fff";
-            spinBtn.style.boxShadow = "0 5px 0 #330066";
+        } else if (state.autoPlay) {
+            spinBtn.innerText = "AUTO ACTIVE";
+            spinBtn.style.background = "linear-gradient(180deg, var(--money-green) 0%, #008844 100%)";
+            spinBtn.style.color = "#000";
         } else {
             spinBtn.innerText = "SPIN REELS";
             spinBtn.style.background = "linear-gradient(180deg, var(--gold) 0%, #b8860b 100%)";
             spinBtn.style.color = "#000";
-            spinBtn.style.boxShadow = "0 5px 0 #8b6508";
         }
     }
 }
@@ -301,6 +359,17 @@ function adjustBet(amount) {
     updateUI();
 }
 
+function toggleAutoPlay() {
+    state.autoPlay = !state.autoPlay;
+    updateUI();
+    if (state.autoPlay && !state.isSpinning) spin();
+}
+
+function toggleFastMode() {
+    state.fastMode = !state.fastMode;
+    updateUI();
+}
+
 function triggerBonus() {
     state.bonusMode = true;
     state.freeSpins = 10;
@@ -308,12 +377,7 @@ function triggerBonus() {
     document.documentElement.style.setProperty('--grid-rows', '7');
     $('main-container').classList.add('bonus-mode');
     $('game-title').innerText = "WEALTH EXPANSION";
-    $('status-ind').innerText = "BONUS ACTIVE";
-    $('status-ind').style.color = "#aa00ff";
-    state.lockedReels = []; // Will populate on first free spin
-    
-    // Expand visible symbols immediately
-    reelElems.forEach(strip => populateStrip(strip, true));
+    rainWealth(50);
     updateUI();
 }
 
@@ -323,157 +387,101 @@ function endBonus() {
     document.documentElement.style.setProperty('--grid-rows', '5');
     $('main-container').classList.remove('bonus-mode');
     $('game-title').innerText = "WEALTH REFINERY";
-    $('status-ind').innerText = "SYSTEM: STABLE";
-    $('status-ind').style.color = "var(--gold)";
     state.lockedReels = [];
     reelContainers.forEach(r => r.classList.remove('sticky'));
-    
-    // Shrink visible symbols
-    reelElems.forEach(strip => populateStrip(strip, true));
     updateUI();
 }
 
 function buyBonus() {
     const cost = state.bet * 100;
-    if (state.balance >= cost && !state.isSpinning && !state.bonusMode) {
+    if (state.balance >= cost && !state.isSpinning) {
         state.balance -= cost;
         triggerBonus();
-        setTimeout(spin, 1500);
+        setTimeout(spin, state.fastMode ? 500 : 1500);
     }
 }
 
 function evaluateWays(resultsGrid) {
     let totalWin = 0;
     let scatterCount = 0;
-
-    // Megaways style: count occurrences in each column
     SYMBOLS.forEach((symDef, symIdx) => {
-        if (symIdx === 7) return; // Skip scatter
-        
-        let ways = 1;
-        let matchLength = 0;
-        
+        if (symIdx === 7) return;
+        let ways = 1, matchLength = 0;
         for (let c = 0; c < 5; c++) {
             let countInCol = 0;
-            for (let r = 0; r < state.gridRows; r++) {
-                if (resultsGrid[c][r] === symIdx) countInCol++;
-            }
-            if (countInCol > 0) {
-                ways *= countInCol;
-                matchLength++;
-            } else {
-                break; // Contiguous left-to-right broken
-            }
+            for (let r = 0; r < state.gridRows; r++) if (resultsGrid[c][r] === symIdx) countInCol++;
+            if (countInCol > 0) { ways *= countInCol; matchLength++; } else break;
         }
-        
         if (matchLength >= 3) {
-            const lengthMult = [0, 0, 0, 1, 2, 5][matchLength]; // 3=1x, 4=2x, 5=5x base
+            const lengthMult = [0, 0, 0, 1, 2, 5][matchLength];
             totalWin += symDef.v * ways * lengthMult * (state.bet / 10);
         }
     });
-
-    // Count Scatters
-    for (let c = 0; c < 5; c++) {
-        for (let r = 0; r < state.gridRows; r++) {
-            if (resultsGrid[c][r] === 7) scatterCount++;
-        }
-    }
-
+    for (let c = 0; c < 5; c++) for (let r = 0; r < state.gridRows; r++) if (resultsGrid[c][r] === 7) scatterCount++;
     return { win: totalWin, scatters: scatterCount };
 }
 
 async function spin() {
     if (state.isSpinning) {
-        if (state.canStop && stopResolver) stopResolver(); // Slam stop!
+        if (state.canStop && stopResolver) stopResolver();
         return;
     }
-    
-    if (state.balance < state.bet && state.freeSpins === 0) return;
+    if (state.balance < state.bet && state.freeSpins === 0) {
+        state.autoPlay = false;
+        updateUI();
+        return;
+    }
 
     state.isSpinning = true;
     state.canStop = false;
-    
-    if (state.freeSpins > 0) {
-        state.freeSpins--;
-    } else {
-        state.balance -= state.bet;
-    }
+    if (state.freeSpins > 0) state.freeSpins--; else state.balance -= state.bet;
     
     winDisplay.innerText = "0.00";
     spinBtn.innerText = "STOP";
     spinBtn.style.background = "linear-gradient(180deg, var(--danger) 0%, #aa0022 100%)";
     spinBtn.style.color = "#fff";
-    spinBtn.style.boxShadow = "0 5px 0 #660011";
-    
-    document.querySelectorAll('.symbol.win-pulse').forEach(s => s.classList.remove('win-pulse'));
     updateUI();
 
-    // 1. Generate Logical Results
     const resultsGrid = [];
     for (let c = 0; c < 5; c++) {
-        // Sticky Middle Reels Logic
-        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c]) {
-            resultsGrid.push(state.lockedReels[c]);
-            continue;
-        }
-
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c]) { resultsGrid.push(state.lockedReels[c]); continue; }
         let col = [];
         for (let r = 0; r < state.gridRows; r++) {
-            // Weighted random: Scatter is rare
             let rand = Math.random();
-            let sym = rand < 0.04 ? 7 : Math.floor(Math.random() * (SYMBOLS.length - 1));
-            col.push(sym);
+            col.push(rand < 0.04 ? 7 : Math.floor(Math.random() * (SYMBOLS.length - 1)));
         }
         resultsGrid.push(col);
-        
-        // Lock middle reels after first bonus spin
         if (state.bonusMode && c >= 1 && c <= 3 && state.freeSpins === 9) {
             state.lockedReels[c] = col;
             reelContainers[c].classList.add('sticky');
         }
     }
 
-    // 2. Build DOM Strips
     reelElems.forEach((strip, c) => {
-        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) {
-            return; // Don't animate sticky reels
-        }
-
+        if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) return;
         let html = '';
-        for (let j = 0; j < 35; j++) { // Blur symbols
-            html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))].s}</div>`;
-        }
-        // Result symbols at the bottom of the strip (will scroll to here)
-        resultsGrid[c].forEach(symIdx => {
-            html += `<div class="symbol" data-sym="${symIdx}">${SYMBOLS[symIdx].s}</div>`;
-        });
-        
+        for (let j = 0; j < 35; j++) html += `<div class="symbol">${SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))].s}</div>`;
+        resultsGrid[c].forEach(symIdx => html += `<div class="symbol" data-sym="${symIdx}">${SYMBOLS[symIdx].s}</div>`);
         strip.innerHTML = html;
-        strip.style.transition = 'none';
-        strip.style.transform = 'translateY(0)';
-        strip.offsetHeight; // Force reflow
+        strip.style.transition = 'none'; strip.style.transform = 'translateY(0)'; strip.offsetHeight;
     });
 
-    setTimeout(() => state.canStop = true, 400);
+    setTimeout(() => state.canStop = true, state.fastMode ? 100 : 400);
 
-    // 3. Animate with Slam Stop Support
-    const spinPromise = new Promise(resolve => {
-        stopResolver = resolve;
-        setTimeout(resolve, 2500); // Max natural spin time
-    });
+    const spinDur = state.fastMode ? 600 : 2500;
+    const spinPromise = new Promise(resolve => { stopResolver = resolve; setTimeout(resolve, spinDur); });
 
     reelElems.forEach((strip, c) => {
         if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) return;
-        
-        const travel = (strip.children.length - state.gridRows) * 90; // 90 is symbol size
-        strip.style.transition = `transform ${1200 + c*300}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
+        const travel = (strip.children.length - state.gridRows) * 90;
+        const time = state.fastMode ? (300 + c * 50) : (1200 + c * 300);
+        strip.style.transition = `transform ${time}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
         strip.style.transform = `translateY(-${travel}px)`;
     });
 
     await spinPromise;
     stopResolver = null;
 
-    // Force Snap (Handles Slam Stop)
     reelElems.forEach((strip, c) => {
         if (state.bonusMode && c >= 1 && c <= 3 && state.lockedReels[c] && state.freeSpins < 9) return;
         const travel = (strip.children.length - state.gridRows) * 90;
@@ -481,36 +489,35 @@ async function spin() {
         strip.style.transform = `translateY(-${travel}px)`;
     });
 
-    await new Promise(r => setTimeout(r, 150));
+    await new Promise(r => setTimeout(r, state.fastMode ? 50 : 150));
 
-    // 4. Evaluate & Reward
     const evalRes = evaluateWays(resultsGrid);
-    
     if (evalRes.win > 0) {
         state.balance += evalRes.win;
-        animateValue(winDisplay, 0, evalRes.win, 800);
+        animateValue(winDisplay, 0, evalRes.win, state.fastMode ? 200 : 800);
         
         // Highlight win symbols
         reelElems.forEach((strip, c) => {
             const symbols = Array.from(strip.children).slice(-state.gridRows);
             symbols.forEach(s => {
-                if (s.dataset.sym !== "7") s.classList.add('win-pulse'); // Simple highlight
+                if (s.dataset.sym !== "7") s.classList.add('win-pulse');
             });
         });
+
+        if (evalRes.win >= state.bet * 20) rainWealth(evalRes.win / state.bet * 2);
     }
 
-    if (evalRes.scatters >= 3 && !state.bonusMode) {
-        setTimeout(triggerBonus, 1000);
-    }
+    if (evalRes.scatters >= 3 && !state.bonusMode) setTimeout(triggerBonus, state.fastMode ? 200 : 1000);
 
     state.isSpinning = false;
     updateUI();
 
-    // Auto-continue free spins
     if (state.freeSpins > 0) {
-        setTimeout(spin, 1200);
+        setTimeout(spin, state.fastMode ? 200 : 1200);
     } else if (state.bonusMode && state.freeSpins === 0) {
-        setTimeout(endBonus, 2000);
+        setTimeout(endBonus, state.fastMode ? 500 : 2000);
+    } else if (state.autoPlay) {
+        setTimeout(() => { if (state.autoPlay) spin(); }, state.fastMode ? 300 : 1000);
     }
 }
 
@@ -525,6 +532,7 @@ function animateValue(obj, start, end, duration) {
     window.requestAnimationFrame(step);
 }
 
+spinBtn.onclick = spin;
 init();
 </script>
 </body>
