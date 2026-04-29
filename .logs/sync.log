@@ -956,3 +956,8 @@ Everything up-to-date
 Everything up-to-date
 Everything up-to-date
 Everything up-to-date
+ssh: Could not resolve hostname github.com: No address associated with hostname
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
