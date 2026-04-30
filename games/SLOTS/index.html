@@ -138,6 +138,7 @@ body {
     position: fixed; inset: 0; background: rgba(0,0,0,0.95);
     z-index: 2000; display: none; flex-direction: column; padding: 40px;
     align-items: center; justify-content: center;
+    overflow-y: auto;
 }
 .modal h2 { color: var(--gold); letter-spacing: 4px; margin-bottom: 30px; }
 .contract-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
@@ -145,6 +146,11 @@ body {
     background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px;
     text-align: center; cursor: pointer;
 }
+
+/* Rules Table */
+.rules-container { max-width: 600px; width: 100%; color: #ccc; font-size: 0.8rem; }
+.pay-table { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+.pay-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
 </style>
 </head>
 <body>
@@ -182,9 +188,14 @@ body {
 </div>
 
 <div class="command-pod">
-    <button class="pod-btn" onclick="openBuyMenu()">
-        <span>CONTRACTS</span>
-    </button>
+    <div style="display:flex; gap:5px;">
+        <button class="pod-btn" onclick="openBuyMenu()">
+            <span>CONTRACTS</span>
+        </button>
+        <button class="pod-btn" onclick="openRules()">
+            <span>HELP</span>
+        </button>
+    </div>
     <div style="display:flex; align-items:center; gap:15px;">
         <button class="pod-btn" onclick="adjustBet(-10)"><span>-</span></button>
         <div class="main-spin-trigger" id="spin-btn" onclick="spin()">
@@ -198,15 +209,35 @@ body {
     </div>
 </div>
 
+<!-- Buy Menu Modal -->
 <div id="bonus-choice" class="modal">
     <h2>WEALTH CONTRACTS</h2>
     <div class="contract-grid">
-        <div class="contract-card" onclick="selectBonus(0)"><h3>Mega Rows</h3></div>
-        <div class="contract-card" onclick="selectBonus(1)"><h3>Colossal Vault</h3></div>
-        <div class="contract-card" onclick="selectBonus(2)"><h3>Treasury x10</h3></div>
-        <div class="contract-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Ultimate</h3></div>
+        <div class="contract-card" onclick="selectBonus(0)"><h3>Mega Rows</h3><p style="font-size:0.6rem; color:#888;">EXPAND GRID TO 9 ROWS</p></div>
+        <div class="contract-card" onclick="selectBonus(1)"><h3>Colossal Vault</h3><p style="font-size:0.6rem; color:#888;">3X3 GIANT SYMBOLS</p></div>
+        <div class="contract-card" onclick="selectBonus(2)"><h3>Treasury x10</h3><p style="font-size:0.6rem; color:#888;">ALL WINS MULTIPLIED BY 10</p></div>
+        <div class="contract-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Ultimate</h3><p style="font-size:0.6rem; color:#888;">ALL BONUSES ACTIVE</p></div>
     </div>
     <button class="pod-btn" onclick="$('bonus-choice').style.display='none'" style="margin-top:20px;"><span>CLOSE</span></button>
+</div>
+
+<!-- Rules Modal -->
+<div id="rules-modal" class="modal">
+    <h2>CORE PROTOCOLS</h2>
+    <div class="rules-container">
+        <p>Quantum Slots uses a 5-reel "Ways to Win" system. 3 or more matching symbols on adjacent reels from left to right trigger a payout.</p>
+        <div class="pay-table">
+            <div class="pay-row"><span>👑 CROWN</span><span>100.00</span></div>
+            <div class="pay-row"><span>💎 DIAMOND</span><span>50.00</span></div>
+            <div class="pay-row"><span>💰 BAG</span><span>25.00</span></div>
+            <div class="pay-row"><span>🥇 GOLD</span><span>15.00</span></div>
+            <div class="pay-row"><span>🥈 SILVER</span><span>10.00</span></div>
+            <div class="pay-row"><span>💵 CASH</span><span>5.00</span></div>
+            <div class="pay-row"><span>🪙 COIN</span><span>2.00</span></div>
+        </div>
+        <p style="margin-top:20px; font-size:0.7rem; color:#666;">* Values scaled by current investment.</p>
+    </div>
+    <button class="pod-btn" onclick="$('rules-modal').style.display='none'" style="margin-top:20px;"><span>CLOSE</span></button>
 </div>
 
 <script>
@@ -272,9 +303,10 @@ function init() {
 
 function populateStrip(strip, isStatic = false) {
     let html = ''; const count = isStatic ? state.gridRows : 40;
+    const symbolSizePx = reelElems[0].parentElement.offsetHeight / state.gridRows;
     for (let i = 0; i < count; i++) {
         const sym = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length-2))];
-        html += `<div class="symbol">${sym.s}</div>`;
+        html += `<div class="symbol" style="height:${symbolSizePx}px">${sym.s}</div>`;
     }
     strip.innerHTML = html;
 }
@@ -283,6 +315,7 @@ function adjustBet(amount) { if (!state.isSpinning && !state.bonusMode) { state.
 function toggleAutoPlay() { state.autoPlay = !state.autoPlay; updateUI(); if (state.autoPlay && !state.isSpinning) spin(); }
 function toggleFastMode() { state.fastMode = !state.fastMode; updateUI(); }
 function openBuyMenu() { if (!state.isSpinning && !state.bonusMode) $('bonus-choice').style.display = 'flex'; }
+function openRules() { $('rules-modal').style.display = 'flex'; }
 
 function selectBonus(type) {
     state.bonusType = type; state.bonusMode = true; state.freeSpins = 10;
