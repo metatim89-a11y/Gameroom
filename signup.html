@@ -1,53 +1,45 @@
-<!-- ./gameroom/signup.html v2.0 - Holographic Overhaul -->
+<!-- ./gameroom/signup.html v3.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Signup | Digital Refinery</title>
+    <title>Membership | Grand Olympus Casino</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg-deep); }
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: var(--bg); }
         .auth-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(20px);
-            padding: 50px; border-radius: 40px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            box-shadow: 0 0 50px rgba(0,0,0,0.5); 
+            background: var(--surface);
+            padding: 50px; border-radius: var(--radius); 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow); 
             width: 350px; text-align: center; 
         }
         .auth-card h2 { color: var(--primary); margin-top: 0; text-transform: uppercase; letter-spacing: 5px; font-weight: 900; margin-bottom: 30px; }
         .input-group { margin-bottom: 25px; text-align: left; }
-        .input-group label { display: block; color: rgba(255,255,255,0.5); font-size: 0.7rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
-        .input-group input { 
-            width: 100%; padding: 15px; background: rgba(0,0,0,0.5); 
-            border: 1px solid rgba(255,255,255,0.1); color: #fff; 
-            border-radius: 15px; outline: none; box-sizing: border-box; 
-            transition: 0.3s;
-        }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--glow); }
+        .input-group label { display: block; color: var(--text-dim); font-size: 0.7rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
         .btn { width: 100%; margin-top: 10px; }
         .links { margin-top: 30px; font-size: 0.8rem; opacity: 0.7; }
         .links a { color: var(--primary); text-decoration: none; font-weight: 800; }
-        #error-msg { color: var(--secondary); font-size: 0.8rem; margin-bottom: 20px; display: none; font-weight: bold; }
+        #error-msg { color: var(--danger); font-size: 0.8rem; margin-bottom: 20px; display: none; font-weight: bold; }
     </style>
 </head>
-<body data-theme="high-roller">
-    <div class="auth-card glass-panel">
-        <h2>New Operative</h2>
-        <div id="error-msg">IDENTIFIER ALREADY ASSIGNED</div>
+<body data-theme="classic">
+    <div class="auth-card">
+        <h2>Membership</h2>
+        <div id="error-msg">KEY ALREADY REGISTERED</div>
         <form id="signup-form">
             <div class="input-group">
-                <label>Desired Identifier (Username)</label>
-                <input type="text" id="username" required>
+                <label>Chosen Username</label>
+                <input type="text" id="username" required style="background:var(--surface-alt); border:1px solid var(--border); color:var(--text); padding:15px; border-radius:8px; width:100%; box-sizing:border-box;">
             </div>
             <div class="input-group">
-                <label>Secure Pulse (Password)</label>
-                <input type="password" id="password" required>
+                <label>Secure Key</label>
+                <input type="password" id="password" required style="background:var(--surface-alt); border:1px solid var(--border); color:var(--text); padding:15px; border-radius:8px; width:100%; box-sizing:border-box;">
             </div>
-            <button type="submit" class="btn">Register Profile</button>
+            <button type="submit" class="btn">Register Membership</button>
         </form>
         <div class="links">
-            <p>Already registered? <a href="login.html">Authenticate</a></p>
-            <p><a href="index.html" style="color:rgba(255,255,255,0.4)">← Exit Console</a></p>
+            <p>Already a member? <a href="login.html">Login</a></p>
+            <p><a href="index.html" style="color:var(--text-dim)">← Exit Casino</a></p>
         </div>
     </div>
     <script>
@@ -55,22 +47,27 @@
             e.preventDefault();
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            let users = JSON.parse(localStorage.getItem('refinery_users') || "{}");
             
-            if(!users['Admin']) users['Admin'] = 'Admin';
+            // Migration check
+            if (localStorage.getItem('refinery_users') && !localStorage.getItem('olympus_users')) {
+                localStorage.setItem('olympus_users', localStorage.getItem('refinery_users'));
+            }
+
+            let users = JSON.parse(localStorage.getItem('olympus_users') || "{}");
             
             if(users[u]) {
                 document.getElementById('error-msg').style.display = 'block';
             } else {
                 users[u] = p;
-                localStorage.setItem('refinery_users', JSON.stringify(users));
+                localStorage.setItem('olympus_users', JSON.stringify(users));
                 localStorage.setItem('session_user', u);
                 window.location.href = 'index.html';
             }
         });
         window.onload = () => {
-            const saved = localStorage.getItem('refinery-theme');
+            const saved = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(saved) document.body.setAttribute('data-theme', saved);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

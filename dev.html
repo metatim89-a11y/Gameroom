@@ -1,10 +1,10 @@
-<!-- ./gameroom/dev.html v1.0 - Refinery Admin & RTP Controller -->
+<!-- ./gameroom/dev.html v2.0 - Olympus Admin & Floor Controller -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Refinery Admin | Central Control</title>
+<title>Olympus Admin | Casino Control</title>
 <link rel="stylesheet" href="style.css">
 <style>
 :root {
@@ -57,20 +57,20 @@ input[type=range] {
 .back-link { text-decoration: none; color: #888; border: 1px solid #333; padding: 10px 20px; border-radius: 10px; }
 </style>
 </head>
-<body>
+<body data-theme="midnight">
 
 <div class="admin-container">
     <div class="header">
-        <a href="index.html" class="back-link">← EXIT ADMIN</a>
-        <h1 style="margin-top:20px;">REFINERY ENGINE <span style="color:var(--admin-gold)">DEV-OPS</span></h1>
-        <p>Mathematical Variance & Payback Calibration</p>
+        <a href="index.html" class="back-link">← EXIT TO LOBBY</a>
+        <h1 style="margin-top:20px;">GRAND OLYMPUS <span style="color:var(--admin-gold)">FLOOR OPS</span></h1>
+        <p>Divine Variance & Payout Calibration</p>
     </div>
 
     <!-- SLOTS CONTROL -->
     <div class="game-card">
         <div class="game-info">
-            <h2>Wealth Refinery</h2>
-            <p>Control symbol weights and bonus frequency.</p>
+            <h2>Olympus Slots</h2>
+            <p>Control divine symbol weights and bonus frequency.</p>
         </div>
         <div class="control-group">
             <div class="rtp-val" id="slots-rtp-txt">95%</div>
@@ -82,7 +82,7 @@ input[type=range] {
     <!-- BLACKJACK CONTROL -->
     <div class="game-card">
         <div class="game-info">
-            <h2>Blackjack</h2>
+            <h2>Olympus Blackjack</h2>
             <p>Adjust dealer "Luck" and deck shuffling variance.</p>
         </div>
         <div class="control-group">
@@ -95,20 +95,20 @@ input[type=range] {
     <!-- FISHING CONTROL -->
     <div class="game-card">
         <div class="game-info">
-            <h2>Fishing Refinery</h2>
+            <h2>Poseidon's Catch</h2>
             <p>Modify catch rates and loot value scaling.</p>
         </div>
         <div class="control-group">
             <div class="rtp-val" id="fish-rtp-txt">90%</div>
             <input type="range" id="fish-rtp" min="1" max="200" value="90" oninput="updateRTP('fish', this.value)">
-            <div class="save-hint">EFFECT: HOOK ATTRACTION STRENGTH</div>
+            <div class="save-hint">EFFECT: SPEAR ATTRACTION STRENGTH</div>
         </div>
     </div>
 
     <!-- WIN WHEEL CONTROL -->
     <div class="game-card">
         <div class="game-info">
-            <h2>Win Wheel</h2>
+            <h2>Wheel of Olympus</h2>
             <p>Shift segment gravity for higher/lower payouts.</p>
         </div>
         <div class="control-group">

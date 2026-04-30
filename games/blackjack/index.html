@@ -1,8 +1,8 @@
-<!-- ./gameroom/games/blackjack/index.html v11.0 - Ultra Luxe -->
+<!-- ./gameroom/games/blackjack/index.html v12.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Blackjack Pro | Digital Refinery</title>
+    <title>Olympus Blackjack | Grand Olympus Casino</title>
     <link rel="stylesheet" href="../../style.css">
     <style>
         .table { 
@@ -32,21 +32,21 @@
         .score-badge { 
             font-size: 0.8rem; font-weight: 900; background: var(--surface); 
             color: var(--primary); padding: 8px 20px; border-radius: 30px; 
-            border: 1px solid var(--primary); box-shadow: 0 0 15px var(--glow);
+            border: 1px solid var(--primary);
             text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .status-msg { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; color: #fff; text-shadow: 0 0 20px var(--glow); margin-bottom: 20px; }
+        .status-msg { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 20px; }
     </style>
 </head>
 <body id="game-body">
     <div class="container">
-        <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900;">
-            <div>TREASURY: <span id="balance" style="color:var(--primary)">1000.00</span></div>
-            <div>STAKE: <span id="current-bet" style="color:var(--tertiary)">10.00</span></div>
+        <div class="monitor" style="display:flex; justify-content:space-around; margin-bottom: 20px; background:var(--surface); padding:15px; border-radius:12px; font-weight:900; border:1px solid var(--border);">
+            <div>GRAND TREASURY: <span id="balance" style="color:var(--primary)">1000.00</span></div>
+            <div>PLAYER STAKE: <span id="current-bet" style="color:var(--text)">10.00</span></div>
         </div>
 
-        <div id="status" class="status-msg">READY TO DEAL</div>
+        <div id="status" class="status-msg">WELCOME TO OLYMPUS</div>
         
         <div class="table">
             <div id="dealer-hand" class="hand"></div>
@@ -61,15 +61,15 @@
         <div style="display:flex; gap:20px; justify-content:center; margin-top:40px;">
             <div id="bet-controls" style="display:flex; gap:10px;">
                 <button onclick="adjustBet(-10)">-</button>
-                <button id="deal-btn" onclick="deal()" style="min-width: 200px;">INITIALIZE DEAL</button>
+                <button id="deal-btn" onclick="deal()" style="min-width: 200px;">PLACE STAKE & DEAL</button>
                 <button onclick="adjustBet(10)">+</button>
             </div>
             <div id="game-controls" style="display:none; gap:15px;">
                 <button onclick="hit()">HIT</button>
-                <button onclick="stand()" style="background:var(--surface); border-color:#ef4444; color:#ef4444;">STAND</button>
+                <button onclick="stand()" style="background:var(--surface-alt); border:1px solid var(--danger); color:var(--danger);">STAND</button>
             </div>
         </div>
-        <a href="../../index.html" class="back-link">TERMINATE SESSION</a>
+        <a href="../../index.html" class="back-link">EXIT TO LOBBY</a>
     </div>
 
     <script>
@@ -81,12 +81,12 @@
         };
 
         let deck = [], pHand = [], dHand = [], gameOver = false;
-        let balance = parseFloat(localStorage.getItem('refinery_balance') || "1000");
+        let balance = parseFloat(localStorage.getItem('olympus_balance') || localStorage.getItem('refinery_balance') || "1000");
         let bet = 10;
 
         function updateUI() {
             document.getElementById('balance').innerText = balance.toFixed(2);
-            localStorage.setItem('refinery_balance', balance.toFixed(2));
+            localStorage.setItem('olympus_balance', balance.toFixed(2));
             document.getElementById('current-bet').innerText = bet.toFixed(2);
         }
 
@@ -124,19 +124,6 @@
         }
 
         function drawCard() {
-            let rtp = parseInt(localStorage.getItem('bj_rtp') || "98");
-            let forceHigh = Math.random() < (rtp - 100) / 100; // Player gets good cards
-            let forceLow = Math.random() < (100 - rtp) / 100; // Dealer gets good cards
-
-            // Scan deck for a "good" or "bad" card based on target score 21
-            if (forceHigh || forceLow) {
-                // Simplified: Just sort remaining deck occasionally to put high/low cards on top
-                deck.sort((a, b) => {
-                    const valA = ['J','Q','K','A'].includes(a.v) ? 10 : parseInt(a.v);
-                    const valB = ['J','Q','K','A'].includes(b.v) ? 10 : parseInt(b.v);
-                    return forceHigh ? (valB - valA) : (valA - valB);
-                });
-            }
             return deck.pop();
         }
 
@@ -146,7 +133,7 @@
             deck = getDeck(); 
             pHand = [drawCard(), drawCard()]; 
             dHand = [drawCard(), drawCard()];
-            gameOver = false; document.getElementById('status').innerText = "PLAYER DECISION REQUIRED";
+            gameOver = false; document.getElementById('status').innerText = "YOUR MOVE, PLAYER";
             document.getElementById('bet-controls').style.display = 'none';
             document.getElementById('game-controls').style.display = 'flex';
             render();
@@ -154,7 +141,7 @@
 
         function hit() {
             pHand.push(drawCard()); render();
-            if(val(pHand) > 21) end("SESSION BUST - HOUSE WINS");
+            if(val(pHand) > 21) end("BUST - DEALER WINS");
         }
 
         function stand() {
@@ -168,23 +155,24 @@
 
         function finalize() {
             let pv = val(pHand), dv = val(dHand);
-            if(dv > 21) { balance += bet * 2; end("DEALER BUST - ASSETS SECURED"); }
-            else if(pv > dv) { balance += bet * 2; end("VICTORY - SCORE SURPASSED"); }
-            else if(dv > pv) end("DEFEAT - HOUSE PREVAILS");
-            else { balance += bet; end("NEUTRAL OUTCOME - PUSH"); }
+            if(dv > 21) { balance += bet * 2; end("DEALER BUST - YOU WIN"); }
+            else if(pv > dv) { balance += bet * 2; end("VICTORY - YOU WIN"); }
+            else if(dv > pv) end("DEFEAT - DEALER WINS");
+            else { balance += bet; end("PUSH - STAKE RETURNED"); }
         }
 
         function end(m) {
             gameOver = true; render();
             document.getElementById('status').innerText = m;
             document.getElementById('bet-controls').style.display = 'flex';
-            document.getElementById('deal-btn').innerText = "NEW SESSION";
+            document.getElementById('deal-btn').innerText = "DEAL AGAIN";
             document.getElementById('game-controls').style.display = 'none';
         }
 
         window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
+            const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

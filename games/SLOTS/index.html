@@ -1,10 +1,10 @@
-<!-- ./gameroom/games/SLOTS/index.html v16.0 - Wealth Refinery: Immersive Console -->
+<!-- ./gameroom/games/SLOTS/index.html v17.0 - Olympus Slots: Divine Console -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>Wealth Refinery | Immersive Console</title>
+<title>Olympus Slots | Grand Olympus Casino</title>
 <link rel="stylesheet" href="../../style.css">
 <style>
 :root {
@@ -159,7 +159,7 @@ body {
 
 <div class="glass-hud">
     <div class="stat-group">
-        <label>Treasury</label>
+        <label>Grand Treasury</label>
         <span id="balance" class="stat-balance">1000.00</span>
     </div>
     <div class="stat-group">
@@ -211,21 +211,21 @@ body {
 
 <!-- Buy Menu Modal -->
 <div id="bonus-choice" class="modal">
-    <h2>WEALTH CONTRACTS</h2>
+    <h2>DIVINE CONTRACTS</h2>
     <div class="contract-grid">
         <div class="contract-card" onclick="selectBonus(0)"><h3>Mega Rows</h3><p style="font-size:0.6rem; color:#888;">EXPAND GRID TO 9 ROWS</p></div>
         <div class="contract-card" onclick="selectBonus(1)"><h3>Colossal Vault</h3><p style="font-size:0.6rem; color:#888;">3X3 GIANT SYMBOLS</p></div>
-        <div class="contract-card" onclick="selectBonus(2)"><h3>Treasury x10</h3><p style="font-size:0.6rem; color:#888;">ALL WINS MULTIPLIED BY 10</p></div>
-        <div class="contract-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Ultimate</h3><p style="font-size:0.6rem; color:#888;">ALL BONUSES ACTIVE</p></div>
+        <div class="contract-card" onclick="selectBonus(2)"><h3>Olympus x10</h3><p style="font-size:0.6rem; color:#888;">ALL WINS MULTIPLIED BY 10</p></div>
+        <div class="contract-card" onclick="selectBonus(3)" style="border-color:#aa00ff"><h3>Divine Ultimate</h3><p style="font-size:0.6rem; color:#888;">ALL BONUSES ACTIVE</p></div>
     </div>
     <button class="pod-btn" onclick="$('bonus-choice').style.display='none'" style="margin-top:20px;"><span>CLOSE</span></button>
 </div>
 
 <!-- Rules Modal -->
 <div id="rules-modal" class="modal">
-    <h2>CORE PROTOCOLS</h2>
+    <h2>OLYMPUS PROTOCOLS</h2>
     <div class="rules-container">
-        <p>Quantum Slots uses a 5-reel "Ways to Win" system. 3 or more matching symbols on adjacent reels from left to right trigger a payout.</p>
+        <p>Olympus Slots uses a 5-reel "Ways to Win" system. 3 or more matching symbols on adjacent reels from left to right trigger a payout.</p>
         <div class="pay-table">
             <div class="pay-row"><span>👑 CROWN</span><span>100.00</span></div>
             <div class="pay-row"><span>💎 DIAMOND</span><span>50.00</span></div>
@@ -242,7 +242,7 @@ body {
 
 <script>
 /**
- * WEALTH REFINERY v16.0 - IMMERSIVE CONSOLE
+ * OLYMPUS SLOTS v17.0 - DIVINE CONSOLE
  */
 const SYMBOLS = [
     { s: "👑", v: 100 }, { s: "💎", v: 50 }, { s: "💰", v: 25 }, { s: "🥇", v: 15 },
@@ -250,7 +250,7 @@ const SYMBOLS = [
 ];
 
 let state = {
-    balance: parseFloat(localStorage.getItem('refinery_balance') || "1000"), 
+    balance: parseFloat(localStorage.getItem('olympus_balance') || localStorage.getItem('refinery_balance') || "1000"), 
     bet: 10, isSpinning: false, canStop: false, autoPlay: false, fastMode: false,
     freeSpins: 0, bonusMode: false, bonusType: -1, gridRows: 5, colossalIdx: -1
 };
@@ -270,7 +270,7 @@ function rainWealth(count = 30) {
 
 function updateUI() {
     $('balance').innerText = state.balance.toFixed(2);
-    localStorage.setItem('refinery_balance', state.balance.toFixed(2));
+    localStorage.setItem('olympus_balance', state.balance.toFixed(2));
     $('current-bet').innerText = state.bet.toFixed(2);
     $('auto-btn').classList.toggle('active', state.autoPlay);
     $('fast-btn').classList.toggle('active', state.fastMode);

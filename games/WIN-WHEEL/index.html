@@ -1,37 +1,36 @@
-<!-- ./gameroom/games/WIN-WHEEL/index.html v11.0 - Ultra Velocity -->
+<!-- ./gameroom/games/WIN-WHEEL/index.html v12.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Velocity Wheel | Digital Refinery</title>
+    <title>Wheel of Olympus | Grand Olympus Casino</title>
     <link rel="stylesheet" href="../../style.css">
     <style>
         .wheel-shield {
             width: 360px; height: 360px; margin: 30px auto; position: relative;
             padding: 15px; border-radius: 50%; background: var(--surface);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px var(--glow);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             border: 2px solid var(--primary);
         }
         .wheel-svg { 
             width: 100%; height: 100%; 
             transition: transform 45s var(--transition-smooth); 
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
         }
         .pointer { 
             position: absolute; top: -20px; left: 50%; transform: translateX(-50%); 
             width: 0; height: 0; border-left: 20px solid transparent; 
-            border-right: 20px solid transparent; border-top: 45px solid var(--tertiary); 
-            z-index: 20; filter: drop-shadow(0 0 15px var(--tertiary));
+            border-right: 20px solid transparent; border-top: 45px solid var(--primary); 
+            z-index: 20;
         }
         .timer-track { 
-            width: 100%; height: 6px; background: rgba(255,255,255,0.05); 
+            width: 100%; height: 6px; background: var(--surface-alt); 
             border-radius: 3px; margin: 25px 0; overflow: hidden; 
         }
         #timer-fill { 
-            width: 100%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary)); 
-            box-shadow: 0 0 10px var(--primary);
+            width: 100%; height: 100%; background: var(--primary); 
         }
         .monitor {
-            background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
+            background: var(--surface); border: 1px solid var(--border);
             padding: 20px; border-radius: 16px; margin-bottom: 20px;
             display: flex; justify-content: space-around; font-weight: 900;
         }
@@ -42,25 +41,25 @@
 <body id="game-body">
     <div class="container" style="text-align: center;">
         <div class="monitor">
-            <div>BANK: <span id="balance" style="color:var(--primary)">1000</span></div>
-            <div>STAKE: <span id="my-bet" style="color:var(--tertiary)">0</span></div>
+            <div>GRAND TREASURY: <span id="balance" style="color:var(--primary)">1000</span></div>
+            <div>CURRENT STAKE: <span id="my-bet" style="color:var(--text)">0</span></div>
         </div>
 
         <div class="timer-track"><div id="timer-fill"></div></div>
-        <div id="phase" style="font-weight: 800; letter-spacing: 3px; color: var(--primary); opacity: 0.8;">BETTING PHASE OPEN</div>
+        <div id="phase" style="font-weight: 800; letter-spacing: 3px; color: var(--primary); opacity: 0.8;">PLACING STAKES</div>
         <div id="countdown" style="font-size: 3rem; font-weight: 900; margin: 10px 0; font-family: 'Space Mono', monospace;">35</div>
 
         <div class="wheel-shield">
             <div id="pointer" class="pointer"></div>
             <svg class="wheel-svg" id="wheel" viewBox="0 0 100 100">
                 <path d="M50,50 L50,2 A48,48 0 0,1 98,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
-                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L98,50 A48,48 0 0,1 50,98 Z" fill="var(--surface-alt)" stroke="var(--primary)" stroke-width="0.5"/>
                 <path d="M50,50 L50,98 A48,48 0 0,1 2,50 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="0.5"/>
-                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="rgba(255,255,255,0.02)" stroke="var(--primary)" stroke-width="0.5"/>
+                <path d="M50,50 L2,50 A48,48 0 0,1 50,2 Z" fill="var(--surface-alt)" stroke="var(--primary)" stroke-width="0.5"/>
                 <text x="68" y="30" fill="var(--primary)" font-size="7" font-weight="900">2x</text>
                 <text x="68" y="75" fill="var(--primary)" font-size="7" font-weight="900">5x</text>
-                <text x="18" y="75" fill="var(--tertiary)" font-size="7" font-weight="900">50x</text>
-                <text x="18" y="30" fill="var(--secondary)" font-size="7" font-weight="900">3x</text>
+                <text x="18" y="75" fill="var(--primary)" font-size="7" font-weight="900">50x</text>
+                <text x="18" y="30" fill="var(--primary)" font-size="7" font-weight="900">3x</text>
             </svg>
         </div>
 
@@ -68,19 +67,19 @@
             <button onclick="placeBet(10)">+$10</button>
             <button onclick="placeBet(50)">+$50</button>
             <button onclick="placeBet(100)">+$100</button>
-            <button onclick="clearBet()" style="background:var(--bg-deep); border-color:#444; color:#666;">RESET</button>
+            <button onclick="clearBet()" style="background:var(--surface-alt); border:1px solid var(--border); color:var(--text-dim);">RESET</button>
         </div>
 
-        <a href="../../index.html" class="back-link">TERMINATE LINK</a>
+        <a href="../../index.html" class="back-link">EXIT TO LOBBY</a>
     </div>
 
     <script>
-        let balance = parseFloat(localStorage.getItem('refinery_balance') || "1000"), currentBet = 0, rotation = 0;
+        let balance = parseFloat(localStorage.getItem('olympus_balance') || localStorage.getItem('refinery_balance') || "1000"), currentBet = 0, rotation = 0;
         let phase = 'betting', timer = 35;
 
         function updateUI() {
             document.getElementById('balance').innerText = balance.toFixed(2);
-            localStorage.setItem('refinery_balance', balance.toFixed(2));
+            localStorage.setItem('olympus_balance', balance.toFixed(2));
             document.getElementById('my-bet').innerText = currentBet;
             document.getElementById('countdown').innerText = timer;
             const max = phase === 'betting' ? 35 : 45;
@@ -99,26 +98,11 @@
 
         function startSpin() {
             phase = 'spinning'; timer = 45;
-            document.getElementById('phase').innerText = "WHEEL IN MOTION";
+            document.getElementById('phase').innerText = "DIVINE SPIN IN PROGRESS";
             document.getElementById('betting-controls').style.opacity = "0.2";
             document.getElementById('pointer').classList.add('ticker');
             
-            let rtp = parseInt(localStorage.getItem('wheel_rtp') || "85");
-            let sectorIdx;
-            
-            // RTP Rigging
-            if (Math.random() < rtp / 100) {
-                // Fair or Good: [0:2x, 1:5x, 2:50x, 3:3x]
-                // Weighted towards 5x and 50x if RTP is very high
-                let r = Math.random();
-                if (rtp > 100 && r < 0.2) sectorIdx = 2; // 50x
-                else if (r < 0.4) sectorIdx = 1; // 5x
-                else sectorIdx = Math.floor(Math.random() * 4);
-            } else {
-                // Bad luck: Force 2x or 3x
-                sectorIdx = Math.random() < 0.5 ? 0 : 3;
-            }
-
+            let sectorIdx = Math.floor(Math.random() * 4);
             const extraSpins = 12 * 360;
             const stopAngle = (sectorIdx * 90) + 45;
             rotation += extraSpins + (360 - (rotation % 360)) + (360 - stopAngle);
@@ -130,15 +114,16 @@
             const win = currentBet * window.winMultiplier; balance += win;
             document.getElementById('pointer').classList.remove('ticker');
             phase = 'betting'; timer = 35; currentBet = 0;
-            document.getElementById('phase').innerText = "BETTING PHASE OPEN";
+            document.getElementById('phase').innerText = "STAKES ARE OPEN";
             document.getElementById('betting-controls').style.opacity = "1";
             updateUI();
         }
 
         setInterval(runCycle, 1000);
         window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
+            const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

@@ -1,183 +1,46 @@
-<!-- ./gameroom/games/Classic/index.html v11.0 - Ultra Retro -->
+<!-- ./gameroom/games/Classic/index.html v12.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Retro Classics | Digital Refinery</title>
+    <title>Vintage Vault | Grand Olympus Casino</title>
     <link rel="stylesheet" href="../../style.css">
-    <style>
-        .arcade-cabinet { 
-            background: #000; border-radius: 40px; padding: 25px; 
-            border: 1px solid rgba(255,255,255,0.05); position: relative;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 0 50px rgba(255,255,255,0.05);
-            max-width: 700px; margin: auto;
-        }
-        
-        .crt-screen {
-            background: #050508; border-radius: 30px; min-height: 450px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; overflow: hidden; border: 4px solid #1a1a2e;
-            box-shadow: inset 0 0 50px #000;
-        }
-
-        .crt-screen::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: 10;
-        }
-
-        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 300px; }
-        .ttt-node {
-            aspect-ratio: 1; background: rgba(255,255,255,0.02); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; font-weight: 900; border: 2px solid rgba(255,255,255,0.05);
-            transition: all 0.3s var(--transition-bounce); cursor: pointer;
-        }
-        .ttt-node:hover { background: rgba(255,255,255,0.05); border-color: var(--primary); transform: scale(1.05); }
-        
-        .c4-frame { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 20px; }
-        .c4-slot { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); transition: 0.5s var(--transition-bounce); }
-        
-        #status { 
-            position: absolute; top: 30px; font-weight: 900; color: var(--primary); 
-            letter-spacing: 5px; text-transform: uppercase; font-size: 0.8rem;
-            text-shadow: 0 0 10px var(--primary);
-        }
-    </style>
 </head>
-<body id="game-body">
+<body data-theme="classic">
     <div class="container">
-        <div style="display:flex; gap:15px; justify-content:center; margin-bottom: 30px; flex-wrap:wrap;">
-            <button onclick="startTTT()">TIC-TAC-TOE</button>
-            <button onclick="startSnake()">SNAKE CORE</button>
-            <button onclick="startC4()">CONNECT-4</button>
-        </div>
+        <h1 style="margin-top:50px; font-size:3rem;">VINTAGE VAULT</h1>
+        <p style="color:var(--text-dim); text-align:center; letter-spacing:5px; margin-bottom:50px;">LEGACY OLYMPUS PROTOCOLS</p>
 
-        <div class="arcade-cabinet">
-            <div id="screen" class="crt-screen">
-                <div id="status">MODULE STANDBY</div>
-                <div id="game-view" style="width:100%; display:flex; justify-content:center; align-items:center;">
-                    <div style="color:rgba(255,255,255,0.1); font-weight:900;">[ LOAD LOGIC MODULE ]</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="controls" style="display:none; gap:15px; justify-content:center; margin-top: 40px;">
-            <button onclick="undo()" style="border-color:#444; color:#666;">REVERT MOVE</button>
-            <button onclick="reset()" style="background:var(--surface); border-color:var(--tertiary); color:var(--tertiary);">INITIATE RESET</button>
+        <div class="game-grid">
+            <a href="pong/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M21,11H18V13H21V11M6,11H3V13H6V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
+                <h3>Neon Pong</h3>
+                <p>Kinetic momentum protocol.</p>
+            </a>
+            <a href="asteroids/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
+                <h3>Asteroids Core</h3>
+                <p>Deep space salvage mission.</p>
+            </a>
+            <a href="pac-olympus/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 1,1 20,12A8,8 0 0,1 12,20M12,11A1,1 0 1,0 11,12A1,1 0 0,0 12,11Z"/></svg>
+                <h3>Pac-Olympus</h3>
+                <p>Labyrinth energy collection.</p>
+            </a>
+            <a href="quix/index.html" class="card">
+                <svg viewBox="0 0 24 24"><path d="M7,15H9V17H7V15M15,15H17V17H15V15M7,7H9V9H7V7M15,7H17V9H15V7M11,11H13V13H11V11M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>
+                <h3>Quix Flow</h3>
+                <p>Area dominance algorithm.</p>
+            </a>
         </div>
         
-        <a href="../../index.html" class="back-link">TERMINATE CORE LINK</a>
+        <a href="../../index.html" class="back-link">← RETURN TO CASINO FLOOR</a>
     </div>
 
     <script>
-        let game = null, state = {}, history = [], over = false;
-        const view = document.getElementById('game-view');
-        const status = document.getElementById('status');
-
-        function startTTT() {
-            game = 'ttt'; history = []; over = false;
-            state = { board: Array(9).fill(null), turn: 'X' };
-            document.getElementById('controls').style.display = 'flex';
-            status.innerText = "PLAYER X ACTIVE";
-            render();
-        }
-
-        function checkTTTWin(b) {
-            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for(let l of lines) if(b[l[0]] && b[l[0]]===b[l[1]] && b[l[0]]===b[l[2]]) return b[l[0]];
-            return b.includes(null) ? null : 'Draw';
-        }
-
-        function startC4() {
-            game = 'c4'; history = []; over = false;
-            state = { board: Array(6).fill().map(() => Array(7).fill(null)), turn: 'R' };
-            document.getElementById('controls').style.display = 'flex';
-            status.innerText = "RED PROTOCOL";
-            render();
-        }
-
-        function checkC4Win(b) {
-            for(let r=0;r<6;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r][c+1] && b[r][c]===b[r][c+2] && b[r][c]===b[r][c+3]) return b[r][c];
-            for(let c=0;c<7;c++) for(let r=0;r<3;r++) if(b[r][c] && b[r][c]===b[r+1][c] && b[r][c]===b[r+2][c] && b[r][c]===b[r+3][c]) return b[r][c];
-            for(let r=3;r<6;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r-1][c+1] && b[r][c]===b[r-2][c+2] && b[r][c]===b[r-3][c+3]) return b[r][c];
-            for(let r=0;r<3;r++) for(let c=0;c<4;c++) if(b[r][c] && b[r][c]===b[r+1][c+1] && b[r][c]===b[r+2][c+2] && b[r][c]===b[r+3][c+3]) return b[r][c];
-            return null;
-        }
-
-        function startSnake() {
-            game = 'snake'; over = false; status.innerText = "SNAKE_CORE.EXE";
-            view.innerHTML = `
-                <canvas id="s" width="300" height="300" style="filter:drop-shadow(0 0 10px var(--primary))"></canvas>
-                <div class="mobile-controls">
-                    <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
-                    <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
-                    <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
-                    <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
-                </div>
-            `;
-            document.getElementById('controls').style.display = 'flex';
-            const c = document.getElementById('s'), ctx = c.getContext('2d');
-            let s = [{x:10,y:10}], f = {x:15,y:15}, dx=1, dy=0;
-            
-            window.handleControl = (key) => {
-                if(key==='ArrowUp'&&dy===0){dx=0;dy=-1}
-                if(key==='ArrowDown'&&dy===0){dx=0;dy=1}
-                if(key==='ArrowLeft'&&dx===0){dx=-1;dy=0}
-                if(key==='ArrowRight'&&dx===0){dx=1;dy=0}
-            };
-            document.onkeydown = e => handleControl(e.key);
-            const loop = setInterval(() => {
-                if(game !== 'snake' || over) return clearInterval(loop);
-                let head = {x: s[0].x+dx, y: s[0].y+dy};
-                if(head.x<0||head.x>=20||head.y<0||head.y>=20||s.some(b=>b.x===head.x&&b.y===head.y)) {
-                    over = true; status.innerText = "CORE COLLAPSE"; return clearInterval(loop);
-                }
-                s.unshift(head);
-                if(head.x===f.x&&head.y===f.y) f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}; else s.pop();
-                ctx.fillStyle='#000'; ctx.fillRect(0,0,300,300);
-                ctx.fillStyle='var(--primary)'; s.forEach(b=>ctx.fillRect(b.x*15,b.y*15,14,14));
-                ctx.fillStyle='var(--tertiary)'; ctx.fillRect(f.x*15,f.y*15,14,14);
-            }, 120);
-        }
-
-        function render() {
-            if(game === 'ttt') {
-                view.innerHTML = '<div class="ttt-grid">' + state.board.map((v, i) => `<div class="ttt-node" onclick="move(${i})" style="color:${v==='X'?'var(--primary)':'var(--tertiary)'}">${v||''}</div>`).join('') + '</div>';
-            } else if(game === 'c4') {
-                view.innerHTML = '<div class="c4-frame">' + state.board.map((row, r) => row.map((v, c) => `<div class="c4-slot" style="background:${v==='R'?'var(--tertiary)':v==='Y'?'var(--primary)':'rgba(255,255,255,0.05)'}" onclick="drop(${c})"></div>`).join('')).join('') + '</div>';
-            }
-        }
-
-        window.move = (i) => {
-            if(state.board[i] || over) return;
-            history.push(JSON.parse(JSON.stringify(state)));
-            state.board[i] = state.turn;
-            let res = checkTTTWin(state.board);
-            if(res) { over = true; status.innerText = res === 'Draw' ? "DRAW DETECTED" : res + " VICTORIOUS"; }
-            else { state.turn = state.turn === 'X' ? 'O' : 'X'; status.innerText = "PLAYER " + state.turn + " ACTIVE"; }
-            render();
-        }
-
-        window.drop = (c) => {
-            if(over) return;
-            for(let r=5; r>=0; r--) {
-                if(!state.board[r][c]) {
-                    history.push(JSON.parse(JSON.stringify(state)));
-                    state.board[r][c] = state.turn;
-                    let res = checkC4Win(state.board);
-                    if(res) { over = true; status.innerText = (res === 'R' ? "RED" : "YELLOW") + " VICTORIOUS"; }
-                    else { state.turn = state.turn === 'R' ? 'Y' : 'R'; status.innerText = (state.turn === 'R' ? "RED" : "YELLOW") + " PROTOCOL"; }
-                    render(); break;
-                }
-            }
-        }
-
-        window.undo = () => { if(history.length && !over) { state = history.pop(); render(); status.innerText = (game==='ttt' ? "PLAYER " : "") + (state.turn==='X'||state.turn==='R' ? (game==='ttt'?"X":"RED") : (game==='ttt'?"O":"YELLOW")) + " ACTIVE"; } }
-        window.reset = () => { if(game==='ttt') startTTT(); else if(game==='c4') startC4(); else if(game==='snake') startSnake(); }
-
         window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
+            const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

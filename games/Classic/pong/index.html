@@ -1,20 +1,20 @@
-<!-- ./gameroom/games/Classic/pong/index.html v11.0 - Ultra Neon -->
+<!-- ./gameroom/games/Classic/pong/index.html v12.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Neon Pong | Digital Refinery</title>
+    <title>Neon Pong | Grand Olympus Casino</title>
     <link rel="stylesheet" href="../../../style.css">
     <style>
         .arcade-frame { 
             background: #000; border: 4px solid var(--primary); border-radius: 24px; 
             padding: 15px; display: inline-block; position: relative;
-            box-shadow: 0 0 30px var(--glow), inset 0 0 20px var(--glow);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; }
+        canvas { background: #050508; border-radius: 12px; box-shadow: inset 0 0 40px #000; max-width: 90vw; height: auto; }
         .score-row { 
             display: flex; justify-content: space-around; font-size: 3rem; 
             font-weight: 900; margin-bottom: 20px; color: #fff;
-            text-shadow: 0 0 15px var(--glow); font-family: 'Space Mono', monospace;
+            font-family: 'Space Mono', monospace;
         }
     </style>
 </head>
@@ -28,10 +28,10 @@
             <canvas id="pong" width="600" height="400"></canvas>
         </div>
         <div style="margin-top: 30px;">
-            <button onclick="resetGame()">RE-INITIALIZE CORE</button>
-            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top:15px; letter-spacing: 2px;">MANUAL OVERRIDE: ARROW_KEYS</p>
+            <button onclick="resetGame()">RESET CORE</button>
+            <p style="font-size: 0.7rem; color: var(--text-dim); margin-top:15px; letter-spacing: 2px;">ARROWS: MANUAL OVERRIDE</p>
         </div>
-        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+        <a href="../index.html" class="back-link">EXIT TO VAULT</a>
     </div>
     <script>
         const canvas = document.getElementById('pong'), ctx = canvas.getContext('2d');
@@ -52,55 +52,36 @@
 
         function update() {
             ballX += ballDX; ballY += ballDY;
-            // AI Logic
             const targetY = ballY - paddleHeight/2;
             if(p2Y < targetY) p2Y += 4.5; else p2Y -= 4.5;
             p2Y = Math.max(0, Math.min(canvas.height - paddleHeight, p2Y));
-
             if(ballY <= 0 || ballY >= canvas.height) ballDY = -ballDY;
             if(ballX <= paddleWidth) {
-                if(ballY > p1Y && ballY < p1Y + paddleHeight) {
-                    ballDX = -ballDX * 1.05;
-                    const deltaY = ballY - (p1Y + paddleHeight/2);
-                    ballDY = deltaY * 0.3;
-                } else {
-                    p2Score++; document.getElementById('p2-score').innerText = p2Score;
-                    resetBall();
-                }
+                if(ballY > p1Y && ballY < p1Y + paddleHeight) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p1Y + paddleHeight/2)) * 0.3; } 
+                else { p2Score++; document.getElementById('p2-score').innerText = p2Score; resetBall(); }
             }
             if(ballX >= canvas.width - paddleWidth) {
-                if(ballY > p2Y && ballY < p2Y + paddleHeight) {
-                    ballDX = -ballDX * 1.05;
-                    const deltaY = ballY - (p2Y + paddleHeight/2);
-                    ballDY = deltaY * 0.3;
-                } else {
-                    p1Score++; document.getElementById('p1-score').innerText = p1Score;
-                    resetBall();
-                }
+                if(ballY > p2Y && ballY < p2Y + paddleHeight) { ballDX = -ballDX * 1.05; ballDY = (ballY - (p2Y + paddleHeight/2)) * 0.3; } 
+                else { p1Score++; document.getElementById('p1-score').innerText = p1Score; resetBall(); }
             }
             draw();
         }
 
         function draw() {
             ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            // Center Line
             ctx.setLineDash([10, 10]); ctx.strokeStyle = 'rgba(255,255,255,0.05)';
             ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
-            ctx.setLineDash([]);
-            
             ctx.fillStyle = 'var(--primary)';
-            ctx.shadowBlur = 15; ctx.shadowColor = 'var(--primary)';
-            ctx.fillRect(2, p1Y, paddleWidth, paddleHeight);
-            ctx.fillRect(canvas.width - paddleWidth - 2, p2Y, paddleWidth, paddleHeight);
+            ctx.fillRect(2, p1Y, paddleWidth, paddleHeight); ctx.fillRect(canvas.width - paddleWidth - 2, p2Y, paddleWidth, paddleHeight);
             ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill();
-            ctx.shadowBlur = 0;
         }
 
         function resetGame() { p1Score = 0; p2Score = 0; document.getElementById('p1-score').innerText = 0; document.getElementById('p2-score').innerText = 0; resetBall(); }
         setInterval(update, 1000/60);
         window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
+            const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

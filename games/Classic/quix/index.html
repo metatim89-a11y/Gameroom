@@ -1,29 +1,29 @@
-<!-- ./gameroom/games/Classic/quix/index.html v11.0 - Ultra Flow -->
+<!-- ./gameroom/games/Classic/quix/index.html v12.0 - Grand Olympus Casino Rebrand -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quix Flow | Digital Refinery</title>
+    <title>Quix Flow | Grand Olympus Casino</title>
     <link rel="stylesheet" href="../../../style.css">
     <style>
         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
         .node { 
-            height: 90px; background: rgba(255,255,255,0.02); border-radius: 16px; 
-            border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; 
+            height: 90px; background: var(--surface-alt); border-radius: 16px; 
+            border: 1px solid var(--border); display: flex; align-items: center; 
             justify-content: center; font-size: 1.5rem; font-weight: 900; 
-            cursor: pointer; transition: all 0.3s var(--transition-bounce);
-            color: rgba(255,255,255,0.1); font-family: 'Space Mono', monospace;
+            cursor: pointer; transition: all 0.3s ease;
+            color: var(--text-dim); font-family: 'Space Mono', monospace;
         }
         .node.active { 
             border-color: var(--primary); background: var(--primary); 
-            color: var(--bg-deep); transform: scale(1.1); 
-            box-shadow: 0 0 30px var(--glow); z-index: 5;
+            color: var(--bg); transform: scale(1.1); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 5;
         }
-        .node:hover:not(.active) { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+        .node:hover:not(.active) { border-color: var(--primary); background: var(--surface); }
         
         .level-badge { 
             font-size: 1rem; font-weight: 900; background: var(--surface); 
             color: var(--primary); padding: 8px 25px; border-radius: 30px; 
-            border: 1px solid var(--primary); display: inline-block;
+            border: 1px solid var(--border); display: inline-block;
             margin-bottom: 20px; letter-spacing: 3px;
         }
     </style>
@@ -31,16 +31,16 @@
 <body id="game-body">
     <div class="container" style="text-align: center;">
         <div class="level-badge" id="score">LEVEL: 01</div>
-        <div id="status" style="font-weight: 800; letter-spacing: 5px; color: var(--tertiary); text-transform: uppercase;">SYNCHRONIZE MODULE</div>
+        <div id="status" style="font-weight: 800; letter-spacing: 5px; color: var(--text); text-transform: uppercase;">DIVINE MEMORY</div>
         
         <div class="game-box">
             <div class="grid" id="node-grid"></div>
         </div>
 
         <div style="margin-top: 40px;">
-            <button id="start-btn" onclick="startGame()" style="min-width: 250px;">INITIALIZE SEQUENCE</button>
+            <button id="start-btn" onclick="startGame()" style="min-width: 250px;">BEGIN RITUAL</button>
         </div>
-        <a href="../../../index.html" class="back-link">TERMINATE LINK</a>
+        <a href="../index.html" class="back-link">EXIT TO VAULT</a>
     </div>
     <script>
         let sequence = [], userSequence = [], level = 1, playing = false;
@@ -63,7 +63,7 @@
         }
         async function playSequence() {
             playing = false;
-            document.getElementById('status').innerText = "ANALYZING...";
+            document.getElementById('status').innerText = "WATCHING...";
             document.getElementById('status').style.color = "var(--primary)";
             await new Promise(r => setTimeout(r, 800));
             for(let id of sequence) {
@@ -71,8 +71,8 @@
                 await new Promise(r => setTimeout(r, 200));
             }
             playing = true;
-            document.getElementById('status').innerText = "REPEAT FLOW";
-            document.getElementById('status').style.color = "var(--tertiary)";
+            document.getElementById('status').innerText = "YOUR TURN";
+            document.getElementById('status').style.color = "var(--text)";
         }
         function flashNode(id) {
             return new Promise(r => {
@@ -86,22 +86,23 @@
             userSequence.push(id);
             const expected = sequence[userSequence.length-1];
             if(id !== expected) {
-                document.getElementById('status').innerText = "SYNC FAILED - REBOOT";
-                document.getElementById('status').style.color = "#ef4444";
+                document.getElementById('status').innerText = "RITUAL FAILED";
+                document.getElementById('status').style.color = "var(--danger)";
                 document.getElementById('start-btn').style.display = 'inline-block';
-                document.getElementById('start-btn').innerText = "RE-INITIALIZE";
+                document.getElementById('start-btn').innerText = "RE-ATTEMPT";
                 playing = false;
             } else if(userSequence.length === sequence.length) {
                 level++;
-                document.getElementById('status').innerText = "LEVEL SYNCED";
+                document.getElementById('status').innerText = "DESCENDED";
                 document.getElementById('status').style.color = "var(--primary)";
                 setTimeout(nextLevel, 1000);
             }
         }
         initGrid();
         window.onload = () => {
-            const t = localStorage.getItem('refinery-theme');
+            const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
             if(t) document.body.setAttribute('data-theme', t);
+            else document.body.setAttribute('data-theme', 'classic');
         }
     </script>
 </body>

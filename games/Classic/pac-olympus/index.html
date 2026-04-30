@@ -1,0 +1,77 @@
+<!-- ./gameroom/games/Classic/pac-olympus/index.html v12.0 - Grand Olympus Casino Rebrand -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pac-Olympus | Grand Olympus Casino</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        .arcade-frame { background: #000; border: 4px solid var(--primary); border-radius: 24px; padding: 15px; display: inline-block; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        canvas { background: #050508; border-radius: 12px; max-width: 90vw; height: auto; }
+        .score-badge { font-size: 1.5rem; font-weight: 900; background: var(--surface); color: var(--primary); padding: 10px 30px; border-radius: 30px; border: 1px solid var(--border); display: inline-block; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
+    </style>
+</head>
+<body id="game-body">
+    <div class="container" style="text-align: center;">
+        <div class="score-badge">COINS: <span id="score">0000</span></div>
+        <div class="arcade-frame">
+            <canvas id="game" width="400" height="400"></canvas>
+        </div>
+        
+        <div class="mobile-controls">
+            <div class="d-btn" style="grid-area: up" onclick="handleControl('ArrowUp')">▲</div>
+            <div class="d-btn" style="grid-area: left" onclick="handleControl('ArrowLeft')">◀</div>
+            <div class="d-btn" style="grid-area: right" onclick="handleControl('ArrowRight')">▶</div>
+            <div class="d-btn" style="grid-area: down" onclick="handleControl('ArrowDown')">▼</div>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <p style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px;">ARROWS OR TOUCH: NAVIGATE LABYRINTH</p>
+        </div>
+        <a href="../../../index.html" class="back-link">EXIT TO LOBBY</a>
+    </div>
+
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+let score = 0, dots = [];
+let pacman = { x: 200, y: 200, size: 18, dir: 'right' };
+
+for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
+
+function handleControl(key) {
+    if(key === 'ArrowRight') pacman.dir = 'right';
+    if(key === 'ArrowLeft') pacman.dir = 'left';
+    if(key === 'ArrowUp') pacman.dir = 'up';
+    if(key === 'ArrowDown') pacman.dir = 'down';
+}
+
+function draw() {
+    ctx.fillStyle = '#050508'; ctx.fillRect(0,0,400,400);
+    ctx.fillStyle = 'var(--primary)';
+    dots.forEach(dot => { ctx.beginPath(); ctx.arc(dot.x, dot.y, 3, 0, Math.PI*2); ctx.fill(); });
+    ctx.fillStyle = '#ffff00'; ctx.beginPath();
+    let sA = (pacman.dir==='right')?0.2:(pacman.dir==='left')?1.2:(pacman.dir==='up')?1.7:0.7;
+    let eA = sA + 1.6; ctx.moveTo(pacman.x, pacman.y); ctx.arc(pacman.x, pacman.y, pacman.size, sA*Math.PI, eA*Math.PI); ctx.fill();
+    update(); requestAnimationFrame(draw);
+}
+
+function update() {
+    const speed = 3;
+    if(pacman.dir==='right') pacman.x+=speed; if(pacman.dir==='left') pacman.x-=speed;
+    if(pacman.dir==='up') pacman.y-=speed; if(pacman.dir==='down') pacman.y+=speed;
+    if(pacman.x>400) pacman.x=0; if(pacman.x<0) pacman.x=400; if(pacman.y>400) pacman.y=0; if(pacman.y<0) pacman.y=400;
+    dots = dots.filter(dot => {
+        if(Math.hypot(pacman.x-dot.x, pacman.y-dot.y) < pacman.size) { score+=10; scoreEl.innerText = score.toString().padStart(4, '0'); return false; }
+        return true;
+    });
+    if(dots.length === 0) for(let i=0; i<30; i++) dots.push({ x: Math.random()*360+20, y: Math.random()*360+20 });
+}
+
+window.addEventListener('keydown', e => handleControl(e.key));
+window.onload = () => { 
+    const t = localStorage.getItem('olympus-theme') || localStorage.getItem('refinery-theme');
+    if(t) document.body.setAttribute('data-theme', t);
+    else document.body.setAttribute('data-theme', 'classic');
+    draw(); 
+}
+</script></body></html>
