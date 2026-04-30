@@ -30,24 +30,24 @@
         #error-msg { color: var(--secondary); font-size: 0.8rem; margin-bottom: 20px; display: none; font-weight: bold; }
     </style>
 </head>
-<body data-theme="high-roller">
-    <div class="auth-card glass-panel">
+<body data-theme="midnight">
+    <div class="auth-card">
         <h2>Identity Auth</h2>
         <div id="error-msg">INVALID CREDENTIALS</div>
         <form id="login-form">
             <div class="input-group">
                 <label>Access Key (Username)</label>
-                <input type="text" id="username" required>
+                <input type="text" id="username" required style="background:var(--surface-alt); border:1px solid var(--border); color:var(--text); padding:15px; border-radius:8px; width:100%; box-sizing:border-box;">
             </div>
             <div class="input-group">
                 <label>Secure Pulse (Password)</label>
-                <input type="password" id="password" required>
+                <input type="password" id="password" required style="background:var(--surface-alt); border:1px solid var(--border); color:var(--text); padding:15px; border-radius:8px; width:100%; box-sizing:border-box;">
             </div>
-            <button type="submit" class="btn">Initialize Link</button>
+            <button type="submit" class="btn" style="width:100%; margin-top:10px;">Initialize Link</button>
         </form>
         <div class="links">
-            <p>New operative? <a href="signup.html">Request Access</a></p>
-            <p><a href="index.html" style="color:rgba(255,255,255,0.4)">← Exit Console</a></p>
+            <p>New operative? <a href="signup.html" style="color:var(--primary)">Request Access</a></p>
+            <p><a href="index.html" style="color:var(--text-dim)">← Exit Console</a></p>
         </div>
     </div>
     <script>

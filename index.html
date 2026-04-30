@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body id="main-body" data-theme="high-roller">
+<body id="main-body" data-theme="midnight">
 
     <header class="main-header">
         <a href="index.html" class="logo">REFINERY // CORE</a>
@@ -24,7 +24,7 @@
             <div class="hero-content">
                 <label style="color:var(--primary); font-weight:800; letter-spacing:3px; text-transform:uppercase; font-size:0.7rem;">Featured Experience</label>
                 <h2>QUANTUM SLOTS</h2>
-                <p>Experience the next generation of mathematical variance. High-fidelity visuals with holographic payout protocols.</p>
+                <p>High-fidelity probability engine with professional asset distribution. Experience the next generation of mathematical variance.</p>
                 <button onclick="window.location.href='games/SLOTS/index.html'">Execute Protocol</button>
             </div>
         </section>
@@ -141,11 +141,11 @@
                         <label>${user}</label>
                         <span>$ ${parseFloat(balance).toFixed(2)}</span>
                     </div>
-                    <select onchange="changeTheme(this.value)" style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.1); padding:5px 10px; border-radius:10px; font-size:0.7rem;">
-                        <option value="high-roller">HIGH ROLLER</option>
-                        <option value="cyber">CYBER</option>
-                        <option value="royal">ROYAL</option>
-                        <option value="synthwave">SYNTHWAVE</option>
+                    <select onchange="changeTheme(this.value)" style="background:var(--surface-alt); color:var(--text); border:1px solid var(--border); padding:5px 10px; border-radius:8px; font-size:0.7rem;">
+                        <option value="midnight">MIDNIGHT ONYX</option>
+                        <option value="minimalist">MINIMALIST LIGHT</option>
+                        <option value="arcade">RETRO ARCADE</option>
+                        <option value="classic">CLASSIC CASINO</option>
                     </select>
                     <a href="profile.html" style="text-decoration:none;"><button style="padding: 8px 15px; font-size: 0.7rem;">ID</button></a>
                 `;

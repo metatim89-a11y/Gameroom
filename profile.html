@@ -36,20 +36,20 @@
         .btn-admin { display: none; background: transparent; border-color: var(--primary); color: var(--primary); margin-bottom: 10px; }
     </style>
 </head>
-<body data-theme="high-roller">
-    <div class="profile-card glass-panel">
+<body data-theme="midnight">
+    <div class="profile-card">
         <h2>Operative Identity</h2>
-        <div class="avatar" id="avatar">?</div>
+        <div class="avatar" id="avatar" style="background:var(--primary); color:var(--bg); box-shadow:var(--shadow);">?</div>
         <h3 id="username-display" style="margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;">User</h3>
 
-        <div class="stat-box">
-            <label>Global Treasury Balance</label>
-            <span id="balance-display">$ 1000.00</span>
+        <div class="stat-box" style="background:var(--surface-alt); border:1px solid var(--border); padding:20px; border-radius:12px; margin-bottom:20px;">
+            <label style="display:block; color:var(--text-dim); font-size:0.6rem; text-transform:uppercase; letter-spacing:2px; margin-bottom:5px;">Global Treasury Balance</label>
+            <span id="balance-display" style="font-size:1.8rem; font-weight:900; color:var(--text); font-family:'Space Mono', monospace;">$ 1000.00</span>
         </div>
 
-        <button id="admin-btn" class="btn btn-admin" onclick="window.location.href='dev.html'">Dev Ops Panel</button>
+        <button id="admin-btn" class="btn btn-admin" onclick="window.location.href='dev.html'" style="display:none; background:transparent; border:1px solid var(--primary); color:var(--primary); width:100%; margin-bottom:10px;">Dev Ops Panel</button>
         <button class="btn" onclick="window.location.href='index.html'" style="width:100%; margin-bottom: 10px;">Return to Core</button>
-        <button class="btn btn-danger" onclick="logout()" style="width:100%;">Terminate Session</button>
+        <button class="btn" onclick="logout()" style="width:100%; background:transparent; border:1px solid var(--danger); color:var(--danger);">Terminate Session</button>
     </div>
     <script>
         const user = localStorage.getItem('session_user');
